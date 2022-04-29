@@ -1,0 +1,27 @@
+{
+  "name": "@sfajs/home",
+  "version": "0.0.1",
+  "description": "Sfa 文档",
+  "author": "hal-wang",
+  "license": "MIT",
+  "homepage": "https://sfajs.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sfajs/home"
+  },
+  "keywords": [
+    "sfa",
+    "serverless"
+  ],
+  "bugs": {
+    "url": "https://github.com/sfajs/inject/issues",
+    "email": "support@hal.wang"
+  },
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "vuepress": "^2.0.0-beta.41"
+  }
+}
