@@ -6,9 +6,18 @@ export default defineUserConfig({
   description: "nodejs 渐进式 web 框架",
   base: "/",
   theme: defaultTheme({
+    docsRepo: "https://github.com/sfajs/website",
+    docsBranch: "main",
+    docsDir: "docs",
+    editLinkPattern: ":repo/edit/:branch/:path",
+    editLinks: true,
+    editLinkText: "编辑此页",
     home: "/index.md",
     logo: "/images/logo.png",
     sidebarDepth: 1,
+    searchMaxSuggestions: 10,
+    backToHome: "返回主页",
+    notFound: ["你访问的页面不存在"],
     navbar: [
       {
         text: "使用文档",
