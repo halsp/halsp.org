@@ -8,6 +8,7 @@ export default defineUserConfig({
   theme: defaultTheme({
     home: "/index.md",
     logo: "/images/logo.png",
+    sidebarDepth: 1,
     navbar: [
       {
         text: "使用文档",
@@ -26,7 +27,15 @@ export default defineUserConfig({
         },
         {
           text: "基础",
-          children: ["middleware.md", "router.md"],
+          children: [
+            "startup.md",
+            "middleware.md",
+            "result.md",
+            "inject.md",
+            "router.md",
+            "filter.md",
+            "pipe.md",
+          ],
         },
       ],
     },
