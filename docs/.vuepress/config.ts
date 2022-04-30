@@ -15,6 +15,10 @@ export default defineUserConfig({
         link: "/usage/intro",
       },
       {
+        text: "运行环境",
+        link: "/usage/env",
+      },
+      {
         text: "GitHub",
         link: "https://github.com/sfajs",
       },
@@ -33,8 +37,20 @@ export default defineUserConfig({
             "result.md",
             "inject.md",
             "router.md",
-            "filter.md",
-            "pipe.md",
+          ],
+        },
+        {
+          text: "进阶",
+          children: ["view.md", "mva.md", "filter.md", "pipe.md", "koa.md"],
+        },
+        {
+          text: "运行环境",
+          children: [
+            "env.md",
+            "http.md",
+            "cloudbase.md",
+            "alifunc.md",
+            "koa-env.md",
           ],
         },
       ],

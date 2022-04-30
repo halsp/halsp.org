@@ -12,13 +12,7 @@
 
 `@sfajs/core` 提供了一个 `TestStartup` 类，该类没有任何运行环境，方便用于单元测试
 
-目前已支持的运行环境如下：
-
-- [@sfajs/cloudbase](https://github.com/sfajs/cloudbase): 将 sfa 托管到腾讯云 CloudBase
-- [@sfajs/alifunc](https://github.com/sfajs/alifunc): 将 sfa 托管到阿里云函数计算
-- [@sfajs/http](https://github.com/sfajs/http): 将 sfa 托管到 http(s) 环境
-
-> 🎉 更多环境欢迎贡献并编辑此 [README](https://github.com/sfajs/website/edit/main/docs/usage/startup.md) 以添加
+目前已支持的运行环境参考 [运行环境介绍](/usage/env)
 
 ## HttpContext
 

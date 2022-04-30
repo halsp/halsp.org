@@ -2,14 +2,20 @@
 
 安装 `@sfajs/filter` 以支持请求过滤器功能
 
+另选择安装 `@sfajs/mva` 以支持视图渲染过滤器
+
 请求过滤器基于 `@sfajs/router`
 
-`@sfajs/filter` 提供以下几种过滤器
+`@sfajs/filter` 提供以下过滤器
 
 - ActionFilter: Action 运行前和运行后执行，比较通用，可以改变传入内容和返回结果，可以用于统一返回
 - AuthorizationFilter: Action 运行前执行，一般用于身份认证
 - ResourceFilter: Action 运行前和运行后执行，一般用于资源缓存
 - ExceptionFilter: Action 运行抛出异常时执行，一般用于自定义异常处理
+
+`@sfajs/mva` 提供以下过滤器
+
+- ResultFilter: 视图渲染前和渲染后执行，可以改变渲染模型和渲染模板，也可以改变渲染结果
 
 ## 引入过滤器
 
@@ -87,9 +93,11 @@ startup.useGlobalFilter(filter)
 1. AuthorizationFilter
 2. ResourceFilter.onResourceExecuting
 3. ActionFilter.onActionExecuting
-4. Action Middleware
-5. ActionFilter.onActionExecuted
-6. ResourceFilter.onResourceExecuted
+4. ResultFilter.onResultExecuting
+5. Action Middleware
+6. ResultFilter.onResultExecuted
+7. ActionFilter.onActionExecuted
+8. ResourceFilter.onResourceExecuted
 
 ### 同类型执行顺序
 
