@@ -31,21 +31,15 @@ export default defineUserConfig({
       "/usage/": [
         {
           text: "新手指南",
-          children: ["intro.md", "quickstart.md"],
+          children: ["intro", "quickstart"],
         },
         {
           text: "基础",
-          children: [
-            "startup.md",
-            "middleware.md",
-            "result.md",
-            "inject.md",
-            "router.md",
-          ],
+          children: ["startup", "middleware", "result", "inject", "router"],
         },
         {
           text: "进阶",
-          children: ["view", "mva", "filter", "pipe", "koa", "static"],
+          children: ["view", "mva", "filter", "pipe", "koa", "static", "debug"],
         },
         {
           text: "运行环境",
