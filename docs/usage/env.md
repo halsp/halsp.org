@@ -5,9 +5,9 @@
 目前已支持的运行环境如下：
 
 - [@sfajs/cloudbase](https://github.com/sfajs/cloudbase): 将 sfa 托管到腾讯云 CloudBase
-  - 文档：[Http 服务](/usage/cloudbase)
+  - 文档：[腾讯云 CloudBase](/usage/cloudbase)
 - [@sfajs/alifunc](https://github.com/sfajs/alifunc): 将 sfa 托管到阿里云函数计算
-  - 文档：[Http 服务](/usage/alifunc)
+  - 文档：[阿里云函数计算务](/usage/alifunc)
 - [@sfajs/http](https://github.com/sfajs/http): 将 sfa 托管到 http(s) 环境
   - 文档：[Http 服务](/usage/http)
 

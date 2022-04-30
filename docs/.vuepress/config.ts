@@ -19,6 +19,10 @@ export default defineUserConfig({
         link: "/usage/env",
       },
       {
+        text: "更多插件",
+        link: "/plugin/intro",
+      },
+      {
         text: "GitHub",
         link: "https://github.com/sfajs",
       },
@@ -41,19 +45,14 @@ export default defineUserConfig({
         },
         {
           text: "进阶",
-          children: ["view.md", "mva.md", "filter.md", "pipe.md", "koa.md"],
+          children: ["view", "mva", "filter", "pipe", "koa", "static"],
         },
         {
           text: "运行环境",
-          children: [
-            "env.md",
-            "http.md",
-            "cloudbase.md",
-            "alifunc.md",
-            "koa-env.md",
-          ],
+          children: ["env", "http", "cloudbase", "alifunc", "koa-env"],
         },
       ],
+      "/plugin/": ["intro", "jwt", "swagger"],
     },
   }),
 });
