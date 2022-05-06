@@ -19,7 +19,7 @@
   - 源码：<https://github.com/sfajs/alifunc>
   - 文档：<https://sfajs.com/usage/alifunc>
 
-> 🎉 更多环境欢迎贡献并编辑此 [README](https://github.com/sfajs/website/edit/main/docs/usage/env.md) 以添加
+> 🎉 更多环境欢迎贡献并编辑此 [README](https://github.com/sfajs/sfajs.com/edit/main/docs/usage/env.md) 以添加
 
 ## 自定义运行环境
 

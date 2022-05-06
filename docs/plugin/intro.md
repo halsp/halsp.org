@@ -13,4 +13,4 @@
   - 源码：<https://github.com/sfajs/swagger>
   - 文档：<https://sfajs.com/plugin/swagger>
 
-> 🎉 更多插件欢迎贡献并编辑此 [README](https://github.com/sfajs/website/edit/main/docs/plugin/intro.md) 以添加
+> 🎉 更多插件欢迎贡献并编辑此 [README](https://github.com/sfajs/sfajs.com/edit/main/docs/plugin/intro.md) 以添加

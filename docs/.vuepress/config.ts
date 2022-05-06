@@ -6,7 +6,7 @@ export default defineUserConfig({
   description: "nodejs 渐进式 web 框架",
   base: "/",
   theme: defaultTheme({
-    docsRepo: "https://github.com/sfajs/website",
+    docsRepo: "https://github.com/sfajs/sfajs.com",
     docsBranch: "main",
     docsDir: "docs",
     editLinkPattern: ":repo/edit/:branch/:path",

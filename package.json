@@ -1,20 +1,20 @@
 {
-  "name": "@sfajs/website",
-  "version": "0.0.1",
-  "description": "Sfa 文档",
+  "name": "sfajs.com",
+  "version": "0.0.2",
+  "description": "sfajs.com 官方网站",
   "author": "hal-wang",
   "license": "MIT",
   "homepage": "https://sfajs.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sfajs/website"
+    "url": "https://github.com/sfajs/sfajs.com"
   },
   "keywords": [
     "sfa",
-    "serverless"
+    "sfajs"
   ],
   "bugs": {
-    "url": "https://github.com/sfajs/website/issues",
+    "url": "https://github.com/sfajs/sfajs.com/issues",
     "email": "support@hal.wang"
   },
   "scripts": {
