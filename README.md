@@ -22,7 +22,7 @@
 
 本项目是 `sfajs.com` 官方网站的源码
 
-dist 目录为 GitHub Pages 托管的网站
+gh-pages 分支为 GitHub Pages 托管的网站
 
 ## 贡献
 
@@ -32,6 +32,6 @@ dist 目录为 GitHub Pages 托管的网站
 
 ### 文档贡献列表
 
-<a href="https://github.com/sfajs/sfa/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=sfajs/sfa" />
+<a href="https://github.com/sfajs/sfajs.com/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sfajs/sfajs.com" />
 </a>
