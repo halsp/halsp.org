@@ -1,34 +1,30 @@
+name: "Publish"
+
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   publish:
+    if: github.repository == 'ipare/ipare.org'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: |
-          npm i -g yarn
-          yarn config set registry https://registry.npmjs.org
-      - run: yarn install
-      - name: Setup Git Infomation
-        run: |
-          git config --global user.name 'hal-wang' 
-          git config --global user.email 'hi@hal.wang'
-      - name: Setup SSH Private Key
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-      - run: yarn run publish
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          registry-url: https://registry.npmjs.org/
+      - run: sh publish.sh
+
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          directory: docs/.vuepress/dist
+          repository: ipare/ipare.org
+          force: true
+          branch: gh-pages
+          github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
