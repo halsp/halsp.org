@@ -1,8 +1,8 @@
 # 断点调试
 
-此教程使用 vscode 断点调试 sfajs 项目
+此教程使用 vscode 断点调试 Ipare 项目
 
-Serverless 项目调试需要使用 `@sfajs/http` 模拟 Http 环境
+Serverless 项目调试需要使用 `@ipare/http` 模拟 Http 环境
 
 ## 环境配置
 
@@ -16,12 +16,12 @@ Serverless 项目调试需要使用 `@sfajs/http` 模拟 Http 环境
 
 安装以下插件
 
-- `@sfajs/http`: SfaJS 的 `Http 服务` 运行环境
+- `@ipare/http`: Ipare 的 `Http 服务` 运行环境
 - `ts-node`: 用于运行 TypeScript 代码
 - `nodemon`: 用于监控文件修改自动编译
 
 ```bash
-npm i @sfajs/http -D
+npm i @ipare/http -D
 npm i ts-node -D
 npm i nodemon -D
 ```
@@ -41,10 +41,10 @@ npm i nodemon -D
 创建文件 `http.ts` 并添加相应中间件
 
 ```TS
-import "@sfajs/http";
-import { SfaHttp } from "@sfajs/http";
+import "@ipare/http";
+import { HttpStartup } from "@ipare/http";
 
-new SfaHttp()
+new HttpStartup()
   .useHttpJsonBody()
   .use((ctx) => {
     console.log(ctx.req.method, ctx.req.path);
@@ -60,7 +60,7 @@ new SfaHttp()
 {
     "version": "0.2.0",
     "configurations": [{
-        "name": "SfaJS Http Debugger",
+        "name": "Ipare Http Debugger",
         "type": "node",
         "request": "launch",
         "cwd": "${workspaceRoot}",

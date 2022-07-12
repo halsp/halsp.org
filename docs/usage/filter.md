@@ -1,19 +1,19 @@
 # 过滤器
 
-安装 `@sfajs/filter` 以支持请求过滤器功能
+安装 `@ipare/filter` 以支持请求过滤器功能
 
-另选择安装 `@sfajs/mva` 以支持视图渲染过滤器
+另选择安装 `@ipare/mva` 以支持视图渲染过滤器
 
-请求过滤器基于 `@sfajs/router`
+请求过滤器基于 `@ipare/router`
 
-`@sfajs/filter` 提供以下过滤器
+`@ipare/filter` 提供以下过滤器
 
 - ActionFilter: Action 运行前和运行后执行，比较通用，可以改变传入内容和返回结果，可以用于统一返回
 - AuthorizationFilter: Action 运行前执行，一般用于身份认证
 - ResourceFilter: Action 运行前和运行后执行，一般用于资源缓存
 - ExceptionFilter: Action 运行抛出异常时执行，一般用于自定义异常处理
 
-`@sfajs/mva` 提供以下过滤器
+`@ipare/mva` 提供以下过滤器
 
 - ResultFilter: 视图渲染前和渲染后执行，可以改变渲染模型和渲染模板，也可以改变渲染结果
 
@@ -28,7 +28,7 @@
 如
 
 ```TS
-import "@sfajs/filter"
+import "@ipare/filter"
 
 startup.useFilter()
 // OR
@@ -40,9 +40,9 @@ startup.useGlobalFilter(YourFilter, 1)
 如果使用过滤器依赖注入，需要在 `startup.useInject` 引入
 
 ```TS
-import "@sfajs/filter"
-import "@sfajs/router"
-import "@sfajs/inject"
+import "@ipare/filter"
+import "@ipare/router"
+import "@ipare/inject"
 
 startup
   // .use(...)
@@ -80,7 +80,7 @@ startup.useGlobalFilter(filter)
 
 ## 依赖注入
 
-过滤器支持 `@sfajs/inject` 依赖注入
+过滤器支持 `@ipare/inject` 依赖注入
 
 使用过滤器时，建议传入类而不是对象，可以让框架自动初始化过滤器
 

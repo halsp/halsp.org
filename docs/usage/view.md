@@ -1,13 +1,25 @@
 # 视图渲染
 
-安装 `@sfajs/view` 以支持视图渲染功能，用于构建一体化应用程序
+<p align="center">
+    <a href="https://github.com/ipare/view/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
+    <a href=""><img src="https://img.shields.io/npm/v/@ipare/view.svg" alt="npm version"></a>
+    <a href=""><img src="https://badgen.net/npm/dt/@ipare/view" alt="npm downloads"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
+    <a href="#"><img src="https://github.com/ipare/view/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/ipare/view/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/view/main.svg" alt="Test Coverage"></a>
+    <a href="https://github.com/ipare/view/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+    <a href="https://gitpod.io/#https://github.com/ipare/view"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
+    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+</p>
 
-`@sfajs/view` 支持多种视图模板，参考 [consolidate](https://github.com/tj/consolidate.js)
+安装 `@ipare/view` 以支持视图渲染功能，用于构建一体化应用程序
+
+`@ipare/view` 支持多种视图模板，基于 [consolidate](https://github.com/tj/consolidate.js)
 
 ## 安装
 
 ```
-npm i @sfajs/views
+npm i @ipare/views
 ```
 
 ## 快速开始
@@ -17,8 +29,8 @@ npm i @sfajs/views
 2. 启用中间件 `startup.useViews()`
 
 ```TS
-import { TestStartup } from "@sfajs/core";
-import "@sfajs/views";
+import { TestStartup } from "@ipare/core";
+import "@ipare/views";
 
 const res = await new TestStartup()
   .useViews()
@@ -60,7 +72,7 @@ startup.useViews({
 
 - ctx.view(): 管道 HttpContext 对象
 - md.view(): 中间件中可以使用 `this.view()` 渲染视图
-- res.view(): SfaResponse 对象
+- res.view(): Response 对象
 
 `view` 函数接收两个参数
 
@@ -77,7 +89,7 @@ startup.useViews({
 
 比如你需要在权限验证之后，将登录信息放入 `ctx.state`
 
-在你使用 `view` 渲染模板时，`@sfajs/views` 做了以下类似操作：
+在你使用 `view` 渲染模板时，`@ipare/views` 做了以下类似操作：
 
 ```JS
 const args = Object.assign({}, options, ctx.state, locals);

@@ -1,15 +1,15 @@
-# Http 服务
+# 原生 Http 服务
 
-安装 `@sfajs/http` 以支持 Http 运行环境
+安装 `@ipare/http` 以支持 Http 运行环境
 
-- 让 sfa 能够运行于 http(s)
-- 你可以随时将 sfa 云函数简单改为 nginx 托管的 sfa http 服务
-- 也可以将 nginx 托管的 sfa http 服务简单改为 sfa 云函数
+- 让 Ipare 能够运行于 http(s)
+- 你可以随时将 Ipare 云函数简单改为 nginx 托管的 Ipare http 服务
+- 也可以将 nginx 托管的 Ipare http 服务简单改为 Ipare 云函数
 
 ## 安装
 
 ```
-npm i @sfajs/http
+npm i @ipare/http
 ```
 
 ## 快速开始
@@ -17,37 +17,37 @@ npm i @sfajs/http
 以下示例开启一个服务，端口当然是 2333 啦
 
 ```JS
-import { SfaHttp } from "@sfajs/http";
+import { HttpStartup } from "@ipare/http";
 
-new SfaHttp()
+new HttpStartup()
   .use(async (ctx) => {
-    ctx.ok("@sfajs/http");
+    ctx.ok("@ipare/http");
   })
   .listen(2333);
 ```
 
-@sfajs/http 也支持 https，只需将上述示例中的 `SfaHttp` 改为 `SfaHttps`
+@ipare/http 也支持 https，只需将上述示例中的 `HttpStartup` 改为 `HttpsStartup`
 
 ## 组合其他中间件
 
-### @sfajs/router
+### @ipare/router
 
 ```JS
-import { SfaHttp } from "@sfajs/http";
-import "@sfajs/router";
+import { HttpStartup } from "@ipare/http";
+import "@ipare/router";
 
-new SfaHttp()
+new HttpStartup()
   .useRouter()
   .listen(2333);
 ```
 
-### @sfajs/static
+### @ipare/static
 
 ```JS
-import { SfaHttp } from "@sfajs/http";
-import "@sfajs/router";
+import { HttpStartup } from "@ipare/http";
+import "@ipare/router";
 
-new SfaHttp()
+new HttpStartup()
   .useStatic()
   .listen(2333);
 ```
@@ -57,8 +57,8 @@ new SfaHttp()
 内置四种 body 解析
 
 ```JS
-import { SfaHttp } from "@sfajs/http";
-new SfaHttp()
+import { HttpStartup } from "@ipare/http";
+new HttpStartup()
   .useHttpJsonBody()
   .useHttpTextBody()
   .useHttpUrlencodedBody()
@@ -151,14 +151,14 @@ startup.useHttpMultipartBody({
 
 ## `httpRes` & `httpReq`
 
-为了更好的利用 sfa，正常情况使用 `ctx.res` 和 `ctx.req` 即可，并且可以更好的配合其他中间件。
+为了更好的利用 ipare，正常情况使用 `ctx.res` 和 `ctx.req` 即可，并且可以更好的配合其他中间件。
 
-为了应对特殊需求，`@sfajs/http` 在 ctx 中可以加入了 `httpRes` 和 `httpReq`，特殊情况下你也可以按原生方法操作 `ctx.httpRes` 和 `ctx.httpReq`，但不建议使用。
+为了应对特殊需求，`@ipare/http` 在 ctx 中可以加入了 `httpRes` 和 `httpReq`，特殊情况下你也可以按原生方法操作 `ctx.httpRes` 和 `ctx.httpReq`，但不建议使用。
 
 如果调用了 `httpReq.end()`，`ctx.res` 将不会被写入返回结果
 
 ## 入口
 
-`SfaHttp` 和 `SfaHttps` 作为 `sfajs` 运行于 `Http` 的入口
+`HttpStartup` 和 `HttpsStartup` 作为 `Ipare` 运行于 `Http` 的入口
 
 该类继承于 `Startup` 并实现 `Http` 功能

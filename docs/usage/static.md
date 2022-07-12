@@ -1,6 +1,6 @@
 # 静态资源
 
-安装 `@sfajs/router` 以支持静态资源功能
+安装 `@ipare/router` 以支持静态资源功能
 
 - 能够返回静态资源
 - 能够匹配单个文件或整个文件夹
@@ -9,7 +9,7 @@
 ## 安装
 
 ```
-npm i @sfajs/static
+npm i @ipare/static
 ```
 
 ## 快速开始
@@ -17,14 +17,14 @@ npm i @sfajs/static
 使用 `startup.useStatic()`
 
 ```JS
-require("@sfajs/static");
+require("@ipare/static");
 const res = await new TestStartup().useStatic().run();
 ```
 
 或
 
 ```JS
-require("@sfajs/static");
+require("@ipare/static");
 const res = await new OtherStartup().useStatic().run();
 ```
 
@@ -32,11 +32,11 @@ const res = await new OtherStartup().useStatic().run();
 
 ## 匹配文件夹
 
-`@sfajs/static` 可以匹配整个文件夹，按文件系统匹配文件，`useStatic` 接收配置参数包含以下参数
+`@ipare/static` 可以匹配整个文件夹，按文件系统匹配文件，`useStatic` 接收配置参数包含以下参数
 
 #### dir
 
-`@sfajs/static` 会在该文件夹中按访问路径匹配文件
+`@ipare/static` 会在该文件夹中按访问路径匹配文件
 
 因此你也可以选择使用多个 `dir`参数不同的 `useStatic`
 
@@ -69,7 +69,7 @@ const res = await new TestStartup()
 
 #### file404
 
-`@sfajs/static` 如果找不到匹配的静态文件，会根据此值寻找文件：
+`@ipare/static` 如果找不到匹配的静态文件，会根据此值寻找文件：
 
 - 未设置，进入下一个中间件（如果存在）
 - 值为文件相对路径，将查找 `dir` 下的该文件
@@ -85,7 +85,7 @@ const res = await new TestStartup()
 
 ## 匹配文件
 
-`@sfajs/static` 也可以指定单个文件，`useStatic` 接收配置参数包含以下参数
+`@ipare/static` 也可以指定单个文件，`useStatic` 接收配置参数包含以下参数
 
 ### file
 

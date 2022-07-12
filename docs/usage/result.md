@@ -63,7 +63,7 @@ this.ctx.res.status = 200;
 ```
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 export class extends Middleware {
   async invoke() {
     this.noContent();
@@ -73,7 +73,7 @@ export class extends Middleware {
 ```
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 export class extends Middleware {
   async invoke() {
     const { account, password } = this.ctx.req.query;

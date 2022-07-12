@@ -2,11 +2,11 @@ import { defaultTheme, defineUserConfig } from "vuepress";
 
 export default defineUserConfig({
   lang: "zh-CN",
-  title: "SfaJS 文档",
-  description: "nodejs 渐进式 web 框架",
+  title: "Ipare 文档",
+  description: "面向云的现代渐进式轻量 Node.js 框架",
   base: "/",
   theme: defaultTheme({
-    docsRepo: "https://github.com/sfajs/sfajs.com",
+    docsRepo: "https://github.com/ipare/ipare.org",
     docsBranch: "main",
     docsDir: "docs",
     editLinkPattern: ":repo/edit/:branch/:path",
@@ -33,7 +33,7 @@ export default defineUserConfig({
       },
       {
         text: "GitHub",
-        link: "https://github.com/sfajs",
+        link: "https://github.com/ipare",
       },
     ],
     sidebar: {
@@ -48,11 +48,20 @@ export default defineUserConfig({
         },
         {
           text: "进阶",
-          children: ["view", "mva", "filter", "pipe", "koa", "static", "debug"],
+          children: [
+            "cli",
+            "view",
+            "mva",
+            "filter",
+            "pipe",
+            "koa",
+            "static",
+            "debug",
+          ],
         },
         {
           text: "运行环境",
-          children: ["env", "http", "cloudbase", "alifunc", "koa-env"],
+          children: ["env", "http", "lambda", "alifunc", "koa-env"],
         },
       ],
       "/plugin/": ["intro", "jwt", "swagger"],

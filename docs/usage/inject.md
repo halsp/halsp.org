@@ -1,27 +1,27 @@
 # 依赖注入
 
-借助 `@sfajs/inject` 可以实现 `sfa` 的 依赖注入
+借助 `@ipare/inject` 可以实现 `Ipare` 的 依赖注入
 
 你需要开启装饰器功能以使用此功能
 
 装饰器有两种方式：
 
-1. 在字段声明时使用装饰器 `@Inject`，`@sfajs/inject` 将在特定时机注入对应服务
-2. 在类声明时使用装饰器 `@Inject`，并在类构造函数中声明服务，`@sfajs/inject` 会在初始化类时注入对应服务
+1. 在字段声明时使用装饰器 `@Inject`，`@ipare/inject` 将在特定时机注入对应服务
+2. 在类声明时使用装饰器 `@Inject`，并在类构造函数中声明服务，`@ipare/inject` 会在初始化类时注入对应服务
 
 使用 `@Inject` 的类的实例对象将可以作为 `服务` 使用，你可以在中间件中使用此服务，也可以在其他服务中使用此服务
 
 ## 快速开始
 
 ```TS
-import "@sfajs/inject";
+import "@ipare/inject";
 startup.useInject();
 ```
 
 ```TS
-import "@sfajs/inject";
-import { Inject } from "@sfajs/inject";
-import { Middleware } from "@sfajs/core";
+import "@ipare/inject";
+import { Inject } from "@ipare/inject";
+import { Middleware } from "@ipare/core";
 
 class OtherService(){}
 
@@ -73,7 +73,7 @@ class TestMiddleware extends Middleware {
 你也可以指定注册的服务，以实现控制反转
 
 ```TS
-import "@sfajs/inject";
+import "@ipare/inject";
 
 startup.inject(IService, Service);
 // OR
@@ -89,7 +89,7 @@ startup.inject(IService, async (ctx) => await createService(ctx));
 可以指定 key 注入服务
 
 ```TS
-import "@sfajs/inject";
+import "@ipare/inject";
 
 startup.inject("SERVICE_KEY", Service);
 // OR
@@ -133,8 +133,8 @@ class TestMiddleware extends Middleware {
 3. Transient：瞬时，每处服务都会被单独初始化
 
 ```TS
-import "@sfajs/inject";
-import { InjectType } "@sfajs/inject";
+import "@ipare/inject";
+import { InjectType } "@ipare/inject";
 
 startup.inject(IService, Service, InjectType.Singleton);
 startup.inject(IService, Service, InjectType.Scoped);
@@ -180,9 +180,9 @@ class TestMiddleware extends Middleware{
 构造函数中也可以使用键值注入参数
 
 ```TS
-import "@sfajs/inject";
-import { Inject } from "@sfajs/inject";
-import { Middleware } from "@sfajs/core";
+import "@ipare/inject";
+import { Inject } from "@ipare/inject";
+import { Middleware } from "@ipare/core";
 
 class OtherService(){}
 
@@ -240,12 +240,12 @@ setup.add(async ()=> await Factory.creatMiddleware())
 
 有些服务可能没有写在其他服务中，也没有写在中间件中，就无法自动注入服务，需要手动注入服务
 
-`@sfajs/inject` 也支持手动注入服务，有两种方式注入
+`@ipare/inject` 也支持手动注入服务，有两种方式注入
 
 1. 你可以先创建对象再注入服务
 
 ```TS
-import { parseInject } from '@sfajs/inject'
+import { parseInject } from '@ipare/inject'
 
 const service = new Service();
 await parseInject(ctx, service);
@@ -259,7 +259,7 @@ const service = await parseInject(ctx, new Service());
 2. 也可以利用控制反转注入服务
 
 ```TS
-import { parseInject } from '@sfajs/inject'
+import { parseInject } from '@ipare/inject'
 
 const service = await parseInject(ctx, Service);
 ```
@@ -293,7 +293,7 @@ const service = await parseInject(ctx, Service);
 定义
 
 ```TS
-import { Inject } from "@sfajs/inject";
+import { Inject } from "@ipare/inject";
 
 const Host = Inject((ctx) => ctx.req.getHeader("Host"));
 const UserID = Inject((ctx) => ctx.req.query["uid"]);
@@ -307,7 +307,7 @@ function UserID(target:any, propertyKey: string|symbol){
 中间件
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 
 class TestMiddleware extends Middleware {
   @Host
@@ -349,7 +349,7 @@ class TestMiddleware extends Middleware {
 定义
 
 ```TS
-import { Inject,parseInject } from "@sfajs/inject";
+import { Inject,parseInject } from "@ipare/inject";
 
 class TestService1{}
 class TestService2{
@@ -369,7 +369,7 @@ const Service3 = Inject((ctx) => new TestService3());
 中间件
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 
 class TestMiddleware extends Middleware {
   @Service3

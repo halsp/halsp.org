@@ -1,8 +1,8 @@
 # 路由
 
-安装 `@sfajs/router` 以支持路由功能
+安装 `@ipare/router` 以支持路由功能
 
-`@sfajs/router` 有以下特点
+`@ipare/router` 有以下特点
 
 - 支持 RESTful 规范
 - 根据文件系统映射访问路径，彻底解耦无关联功能
@@ -12,7 +12,7 @@
 
 ## 安装
 
-npm i @sfajs/router
+npm i @ipare/router
 
 ## 简单使用
 
@@ -21,8 +21,8 @@ startup.useRouter()
 ```
 
 ```TS
-import { TestStartup } from "@sfajs/core";
-import "@sfajs/router";
+import { TestStartup } from "@ipare/core";
+import "@ipare/router";
 const res = await new TestStartup()
   .useRouter()
   .run();
@@ -44,8 +44,8 @@ const res = await new TestStartup()
     "build": "sfra"
   },
   "dependencies": {
-    "@sfajs/core": "^1.0.1",
-    "@sfajs/router": "^1.0.1"
+    "@ipare/core": "^1.0.1",
+    "@ipare/router": "^1.0.1"
   }
 }
 ```
@@ -60,23 +60,23 @@ npm run build
 
 ### 构建结果
 
-- js 项目，将生成 `sfa-router.map` 文件，你可能需要将该文件添加至 `.gitignore` 中
+- js 项目，将生成 `ipare-router.map` 文件，你可能需要将该文件添加至 `.gitignore` 中
 
-- ts 项目，将按 `tsconfig.json` 中的 `compilerOptions/target` 生成目标文件，同时也会在目标文件夹下生成 `sfa-router.map` 文件
+- ts 项目，将按 `tsconfig.json` 中的 `compilerOptions/target` 生成目标文件，同时也会在目标文件夹下生成 `ipare-router.map` 文件
 
 ## 路由（useRouter）
 
 如果你无需视图（view）层，注册路由中间件 `startup.useRouter` 仅支持路由功能，`startup.useRouter` 已包含此功能。
 
 ```TS
-import "@sfajs/router";
+import "@ipare/router";
 const res = await new TestStartup().useRouter().run();
 ```
 
 或
 
 ```TS
-import "@sfajs/router";
+import "@ipare/router";
 const res = await new OtherStartup().useRouter().run();
 ```
 
@@ -86,7 +86,7 @@ const res = await new OtherStartup().useRouter().run();
 
 `startup.useRouter` 接收可选参数 `RouterConfig`：
 
-- dir: 路由文件夹，`@sfajs/router` 能够将路由文件夹下的所有 `Action` 映射为 `http` 访问路径。所有 API Action 统一放在这个文件夹中，在该目录中，建立各 `Action` 文件或文件夹。`Action` 文件是 API 的最小执行单元，详情后面 [Action](##Action) 部分有介绍
+- dir: 路由文件夹，`@ipare/router` 能够将路由文件夹下的所有 `Action` 映射为 `http` 访问路径。所有 API Action 统一放在这个文件夹中，在该目录中，建立各 `Action` 文件或文件夹。`Action` 文件是 API 的最小执行单元，详情后面 [Action](##Action) 部分有介绍
 - prefix: 路由前缀
 
 ## 路由元数据
@@ -94,15 +94,15 @@ const res = await new OtherStartup().useRouter().run();
 你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
 
 ```TS
-import { Action } from "@sfajs/core"
+import { Action } from "@ipare/core"
 
 @SetActionMetadata("roles", ["admin"])
 export default class extends Action{}
 ```
 
 ```TS
-import "@sfajs/router";
-import { TestStartup } from "@sfajs/core"
+import "@ipare/router";
+import { TestStartup } from "@ipare/core"
 
 const res = await new TestStartup()
   .use(async (ctx, next)=>{
@@ -116,7 +116,7 @@ const res = await new TestStartup()
 也可以利用 `setActionMetadata` 创建自定义装饰器，更便捷的添加元数据
 
 ```TS
-import { setActionMetadata } from "@sfajs/router";
+import { setActionMetadata } from "@ipare/router";
 
 function Admin(target: any) {
   setActionMetadata(target, {
@@ -131,13 +131,13 @@ function Root(target: any) {
 ```
 
 ```TS
-import { Action } from "@sfajs/core"
+import { Action } from "@ipare/core"
 @Admin
 export default class extends Action{}
 ```
 
 ```TS
-import { Action } from "@sfajs/core"
+import { Action } from "@ipare/core"
 @Root
 export default class extends Action{}
 ```
@@ -145,8 +145,8 @@ export default class extends Action{}
 也可以使用 `getActionMetadata` 获取元数据
 
 ```TS
-import { Action } from "@sfajs/core"
-import { getActionMetadata } from "@sfajs/router";
+import { Action } from "@ipare/core"
+import { getActionMetadata } from "@ipare/router";
 
 @Root
 export default class extends Action{
@@ -158,7 +158,7 @@ export default class extends Action{
 
 ## 路由匹配
 
-在`@sfajs/router`中，路由与文件系统匹配。
+在`@ipare/router`中，路由与文件系统匹配。
 
 路由查询参数命名以 `^` 开头（文件系统中命名不允许出现字符 `:`），如果存在多个查询参数则后面的会覆盖前面的，如 `GET user/^id/todo/^id`，则 `id` 值为 `todoId`。正确命名应如 `user/^userId/todo/^todoId`。
 
@@ -288,7 +288,7 @@ export default class extends Action{
 在 action 文件 (`.ts/.js`) 中创建继承 `Action` 的类，并重写 `invoke` 函数
 
 ```JS
-import { Action } from "@sfajs/router";
+import { Action } from "@ipare/router";
 export default class extends Action {
   async invoke() {
     this.ok({
@@ -304,7 +304,7 @@ export default class extends Action {
 
 ## params
 
-`@sfajs/router` 会在 `ctx.req` 中添加 `params` 属性
+`@ipare/router` 会在 `ctx.req` 中添加 `params` 属性
 
 在 `startup.useRouter` 之前或之后的中间件，都可以获取 `ctx.req.params`
 

@@ -1,6 +1,6 @@
 # Swagger 文档
 
-安装 `@sfajs/swagger` 以使用 Swagger 文档，用于自动生成你的 sfa 文档
+安装 `@ipare/swagger` 以使用 Swagger 文档，用于自动生成你的 Ipare 文档
 
 基于 [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) 生成页面，在浏览器中使用 [swagger-ui](https://github.com/swagger-api/swagger-ui) 渲染 UI
 
@@ -9,8 +9,8 @@
 使用中间件的默认配置
 
 ```TS
-import { TestStartup } from "@sfajs/core";
-import "@sfajs/swagger";
+import { TestStartup } from "@ipare/core";
+import "@ipare/swagger";
 
 const res = await new TestStartup()
   .useSwagger()
@@ -26,7 +26,7 @@ console.log(res.body); // html
  * @openapi
  * /:
  *   get:
- *     description: Welcome to @sfajs/swagger!
+ *     description: Welcome to @ipare/swagger!
  *     responses:
  *       200:
  *         description: Returns a mysterious string.
@@ -133,7 +133,7 @@ const getHtml = (jsonStr) => `<!DOCTYPE html>
 </html>`;
 ```
 
-上述 `getHtml` 为 `@sfajs/swagger` 的默认实现
+上述 `getHtml` 为 `@ipare/swagger` 的默认实现
 
 ### 示例项目
 

@@ -1,22 +1,22 @@
 # Jwt 身份验证
 
-安装 `@sfajs/jwt` 以使用 Jwt 身份验证
+安装 `@ipare/jwt` 以使用 Jwt 身份验证
 
-`@sfajs/jwt` 基于以下内容
+`@ipare/jwt` 基于以下内容
 
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
-- [@sfajs/inject](https://github.com/sfajs/inject)
+- [@ipare/inject](https://github.com/ipare/inject)
 
 ## 快速开始
 
 ```TS
-import "@sfajs/jwt";
+import "@ipare/jwt";
 startup.useJwt(options);
 ```
 
 ```TS
-import "@sfajs/jwt";
-import { TestStartup } from "@sfajs/core";
+import "@ipare/jwt";
+import { TestStartup } from "@ipare/core";
 
 const res = await new TestStartup()
   .useJwt(options)
@@ -97,7 +97,7 @@ startup
 
 JwtService 提供了一些 jwt 方法
 
-在调用 `useJwt` 时就已经使用 `@sfajs/inject` 注入了 `JwtService`
+在调用 `useJwt` 时就已经使用 `@ipare/inject` 注入了 `JwtService`
 
 ### 引用
 
@@ -171,7 +171,7 @@ const jwtService = await parseInject(ctx, JwtService);
 `jwt token` 字符串
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{
@@ -185,7 +185,7 @@ class TestMiddleware extends Middleware{
 解析 `jwt token` 字符串并转为 json 对象
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{
@@ -199,7 +199,7 @@ class TestMiddleware extends Middleware{
 只取 jwt payload 部分，如果是 json 字符串，则会自动解析
 
 ```TS
-import { Middleware } from "@sfajs/core";
+import { Middleware } from "@ipare/core";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{

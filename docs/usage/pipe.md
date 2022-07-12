@@ -1,21 +1,21 @@
 # 管道
 
-安装 `@sfajs/pipe` 以支持管道功能
+安装 `@ipare/pipe` 以支持管道功能
 
 请求参数管道，用于校验、转换、格式化请求参数
 
 此处管道不同于管道上下文 `HttpContext`
 
-你需要使用装饰器并引入 `@sfajs/inject` 以使用此功能
+你需要使用装饰器并引入 `@ipare/inject` 以使用此功能
 
 用 `Query`, `Header`, `Param`, `Body`, `Context` 装饰字段，该字段在特定生命周期会被自动赋值
 
 ## 快速开始
 
 ```TS
-import "@sfajs/inject";
-import { Header, Query, Param, Body, Context } from "@sfajs/pipe";
-import { Middleware, ReadonlyDict, TestStartup, HttpContext } from "@sfajs/core";
+import "@ipare/inject";
+import { Header, Query, Param, Body, Context } from "@ipare/pipe";
+import { Middleware, ReadonlyDict, TestStartup, HttpContext } from "@ipare/core";
 
 class TestMiddleware extends Middleware {
   @Context
@@ -54,7 +54,7 @@ const res = await new TestStartup()
     .run();
 ```
 
-上述代码中的 `useInject` 会启用依赖注入，`@sfajs/pipe` 利用依赖注入实现功能
+上述代码中的 `useInject` 会启用依赖注入，`@ipare/pipe` 利用依赖注入实现功能
 
 需要注意的是，该功能只会在 `useInject` 之后的中间件中生效，因此你需要把 `useInject` 放在靠前的位置，根据实际项目决定
 
@@ -63,9 +63,9 @@ const res = await new TestStartup()
 在其他任意类中，你也可以利用控制反转实现实例化
 
 ```TS
-import { parseInject } from "@sfajs/inject";
-import { HttpContext } from "@sfajs/core";
-import { Header, Query, Context } from "@sfajs/pipe";
+import { parseInject } from "@ipare/inject";
+import { HttpContext } from "@ipare/core";
+import { Header, Query, Context } from "@ipare/pipe";
 
 class TestClass {
   @Context
@@ -89,7 +89,7 @@ const obj = parseInject(new TestClass());
 
 例如不能使用单例类或单例中间件，否则可能会在高并发下出现不可预知的问题
 
-在这样的中间件中不能使用 `@sfajs/pipe`，因为中间件是单例的：
+在这样的中间件中不能使用 `@ipare/pipe`，因为中间件是单例的：
 
 ```TS
 startup.use(new YourMiddleware())
@@ -109,7 +109,7 @@ startup.use((ctx) => md);
 传入类
 
 ```TS
-import { Query, ParseIntPipe } from "@sfajs/pipe"
+import { Query, ParseIntPipe } from "@ipare/pipe"
 
 @Query("field", ParseIntPipe)
 queryField: number;
@@ -146,7 +146,7 @@ query: any;
 创建一个类，实现 `PipeTransform` 接口，如
 
 ```TS
-import { Context, PipeTransform } from "@sfajs/pipe"
+import { Context, PipeTransform } from "@ipare/pipe"
 
 class ToStringPipe implements PipeTransform<any, string> {
   @Context

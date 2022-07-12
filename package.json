@@ -1,20 +1,19 @@
 {
-  "name": "sfajs.com",
+  "name": "ipare.org",
   "version": "0.0.2",
-  "description": "sfajs.com 官方网站",
+  "description": "ipare.org 官方网站",
   "author": "hal-wang",
   "license": "MIT",
-  "homepage": "https://sfajs.com",
+  "homepage": "https://ipare.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sfajs/sfajs.com"
+    "url": "https://github.com/ipare/ipare.org"
   },
   "keywords": [
-    "sfa",
-    "sfajs"
+    "ipare"
   ],
   "bugs": {
-    "url": "https://github.com/sfajs/sfajs.com/issues",
+    "url": "https://github.com/ipare/ipare.org/issues",
     "email": "support@hal.wang"
   },
   "scripts": {

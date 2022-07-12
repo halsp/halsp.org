@@ -8,9 +8,9 @@
 
 ## Startup
 
-为了让 sfa 能够在各类生产环境中使用，`Startup`类设计的较为开放，在 ts 中是个抽象类，因此该类不能直接使用，需要定义派生类并在合适的函数中调用 `invoke` 函数。
+为了让 ipare 能够在各类生产环境中使用，`Startup`类设计的较为开放，在 ts 中是个抽象类，因此该类不能直接使用，需要定义派生类并在合适的函数中调用 `invoke` 函数。
 
-`@sfajs/core` 提供了一个 `TestStartup` 类，该类没有任何运行环境，方便用于单元测试
+`@ipare/core` 提供了一个 `TestStartup` 类，该类没有任何运行环境，方便用于单元测试
 
 目前已支持的运行环境参考 [运行环境介绍](/usage/env)
 
@@ -20,11 +20,11 @@
 
 该对象包含以下内容：
 
-- res 字段: `SfaResponse` 实例对象
-- req 字段: `SfaRequest` 实例对象
+- res 字段: `Response` 实例对象
+- req 字段: `Request` 实例对象
 - bag 函数：用于在管道中传递更多内容
 
-### SfaResponse
+### Response
 
 作为 API 返回内容（在 Startup 可能会被解析后返回）
 
@@ -54,7 +54,7 @@
 }
 ```
 
-### SfaRequest
+### Request
 
 在中间件中，可通过 `this.ctx.req` 方式获取请求内容
 
@@ -76,7 +76,7 @@
 
 如果使用 TS，可以借泛型特性获得更多智能提示。
 
-sfa 支持两种引用类型的 bag
+ipare 支持两种引用类型的 bag
 
 - Singleton: 单例模式，添加后可多次获取同一引用
 - Transient: 临时模式，添加后每次获取都会创建一个新引用

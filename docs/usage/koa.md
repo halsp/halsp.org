@@ -1,27 +1,27 @@
 # 使用 Koa
 
-安装 `@sfajs/koa` 以支持 Koa 功能
+安装 `@ipare/koa` 以支持 Koa 功能
 
-- 让 koa 成为 sfa 的中间件
-- 或 sfa 成为 koa 的中间件
+- 让 koa 成为 ipare 的中间件
+- 或 ipare 成为 koa 的中间件
 - 并打通二者中间件管道
-- 让 `sfa` 可以使用大部分 `koa` 插件
-- 用 `koa` 托管 `sfa`
+- 让 `ipare` 可以使用大部分 `koa` 插件
+- 用 `koa` 托管 `ipare`
 
 ## 安装
 
 ```
-npm i @sfajs/koa
+npm i @ipare/koa
 ```
 
 ## 快速开始
 
-### 将 koa 作为 sfa 的中间件
+### 将 koa 作为 ipare 的中间件
 
 ```TS
-import { TestStartup } from "@sfajs/core";
-import "@sfajs/koa";
-import { Koa } from "@sfajs/koa";
+import { TestStartup } from "@ipare/core";
+import "@ipare/koa";
+import { Koa } from "@ipare/koa";
 
 const res = await new TestStartup()
   .use(async (ctx, next) => {
@@ -42,10 +42,10 @@ const res = await new TestStartup()
   .run();
 ```
 
-### 将 sfa 作为 koa 的中间件
+### 将 ipare 作为 koa 的中间件
 
 ```TS
-import { Koa } from "@sfajs/koa";
+import { Koa } from "@ipare/koa";
 
 const koa = new Koa()
   .use(async (ctx, next) => {
@@ -54,7 +54,7 @@ const koa = new Koa()
     console.log("step 5")
   })
   .use(
-    koaSfa((startup) => {
+    koaIpare((startup) => {
       startup.use(async (ctx, next) => {
         console.log("step 2")
         await next();
@@ -70,48 +70,48 @@ const server = koa.listen(2333);
 
 ## 中间件管道
 
-@sfajs/koa 会打通 sfa 和 koa 的中间件管道，就像你在 sfa 中使用 koa 中间件一样
+@ipare/koa 会打通 ipare 和 koa 的中间件管道，就像你在 ipare 中使用 koa 中间件一样
 
 管道流向：
 
-1. 在 useKoa 后仍有 sfa 中间件：sfa -> koa -> sfa -> koa -> sfa
-2. 在 useKoa 后没有 sfa 中间件，或 koa 某个中间件是管道终点：sfa -> koa -> sfa
+1. 在 useKoa 后仍有 ipare 中间件：ipare -> koa -> ipare -> koa -> ipare
+2. 在 useKoa 后没有 ipare 中间件，或 koa 某个中间件是管道终点：ipare -> koa -> ipare
 
 因此你还可以这样玩：
 
 ```TS
-import { TestStartup } from "@sfajs/core";
-import { Koa } from "@sfajs/koa";
+import { TestStartup } from "@ipare/core";
+import { Koa } from "@ipare/koa";
 import cors from "koa-cors";
 
 const res = await new TestStartup()
   .useKoa(
     new Koa()
       .use(async (ctx, next) => {
-        ctx.body = "Sfa loves Koa";
+        ctx.body = "Ipare loves Koa";
         await next();
       })
       .use(async (ctx) => {
-        ctx.setHeader("koa", "sfa");
+        ctx.setHeader("koa", "ipare");
         await next();
       })
   )
   .use(async (ctx, next) => {
-    console.log(ctx.res.body); // "Sfa loves Koa"
+    console.log(ctx.res.body); // "Ipare loves Koa"
     await next();
   })
   .useKoa(new Koa().use(cors()))
   .use(async (ctx) => {
-    console.log(ctx.res.getHeader("koa")); // "sfa"
+    console.log(ctx.res.getHeader("koa")); // "ipare"
   })
   .run();
 ```
 
 ## 使用流
 
-为了兼容各运行环境，sfa 的 ctx.body 都是已解析好的数据
+为了兼容各运行环境，ipare 的 ctx.body 都是已解析好的数据
 
-因此如果涉及到流，你有两种做法可以让 `@sfajs/koa` 正确解析
+因此如果涉及到流，你有两种做法可以让 `@ipare/koa` 正确解析
 
 1. 先解析
 
@@ -119,14 +119,14 @@ const res = await new TestStartup()
 
 1. 配置传入可读流
 
-useKoa 第二个参数的 streamingBody 传入一个函数，函数参数为 sfa 的 `ctx`，返回值类型为 `ReadableStream`
+useKoa 第二个参数的 streamingBody 传入一个函数，函数参数为 ipare 的 `ctx`，返回值类型为 `ReadableStream`
 
 如 http(s) 环境下
 
 ```TS
-import { SfaHttp } from "@sfajs/http";
+import { HttpStartup } from "@ipare/http";
 
-new SfaHttp().useKoa(new Koa(), {
+new HttpStartup().useKoa(new Koa(), {
   streamingBody: (ctx) => ctx.httpReq,
 });
 ```
@@ -134,9 +134,9 @@ new SfaHttp().useKoa(new Koa(), {
 如 阿里云函数 环境下
 
 ```TS
-import SfaAlifunc from "@sfajs/alifunc";
+import { AlifuncStartup } from "@ipare/alifunc";
 
-new SfaAlifunc(req, resp, context).useKoa(new Koa(), {
+new AlifuncStartup(req, resp, context).useKoa(new Koa(), {
   streamingBody: (ctx) => ctx.aliReq,
 });
 ```

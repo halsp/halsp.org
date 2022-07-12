@@ -1,14 +1,14 @@
 # MVA 框架
 
-安装 `@sfajs/mva` 以支持 MVA 功能
+安装 `@ipare/mva` 以支持 MVA 功能
 
-`@sfajs/mva` 基于 `@sfajs/router` ，`@sfajs/view`
+`@ipare/mva` 基于 `@ipare/router` ，`@ipare/view`
 
-`@sfajs/mva` 可以将路由返回结果，与模板自动对应并渲染返回
+`@ipare/mva` 可以将路由返回结果，与模板自动对应并渲染返回
 
 ## 安装
 
-npm i @sfajs/mva
+npm i @ipare/mva
 
 ## 简单使用
 
@@ -17,14 +17,14 @@ startup.useMva()
 ```
 
 ```TS
-import { TestStartup } from "@sfajs/core";
-import "@sfajs/mva";
+import { TestStartup } from "@ipare/core";
+import "@ipare/mva";
 const res = await new TestStartup()
   .useMva()
   .run();
 ```
 
-参考 `@sfajs/router` 在根目录中（ts 项目为 src 目录）添加以下文件夹：
+参考 `@ipare/router` 在根目录中（ts 项目为 src 目录）添加以下文件夹：
 
 1. 路由文件夹 `actions`，并编写 `action`，也可为其他，但通过 `routerConfig.dir` 参数指定
 2. 视图文件夹 `views` ，并编写相应视图模板，也可为其他，但通过 `viewsConfig.dir` 参数指定
@@ -39,7 +39,7 @@ const res = await new TestStartup()
 
 ## 过滤器
 
-基于 `@sfajs/filter`，提供了 `ResultFilter` 过滤器
+基于 `@ipare/filter`，提供了 `ResultFilter` 过滤器
 
 在渲染视图之前会执行 `onResultExecuting`，如果函数返回 false 将终止剩余 `ResultFilter` 过滤器执行，并取消渲染视图
 
@@ -50,7 +50,7 @@ const res = await new TestStartup()
 新建一个类并实现 `ResultFilter` 接口
 
 ```TS
-import { ResultFilter } from "@sfajs/mva";
+import { ResultFilter } from "@ipare/mva";
 
 class TestFilter implements ResultFilter {
   onResultExecuted(ctx: HttpContext): void | Promise<void> {

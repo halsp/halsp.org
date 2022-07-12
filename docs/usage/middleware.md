@@ -1,6 +1,6 @@
 # 中间件
 
-在 sfajs 中，大部分功能都是由中间件实现的
+在 Ipare 中，大部分功能都是由中间件实现的
 
 中间件的功能包括：
 
@@ -11,7 +11,7 @@
 
 ## 执行顺序
 
-sfajs 的中间件采用了洋葱圈模型，即
+Ipare 的中间件采用了洋葱圈模型，即
 
 - 进入中间件并执行代码
 - 执行下一个中间件
@@ -162,7 +162,7 @@ startup.hook(HookType, (ctx, md) => {})
 其中参数 1 可省略，默认为 `BeforeInvoke`
 
 ```TS
-  import { Middleware, TestStartup } from "@sfajs/core";
+  import { Middleware, TestStartup } from "@ipare/core";
 
   const startup = new TestStartup()
     .hook((md) => {
