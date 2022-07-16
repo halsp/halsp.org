@@ -15,9 +15,9 @@
   - 源码：<https://github.com/ipare/lambda>
   - 文档：<https://ipare.org/usage/lambda>
 - 阿里云函数计算
-  - NPM 包：[@ipare/alifunc](https://www.npmjs.com/package/@ipare/alifunc)
-  - 源码：<https://github.com/ipare/alifunc>
-  - 文档：<https://ipare.org/usage/alifunc>
+  - NPM 包：[@ipare/alifc](https://www.npmjs.com/package/@ipare/alifc)
+  - 源码：<https://github.com/ipare/alifc>
+  - 文档：<https://ipare.org/usage/alifc>
 
 > 🎉 更多环境欢迎贡献并编辑此 [README](https://github.com/ipare/ipare.org/edit/main/docs/usage/env.md) 以添加
 

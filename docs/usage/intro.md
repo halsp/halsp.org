@@ -10,7 +10,7 @@
     <a href="https://github.com/ipare/core/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
     <a href=""><img src="https://img.shields.io/npm/v/@ipare/core.svg" alt="npm version"></a>
     <a href=""><img src="https://badgen.net/npm/dt/@ipare/core" alt="npm downloads"></a>
-    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/core.svg" alt="node compatibility"></a>
     <a href="#"><img src="https://github.com/ipare/core/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
     <a href="https://codecov.io/gh/ipare/core/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/core/main.svg" alt="Test Coverage"></a>
     <a href="https://github.com/ipare/core/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>

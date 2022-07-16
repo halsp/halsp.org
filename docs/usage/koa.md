@@ -134,9 +134,9 @@ new HttpStartup().useKoa(new Koa(), {
 如 阿里云函数 环境下
 
 ```TS
-import { AlifuncStartup } from "@ipare/alifunc";
+import { AlifcStartup } from "@ipare/alifc";
 
-new AlifuncStartup(req, resp, context).useKoa(new Koa(), {
+new AlifcStartup(req, resp, context).useKoa(new Koa(), {
   streamingBody: (ctx) => ctx.aliReq,
 });
 ```
