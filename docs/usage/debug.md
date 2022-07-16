@@ -2,28 +2,32 @@
 
 此教程使用 vscode 断点调试 Ipare 项目
 
-Serverless 项目调试需要使用 `@ipare/http` 模拟 Http 环境
+非 `@ipare/http` 项目调试，会自动使用 `@ipare/http` 模拟原生 Http 环境
 
-## 环境配置
+## CLI 创建的项目
 
-如果运行环境是 [Http 服务](/usage/http) 可以跳过此部分
+由 `@ipare/cli` 创建的项目已经配置好调试环境，可以用 vscode 打开项目并按下 F5 开始调试
 
-如果运行环境是其他，可以创建 `Http 服务` 用于本地调试
+或运行这个命令
 
-教程使用 TypeScript，你也可以使用对应的 JavaScript
+```bash
+npm start
+```
+
+## 不是 CLI 创建的项目
+
+如果不是 `@ipare/cli` 创建的项目，并且没有调试配置，可以参考以下步骤配置
 
 ### 安装
 
-安装以下插件
-
-- `@ipare/http`: Ipare 的 `Http 服务` 运行环境
-- `ts-node`: 用于运行 TypeScript 代码
-- `nodemon`: 用于监控文件修改自动编译
+确保已在项目内或全局安装 `@ipare/cli`
 
 ```bash
-npm i @ipare/http -D
-npm i ts-node -D
-npm i nodemon -D
+# 项目中安装
+npm install @ipare/cli -D
+
+# 或 全局安装
+npm install @ipare/cli -g
 ```
 
 ### 创建脚本
@@ -32,58 +36,30 @@ npm i nodemon -D
 
 ```JSON
   "scripts": {
-    "dev": "nodemon --exec ts-node ./http.ts",
+    "dev": "ipare start --mode development --watch",
+    "start": "npm run dev",
+    "build": "ipare build"
   },
 ```
 
-### 创建测试入口
-
-创建文件 `http.ts` 并添加相应中间件
-
-```TS
-import "@ipare/http";
-import { HttpStartup } from "@ipare/http";
-
-new HttpStartup()
-  .useHttpJsonBody()
-  .use((ctx) => {
-    console.log(ctx.req.method, ctx.req.path);
-  })
-  .listen(2333);
-```
-
-## 调试配置
+### 增加调试配置
 
 在项目下创建 `.vscode/launch.json` 文件
 
 ```JSON
 {
-    "version": "0.2.0",
-    "configurations": [{
-        "name": "Ipare Http Debugger",
-        "type": "node",
-        "request": "launch",
-        "cwd": "${workspaceRoot}",
-        "runtimeExecutable": "npm",
-        "windows": {
-            "runtimeExecutable": "npm.cmd"
-        },
-        "runtimeArgs": [
-            "run",
-            "dev"
-        ],
-        "env": {
-            "NODE_ENV": "local"
-        },
-        "console": "integratedTerminal",
-        "protocol": "auto",
-        "restart": true,
-        "port": 2333,
-        "autoAttachChildProcesses": true
-    }]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "command": "npm start",
+      "name": "Ipare Http Debugger",
+      "request": "launch",
+      "type": "node-terminal"
+    }
+  ]
 }
 ```
 
-## 开始调试
+### 开始调试
 
 按下 F5 即可开始断点调试
