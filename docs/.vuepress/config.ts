@@ -40,7 +40,7 @@ export default defineUserConfig({
       "/usage/": [
         {
           text: "新手指南",
-          children: ["intro", "quickstart"],
+          children: ["intro", "quickstart", "appoint"],
         },
         {
           text: "基础",
@@ -61,7 +61,7 @@ export default defineUserConfig({
         },
         {
           text: "运行环境",
-          children: ["env", "http", "lambda", "alifunc", "koa-env"],
+          children: ["env", "http", "lambda", "alifc", "koa-env"],
         },
       ],
       "/plugin/": ["intro", "jwt", "swagger"],
