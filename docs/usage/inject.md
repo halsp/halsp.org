@@ -1,15 +1,46 @@
 # 依赖注入
 
+<p align="center" class="tags">
+    <a href="https://github.com/ipare/inject/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
+    <a href=""><img src="https://img.shields.io/npm/v/@ipare/inject.svg" alt="npm version"></a>
+    <a href=""><img src="https://badgen.net/npm/dt/@ipare/inject" alt="npm downloads"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/inject.svg" alt="node compatibility"></a>
+    <a href="#"><img src="https://github.com/ipare/inject/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/ipare/inject/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/inject/main.svg" alt="Test Coverage"></a>
+    <a href="https://github.com/ipare/inject/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+    <a href="https://gitpod.io/#https://github.com/ipare/inject"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
+    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+</p>
+
 借助 `@ipare/inject` 可以实现 `Ipare` 的 依赖注入
 
-你需要开启装饰器功能以使用此功能
+## 装饰器
+
+你需要开启装饰器功能以使用依赖注入
 
 装饰器有两种方式：
 
-1. 在字段声明时使用装饰器 `@Inject`，`@ipare/inject` 将在特定时机注入对应服务
+1. 在字段声明时使用装饰器 `@Inject`，`@ipare/inject` 将在初始化后注入对应服务
+
+```TS
+class OtherService(){}
+
+class TestService{
+  @Inject
+  private readonly otherService!: OtherService;
+}
+```
+
 2. 在类声明时使用装饰器 `@Inject`，并在类构造函数中声明服务，`@ipare/inject` 会在初始化类时注入对应服务
 
-使用 `@Inject` 的类的实例对象将可以作为 `服务` 使用，你可以在中间件中使用此服务，也可以在其他服务中使用此服务
+```TS
+class OtherService(){}
+
+@Inject
+class TestService{
+  constructor(private readonly otherService: OtherService){}
+}
+```
 
 ## 快速开始
 
@@ -55,9 +86,32 @@ const res = await new TestStartup().useInject().add(TestMiddleware).run();
 - 中间件：在 `invoke` 函数被执行前会初始化 `@Inject` 装饰的字段
 - 其他类：在类构造函数执行完毕后立即初始化 `@Inject` 装饰的字段
 
+## 作用域
+
+服务的作用域分为三种
+
+1. Singleton：单例，nodejs 运行期间只初始化一次，即同时只会存在一个对象
+2. Scoped：单次访问，每次网络访问会初始化一次，每次网络访问结束后此对象会被丢弃
+3. Transient：瞬时，每处服务都会被单独初始化
+
+```TS
+import "@ipare/inject";
+import { InjectType } "@ipare/inject";
+
+startup.inject(IService, Service, InjectType.Singleton);
+startup.inject(IService, Service, InjectType.Scoped);
+startup.inject(IService, Service, InjectType.Transient);
+```
+
+需要注意的是，在云函数中，不能保证服务是单例的，因为云函数可能在调用完毕即销毁，下次调用启动新实例
+
 ## 注册服务
 
-没有被注册的服务，会自动实例化字段对应的类，如
+服务的注册分为隐式注册和显示注册
+
+### 隐式注册
+
+自动注册的服务，可以自动实例化特定类，仅支持 `Scoped` 作用域的服务，如
 
 ```TS
 class TestMiddleware extends Middleware {
@@ -66,11 +120,13 @@ class TestMiddleware extends Middleware {
 }
 ```
 
-`testService` 字段值将自动被实例化
+`testService` 字段值将自动被实例化，值为 `TestService` 实例对象
 
 `TestService` 类构造函数的参数，也可以自动初始化
 
-你也可以指定注册的服务，以实现控制反转
+### 显式注册
+
+可以指定实例化派生类或服务的作用域，以实现控制反转
 
 ```TS
 import "@ipare/inject";
@@ -86,7 +142,7 @@ startup.inject(IService, async (ctx) => await createService(ctx));
 
 ## 键值注入
 
-可以指定 key 注入服务
+你还可以使用特定的 Key 注入服务
 
 ```TS
 import "@ipare/inject";
@@ -122,23 +178,6 @@ class TestMiddleware extends Middleware {
   @Inject("KEY3")
   private readonly key3!: number; // 2333
 }
-```
-
-## 作用域
-
-依赖注入服务的作用域分为三种
-
-1. Singleton：单例，nodejs 运行期间只初始化一次，即同时只会存在一个对象
-2. Scoped：单次访问，每次网络访问会初始化一次，每次网络访问结束后此对象会被丢弃
-3. Transient：瞬时，每处服务都会被单独初始化
-
-```TS
-import "@ipare/inject";
-import { InjectType } "@ipare/inject";
-
-startup.inject(IService, Service, InjectType.Singleton);
-startup.inject(IService, Service, InjectType.Scoped);
-startup.inject(IService, Service, InjectType.Transient);
 ```
 
 ## 服务的嵌套

@@ -16,13 +16,13 @@
 
 ## HttpContext
 
-请求管道中的内容都在 `HttpContext` 对象之中，每个中间件都可以调用 `this.ctx` 来获取或修改管道内容
+中间件管道中的内容都在 `HttpContext` 对象之中，每个中间件都可以调用 `this.ctx` 来获取或修改中间件管道内容
 
 该对象包含以下内容：
 
 - res 字段: `Response` 实例对象
 - req 字段: `Request` 实例对象
-- bag 函数：用于在管道中传递更多内容
+- bag 函数：用于在中间件管道中传递更多内容
 
 ### Response
 
@@ -42,18 +42,6 @@
 
 在每个中间件都可以修改 `this.ctx.res` 中的内容
 
-#### X-HTTP-Method-Override
-
-如果请求头部包含 `X-HTTP-Method-Override` 参数，则访问方法 `httpMethod` 以 `X-HTTP-Method-Override` 值为准
-
-比如 Action 要求 `PATCH` 请求，但微信小程序不支持 `PATCH`，那么可以使用 `POST` 访问，并在头部加上此参数，值为 `PATCH`
-
-```JSON
-"headers":{
-  "X-HTTP-Method-Override": "PATCH"
-}
-```
-
 ### Request
 
 在中间件中，可通过 `this.ctx.req` 方式获取请求内容
@@ -69,6 +57,18 @@
 - hasHeader: 判断 header 是否存在，忽略 key 大小写
 - removeHeader: 移除一个 header，忽略 key 大小写
 - getHeader: 获取一个 header 值，忽略 key 大小写
+
+#### X-HTTP-Method-Override
+
+如果请求头部包含 `X-HTTP-Method-Override` 参数，则访问方法 `httpMethod` 以 `X-HTTP-Method-Override` 值为准
+
+比如 Action 要求 `PATCH` 请求，但微信小程序不支持 `PATCH`，那么可以使用 `POST` 访问，并在头部加上此参数，值为 `PATCH`
+
+```JSON
+"headers":{
+  "X-HTTP-Method-Override": "PATCH"
+}
+```
 
 ### `bag` 函数
 

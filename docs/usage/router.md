@@ -1,5 +1,17 @@
 # 路由
 
+<p align="center" class="tags">
+    <a href="https://github.com/ipare/router/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
+    <a href=""><img src="https://img.shields.io/npm/v/@ipare/router.svg" alt="npm version"></a>
+    <a href=""><img src="https://badgen.net/npm/dt/@ipare/router" alt="npm downloads"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/router.svg" alt="node compatibility"></a>
+    <a href="#"><img src="https://github.com/ipare/router/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/ipare/router/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/router/main.svg" alt="Test Coverage"></a>
+    <a href="https://github.com/ipare/router/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+    <a href="https://gitpod.io/#https://github.com/ipare/router"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
+    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+</p>
+
 安装 `@ipare/router` 以支持路由功能
 
 `@ipare/router` 有以下特点
@@ -28,45 +40,34 @@ const res = await new TestStartup()
   .run();
 ```
 
-## 构建
+## 约定
 
-在 package.json 文件的 scripts 节点下添加
+路由文件夹默认为 `src/actions`
 
-```JSON
-"build": "sfra" // 等价于 sfra actions, actions 为路由文件夹路径
+当然你也可以指定其他文件夹，需配置 `ipare-cli.config.ts`，增加 `routerActionsDir` ，如
+
+```ts
+import { defineConfig, Configuration } from "@ipare/cli";
+export default defineConfig(({ mode }) => {
+  return {
+    routerActionsDir: "custom-actions",
+  } as Configuration;
+});
 ```
 
-`sfra` 命令有个可选参数，默认值为 `actions`，是 action 所在目录
+## 编译
 
-```JSON
-{
-  "scripts": {
-    "build": "sfra"
-  },
-  "dependencies": {
-    "@ipare/core": "^1.0.1",
-    "@ipare/router": "^1.0.1"
-  }
-}
-```
+使用 `@ipare/cli` 的编译命令 `ipare build` 时，`@ipare/router` 会扫描路由文件夹并创建映射表
 
-在根目录中（ts 项目为 src 目录）添加路由文件夹 `actions`，并编写 `action`，也可为其他，但需通过 `routerConfig.dir` 参数指定
+用于快速匹配路由，增加程序启动速度
 
-构建时运行
+### 编译结果
 
-```
-npm run build
-```
+将会在目标文件夹下或缓存文件夹 `.ipare-cache` 生成 `ipare-router.config` 文件
 
-### 构建结果
+## 注册（useRouter）
 
-- js 项目，将生成 `ipare-router.map` 文件，你可能需要将该文件添加至 `.gitignore` 中
-
-- ts 项目，将按 `tsconfig.json` 中的 `compilerOptions/target` 生成目标文件，同时也会在目标文件夹下生成 `ipare-router.map` 文件
-
-## 路由（useRouter）
-
-如果你无需视图（view）层，注册路由中间件 `startup.useRouter` 仅支持路由功能，`startup.useRouter` 已包含此功能。
+注册路由中间件 `startup.useRouter` 以支持路由功能
 
 ```TS
 import "@ipare/router";
@@ -84,77 +85,11 @@ const res = await new OtherStartup().useRouter().run();
 
 ## 配置参数
 
-`startup.useRouter` 接收可选参数 `RouterConfig`：
+`startup.useRouter` 接收可选参数 `RouterOptions`：
 
-- dir: 路由文件夹，`@ipare/router` 能够将路由文件夹下的所有 `Action` 映射为 `http` 访问路径。所有 API Action 统一放在这个文件夹中，在该目录中，建立各 `Action` 文件或文件夹。`Action` 文件是 API 的最小执行单元，详情后面 [Action](##Action) 部分有介绍
+- dir: 路由文件夹，若设置该参数，在运行阶段（编译时不起作用），将覆盖 `ipare-cli.config.ts` 中的 `routerActionsDir`
 - prefix: 路由前缀
-
-## 路由元数据
-
-你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
-
-```TS
-import { Action } from "@ipare/core"
-
-@SetActionMetadata("roles", ["admin"])
-export default class extends Action{}
-```
-
-```TS
-import "@ipare/router";
-import { TestStartup } from "@ipare/core"
-
-const res = await new TestStartup()
-  .use(async (ctx, next)=>{
-    const role = ctx.actionMetadata.role; // admin
-    await next();
-  })
-  .useRouter()
-  .run();
-```
-
-也可以利用 `setActionMetadata` 创建自定义装饰器，更便捷的添加元数据
-
-```TS
-import { setActionMetadata } from "@ipare/router";
-
-function Admin(target: any) {
-  setActionMetadata(target, {
-    role: 'admin',
-  });
-}
-function Root(target: any) {
-  setActionMetadata(target, {
-    role: 'root',
-  });
-}
-```
-
-```TS
-import { Action } from "@ipare/core"
-@Admin
-export default class extends Action{}
-```
-
-```TS
-import { Action } from "@ipare/core"
-@Root
-export default class extends Action{}
-```
-
-也可以使用 `getActionMetadata` 获取元数据
-
-```TS
-import { Action } from "@ipare/core"
-import { getActionMetadata } from "@ipare/router";
-
-@Root
-export default class extends Action{
-  async invoke(){
-    const metadata = getActionMetadata(this);
-  }
-}
-```
+- customMethods: 自定义请求方法数组，如 ['custom-get','custom-post']
 
 ## 路由匹配
 
@@ -304,10 +239,6 @@ export default class extends Action {
 
 ## params
 
-`@ipare/router` 会在 `ctx.req` 中添加 `params` 属性
-
-在 `startup.useRouter` 之前或之后的中间件，都可以获取 `ctx.req.params`
-
 `params` 内容是 RESTful 路径中的参数，如
 
 - 访问路径：`/user/66/todo/88`
@@ -322,31 +253,112 @@ export default class extends Action {
 }
 ```
 
-## 关于 TS
+`@ipare/router` 会在 `ctx.req` 中添加 `params` 属性
 
-如果你在 `tsconfig.json` 中设置了输出文件夹 `compilerOptions/outDir`，那么 `sfra` 命令参数中的路由文件夹是 `outDir` 下的相对路径
+## 路由元数据
 
-```JSON
-// tsconfig.json
-{
-  "compilerOptions": {
-    "outDir": "dist"
+你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
+
+```TS
+import { Action } from "@ipare/core"
+
+@SetActionMetadata("roles", ["admin"])
+export default class extends Action{}
+```
+
+```TS
+import "@ipare/router";
+import { TestStartup } from "@ipare/core"
+
+const res = await new TestStartup()
+  .use(async (ctx, next)=>{
+    const role = ctx.actionMetadata.role; // admin
+    await next();
+  })
+  .useRouter()
+  .run();
+```
+
+也可以利用 `setActionMetadata` 创建自定义装饰器，更便捷的添加元数据
+
+```TS
+import { setActionMetadata } from "@ipare/router";
+
+function Admin(target: any) {
+  setActionMetadata(target, {
+    role: 'admin',
+  });
+}
+function Root(target: any) {
+  setActionMetadata(target, {
+    role: 'root',
+  });
+}
+```
+
+```TS
+import { Action } from "@ipare/core"
+@Admin
+export default class extends Action{}
+```
+
+```TS
+import { Action } from "@ipare/core"
+@Root
+export default class extends Action{}
+```
+
+也可以使用 `getActionMetadata` 获取元数据
+
+```TS
+import { Action } from "@ipare/core"
+import { getActionMetadata } from "@ipare/router";
+
+@Root
+export default class extends Action{
+  async invoke(){
+    const metadata = getActionMetadata(this);
   }
 }
 ```
 
-如 `outDir` 值为 `dist`，构建命令为 `sfra actions`，那么 `dist/actions` 应该是生产用的路由文件夹
+## HttpMethod 装饰器
 
-### 静态文件
+`@ipare/router` 提供以下装饰器用于指定 `Action` 的请求方法和请求路径
 
-如果有非 ts 文件，你需要在 `tsconfig.json` 中加入 static 节点并添加相应文件
+- HttpGet
+- HttpPost
+- HttpPatch
+- HttpDelete
+- HttpPut
+- HttpHead
+- HttpOptions
+- HttpConnect
+- HttpTrace
+- HttpCustom
 
-```JSON
-"static": [
-  {
-    "source": "static", // 原文件夹在根目录下的相对路径
-    "target": "assets" // 目标文件夹在 outDir 下的相对路径
-  },
-  "static.txt"
-]
+使用方式如
+
+```TS
+import { HttpGet } from '@ipare/router';
+
+@HttpGet
+export default class extends Action {
+  async invoke(): Promise<void> {
+    this.ok("method");
+  }
+}
+```
+
+或
+
+```TS
+import { HttpGet } from '@ipare/router';
+
+@HttpGet("test/^id")
+export default class extends Action {
+  async invoke(): Promise<void> {
+    this.ok("method");
+  }
+}
 ```

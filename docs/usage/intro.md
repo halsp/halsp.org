@@ -34,7 +34,7 @@ Ipare 是一个高效可伸缩的渐进式 nodejs 框架
 
 ## 环境准备
 
-- <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
+- <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/core.svg" alt="node compatibility"></a>
 
 ## 提问
 
