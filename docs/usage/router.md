@@ -12,7 +12,7 @@
     <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
 </p>
 
-安装 `@ipare/router` 以支持路由功能
+添加 `@ipare/router` 以支持路由功能
 
 `@ipare/router` 有以下特点
 

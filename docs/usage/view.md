@@ -4,7 +4,7 @@
     <a href="https://github.com/ipare/view/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
     <a href=""><img src="https://img.shields.io/npm/v/@ipare/view.svg" alt="npm version"></a>
     <a href=""><img src="https://badgen.net/npm/dt/@ipare/view" alt="npm downloads"></a>
-    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/view.svg" alt="node compatibility"></a>
     <a href="#"><img src="https://github.com/ipare/view/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
     <a href="https://codecov.io/gh/ipare/view/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/view/main.svg" alt="Test Coverage"></a>
     <a href="https://github.com/ipare/view/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
@@ -19,7 +19,7 @@
 ## 安装
 
 ```
-npm i @ipare/views
+npm i @ipare/view
 ```
 
 ## 快速开始
@@ -30,7 +30,7 @@ npm i @ipare/views
 
 ```TS
 import { TestStartup } from "@ipare/core";
-import "@ipare/views";
+import "@ipare/view";
 
 const res = await new TestStartup()
   .useViews()
@@ -66,13 +66,13 @@ startup.useViews({
 
 默认为 `views`, 所有视图将在视图文件夹中查找
 
-## `.view`
+## 渲染函数 `view()`
 
 你可以在三个地方使用 `view()` 函数渲染视图
 
-- ctx.view(): 管道 HttpContext 对象
-- md.view(): 中间件中可以使用 `this.view()` 渲染视图
-- res.view(): Response 对象
+- ctx.view(): 管道 HttpContext 类实例方法
+- md.view(): 中间件中可以使用 `this.view()` 实例方法渲染视图
+- res.view(): Response 类实例方法
 
 `view` 函数接收两个参数
 

@@ -12,7 +12,7 @@
     <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
 </p>
 
-借助 `@ipare/inject` 可以实现 `Ipare` 的 依赖注入
+添加 `@ipare/inject` 以实现 `Ipare` 的 依赖注入
 
 ## 装饰器
 
