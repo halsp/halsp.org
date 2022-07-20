@@ -1,5 +1,17 @@
 # 过滤器
 
+<p align="center" class="tags">
+    <a href="https://github.com/ipare/filter/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
+    <a href=""><img src="https://img.shields.io/npm/v/@ipare/filter.svg" alt="npm version"></a>
+    <a href=""><img src="https://badgen.net/npm/dt/@ipare/filter" alt="npm downloads"></a>
+    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/filter.svg" alt="node compatibility"></a>
+    <a href="#"><img src="https://github.com/ipare/filter/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/ipare/filter/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/filter/main.svg" alt="Test Coverage"></a>
+    <a href="https://github.com/ipare/filter/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+    <a href="https://gitpod.io/#https://github.com/ipare/filter"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
+    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+</p>
+
 安装 `@ipare/filter` 以支持请求过滤器功能
 
 另选择安装 `@ipare/mva` 以支持视图渲染过滤器
@@ -35,23 +47,9 @@ startup.useFilter()
 startup.useGlobalFilter(YourFilter, 1)
 ```
 
-需要在 `startup.useRouter` 之前引入
-
-如果使用过滤器依赖注入，需要在 `startup.useInject` 引入
-
-```TS
-import "@ipare/filter"
-import "@ipare/router"
-import "@ipare/inject"
-
-startup
-  // .use(...)
-  .useInject()
-  // .use(...)
-  .useFilter()
-  // .use(...)
-  .useRouter()
-```
+:::tip 注意
+过滤器需要在 `startup.useRouter` 或 `startup.useMva` 之前引入
+:::
 
 ## 在 Action 上使用过滤器
 
@@ -68,19 +66,35 @@ export default class extends Action{
 
 ## 全局过滤器
 
-用以下函数添加过滤器
+用以下方式添加全局过滤器
 
 ```TS
 startup.useGlobalFilter(filter)
 ```
 
-注意此函数应在 `useRouter` 之前调用
+:::tip 注意
+应在 `useRouter` 之前添加全局过滤器
+:::
 
-可以调用多次，每次都会添加一个全局过滤器
+全局过滤器可以添加多个，每次使用 `useGlobalFilter` 都会添加一个全局过滤器
 
 ## 依赖注入
 
-过滤器支持 `@ipare/inject` 依赖注入
+过滤器支持 `@ipare/inject` 依赖注入，要在 `startup.useInject` 之后引入过滤器
+
+```TS
+import "@ipare/filter"
+import "@ipare/router"
+import "@ipare/inject"
+
+startup
+  // .use(...)
+  .useInject()
+  // .use(...)
+  .useFilter()
+  // .use(...)
+  .useRouter()
+```
 
 使用过滤器时，建议传入类而不是对象，可以让框架自动初始化过滤器
 

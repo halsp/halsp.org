@@ -51,8 +51,8 @@ export default defineUserConfig({
           children: [
             "cli",
             "view",
-            "mva",
             "filter",
+            "mva",
             "pipe",
             "koa",
             "static",

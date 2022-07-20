@@ -26,15 +26,15 @@ const res = await new TestStartup()
 
 参考 `@ipare/router` 在根目录中（ts 项目为 src 目录）添加以下文件夹：
 
-1. 路由文件夹 `actions`，并编写 `action`，也可为其他，但通过 `routerConfig.dir` 参数指定
-2. 视图文件夹 `views` ，并编写相应视图模板，也可为其他，但通过 `viewsConfig.dir` 参数指定
+1. 路由文件夹 `actions`，并编写 `action`，也可为其他，但通过 `routerOptions.dir` 参数指定
+2. 视图文件夹 `views` ，并编写相应视图模板，也可为其他，但通过 `viewOptions.dir` 参数指定
 
 ## 配置参数
 
 `useMvc` 接收一个可选配置参数
 
-- viewsConfig: `useViews` 参数
-- routerConfig: `useRouter` 参数
+- viewOptions: 与 `useViews` 参数相同
+- routerOptions: 与 `useRouter` 参数相同
 - codes: 指定状态码对应的模板
 
 ## 过滤器
