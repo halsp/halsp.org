@@ -1,17 +1,5 @@
 # 参数校验
 
-<p align="center">
-    <a href="https://github.com/ipare/validator/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
-    <a href=""><img src="https://img.shields.io/npm/v/@ipare/validator.svg" alt="npm version"></a>
-    <a href=""><img src="https://badgen.net/npm/dt/@ipare/validator" alt="npm downloads"></a>
-    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/validator.svg" alt="node compatibility"></a>
-    <a href="#"><img src="https://github.com/ipare/validator/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/ipare/validator/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/validator/main.svg" alt="Test Coverage"></a>
-    <a href="https://github.com/ipare/validator/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
-    <a href="https://gitpod.io/#https://github.com/ipare/validator"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
-    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-</p>
-
 安装 `@ipare/validate` 以支持参数校验功能
 
 基于 [class-validator](https://github.com/typestack/class-validator) 和 [@ipare/pipe](https://github.com/ipare/pipe) 校验请求参数

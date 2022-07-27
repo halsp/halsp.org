@@ -25,7 +25,7 @@ npm init ipare
 ? Pick the package manager to use when installing dependencies: Use NPM
 ```
 
-`create-ipare` 是 Ipare 的官方项目脚手架工具，由 [@ipare/cli](https://github.com/ipare/cli) 自动生成，并且功能完全和 `@ipare/cli` 的 `ipare create` 命令相同。
+`create-ipare` 是 Ipare 的官方项目脚手架工具，由 `@ipare/cli` 自动生成，并且功能完全和 `@ipare/cli` 的 `ipare create` 命令相同。
 
 ### 启动
 
