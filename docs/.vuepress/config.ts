@@ -48,23 +48,14 @@ export default defineUserConfig({
         },
         {
           text: "进阶",
-          children: [
-            "cli",
-            "view",
-            "filter",
-            "mva",
-            "pipe",
-            "koa",
-            "static",
-            "debug",
-          ],
+          children: ["cli", "view", "filter", "mva", "pipe", "koa", "debug"],
         },
         {
           text: "运行环境",
           children: ["env", "http", "lambda", "alifc", "koa-env"],
         },
       ],
-      "/plugin/": ["intro", "jwt", "swagger", "validator"],
+      "/plugin/": ["intro", "jwt", "swagger", "validator", "static"],
     },
   }),
 });
