@@ -8,5 +8,6 @@
 - Swagger 文档
 - 参数校验
 - 静态资源
+- Koa
 
-> 🎉 更多插件欢迎贡献并编辑文档 [README](https://github.com/ipare/ipare.org) 以添加
+> 🎉 更多插件欢迎贡献并编辑文档 [ipare.org](https://github.com/ipare/ipare.org) 以添加

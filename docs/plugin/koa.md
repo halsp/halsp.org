@@ -1,4 +1,4 @@
-# 使用 Koa
+# Koa
 
 安装 `@ipare/koa` 以支持 Koa 功能
 
