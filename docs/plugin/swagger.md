@@ -1,76 +1,114 @@
 # Swagger 文档
 
-安装 `@ipare/swagger` 以使用 Swagger 文档，用于自动生成你的 Ipare 文档
+安装 `@ipare/swagger` 以使用 Swagger 文档，用于生成你的 Ipare 文档
 
-基于 [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) 生成页面，在浏览器中使用 [swagger-ui](https://github.com/swagger-api/swagger-ui) 渲染 UI
+使用装饰器注释文档
+
+在浏览器中使用 [swagger-ui](https://github.com/swagger-api/swagger-ui) 渲染文档
+
+## 安装
+
+```
+npm install @ipare/swagger
+```
 
 ## 快速开始
 
-使用中间件的默认配置
+在 `startup.ts` 中
 
 ```TS
-import { TestStartup } from "@ipare/core";
 import "@ipare/swagger";
 
-const res = await new TestStartup()
-  .useSwagger()
-  .run();
-
-console.log(res.body); // html
+startup.useSwagger();
 ```
 
-在项目下任意 `.js`/`.ts` 文件中
+定义传输模型
 
 ```TS
-/**
- * @openapi
- * /:
- *   get:
- *     description: Welcome to @ipare/swagger!
- *     responses:
- *       200:
- *         description: Returns a mysterious string.
- */
-```
+import { DtoDescription, DtoFormat, DtoLengthRange } from "@ipare/swagger";
 
-## 配置
+@DtoDescription("login info")
+export class LoginDto {
+  @DtoDescription("email")
+  @DtoFormat("email")
+  account!: string;
 
-`startup.useSwagger` 接收三个参数：
-
-- swaggerJSDoc
-- url
-- customHtml
-
-### swaggerJSDoc
-
-参考 [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) 的 `options` 参数
-
-默认值：
-
-```JSON
-{
-  "definition": {
-    "swagger": "2.0",
-    "info": {
-      "title": "Test",
-      "version": "1.0.0",
-    },
-  },
-  "apis": ["./*.ts", "./*.js"],
+  @DtoDescription("password")
+  @DtoLengthRange({
+    min: 8,
+    max: 24,
+  })
+  password!: string;
 }
 ```
 
-一般你需要替换默认值
+在 `Action` 中用 `@ipare/pipe` 注入请求参数
 
-### url
+```TS
+import { Action } from "@ipare/core";
+import { Body } from "@ipare/pipe";
+
+@ApiTags("user")
+@ApiDescription("Get user info")
+export default class extends Action {
+  @Body
+  private readonly loginDto!: LoginDto;
+
+  async invoke() {
+    this.ok(this.loginDto);
+  }
+}
+```
+
+## 配置介绍
+
+`startup.useSwagger` 接收一个 `options` 参数，包含以下字段：
+
+- path
+- builder
+- customHtml
+
+### path
 
 访问 swagger 页面的路径，默认为 `/`
 
+### builder
+
+回调函数，参数为 `OpenApiBuilder` 对象，返回值为同一个或新的 `OpenApiBuilder` 对象
+
+如
+
+```TS
+startup.useSwagger({
+  builder: (builder) => {
+    builder.addInfo({
+      title: "@ipare/swagger",
+      version: "0.0.1",
+    });
+    return builder;
+  }
+})
+```
+
+或
+
+```TS
+startup.useSwagger({
+  builder: (builder) => {
+    return new OpenApiBuilder();
+  },
+});
+```
+
+`OpenApiBuilder` 参考 [openapi3-ts](https://github.com/metadevpro/openapi3-ts)
+
 ### customHtml
 
-如果你想自定义 swagger 页面，需要传入一个函数。函数入参为 json 字符串，返回值为 html 字符串或 `Promise<string>`
+如果默认页面不能满足需求，可以自定义 swagger html 页面
 
-但你需要注意，`SwaggerUIBundle` 参数 `spec` 的值应该是传入的字符串，如：
+该参数传入一个回调函数，函数参数为 json 字符串，返回值为 html 字符串
+
+json 字符串参数为生成的 swagger 文档
 
 ```TS
 startup.useSwagger({
@@ -135,8 +173,107 @@ const getHtml = (jsonStr) => `<!DOCTYPE html>
 
 上述 `getHtml` 为 `@ipare/swagger` 的默认实现
 
-### 示例项目
+## 支持的装饰器
 
-- todo
+文档中大部分内容是根据装饰器生成的
+
+### Action 类装饰器
+
+装饰 `Action` 的装饰器，用于描述单个接口
+
+- ApiTags
+- ApiSummary
+- ApiCallback
+- ApiDeprecated
+- ApiDescription
+- ApiExternalDocs
+- ApiOperationId
+- ApiResponses
+- ApiSecurity
+- ApiServers
+
+```TS
+import { Action } from "@ipare/core";
+import { Body } from "@ipare/pipe";
+
+@ApiTags("tag")
+@ApiDescription("description")
+export default class extends Action {
+  async invoke() {
+    this.ok();
+  }
+}
+```
+
+### Dto 装饰器
+
+装饰数据传输模型的装饰器，也可以装饰 `@ipare/pipe` 的具名字段
+
+- DtoDescription
+- DtoAllowEmptyValue
+- DtoDeprecated
+- DtoIgnore
+- DtoRequired
+- DtoArrayType
+- DtoExample
+- DtoSchema
+- DtoParameterStyle
+- DtoDefault
+- DtoNumRange
+- DtoLengthRange
+- DtoPattern
+- DtoPropertiesRange
+- DtoReadOnly
+- DtoTitle
+- DtoWriteOnly
+- DtoEnum
+- DtoFormat
+- DtoXml
+- DtoExamples
+- DtoType
+
+在数据传输模型中
+
+```TS
+import { DtoDescription, DtoFormat, DtoLengthRange } from "@ipare/swagger";
+
+@DtoDescription("login info")
+export class LoginDto {
+  @DtoDescription("email")
+  @DtoFormat("email")
+  account!: string;
+
+  @DtoDescription("password")
+  @DtoLengthRange({
+    min: 8,
+    max: 24,
+  })
+  password!: string;
+}
+```
+
+或在 Action 中
+
+```TS
+import { Action } from "@ipare/core";
+import { Body } from "@ipare/pipe";
+import { DtoRequired, DtoDescription } from "@ipare/swagger";
+
+export default class extends Action {
+  @Body("account")
+  @DtoRequired()
+  @DtoDescription("email")
+  private readonly account!: string;
+
+  async invoke() {
+    this.ok({ account });
+  }
+}
+```
+
+## 示例项目
+
+- todo 一个简易的 todo 项目
+  - 在线示例: https://todo.hal.wang
   - github: https://github.com/hal-wang/todo
   - swagger: https://todo-5gcg801923564f08-1253337886.ap-shanghai.app.tcloudbase.com/v2
