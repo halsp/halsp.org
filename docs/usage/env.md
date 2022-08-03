@@ -10,7 +10,7 @@
   - NPM 包：[@ipare/http](https://www.npmjs.com/package/@ipare/http)
   - 源码：<https://github.com/ipare/http>
   - 文档：<https://ipare.org/usage/http>
-- 腾讯云 CloudBase
+- 云函数，支持腾讯云事件云函数、阿里云事件云函数、aws lambda、azure functions 等
   - NPM 包：[@ipare/lambda](https://www.npmjs.com/package/@ipare/lambda)
   - 源码：<https://github.com/ipare/lambda>
   - 文档：<https://ipare.org/usage/lambda>
