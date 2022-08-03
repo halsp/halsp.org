@@ -9,7 +9,7 @@
     <a href=""><img src="https://badgen.net/npm/dt/@ipare/core" alt="npm downloads"></a>
     <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/core.svg" alt="node compatibility"></a>
     <a href="#"><img src="https://github.com/ipare/ipare/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/ipare/core/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/core/main.svg" alt="Test Coverage"></a>
+    <a href="https://codecov.io/gh/ipare/ipare/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/ipare/main.svg" alt="Test Coverage"></a>
     <a href="https://github.com/ipare/ipare/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
     <a href="https://gitpod.io/#https://github.com/ipare/ipare"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
     <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
@@ -29,8 +29,16 @@ gh-pages 分支为 GitHub Pages 托管的网站
 
 欢迎对网站内容做出改善，帮助更多的人使用 Ipare
 
+同时欢迎开发插件并更新此本地
+
 ### 文档贡献列表
 
 <a href="https://github.com/ipare/ipare.org/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ipare/ipare.org" />
+</a>
+
+### Ipare 贡献列表
+
+<a href="https://github.com/ipare/ipare/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ipare/ipare" />
 </a>
