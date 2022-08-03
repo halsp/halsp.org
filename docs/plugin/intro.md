@@ -9,5 +9,6 @@
 - 参数校验
 - 静态资源
 - Koa
+- TypeORM
 
 > 🎉 更多插件欢迎贡献并编辑文档 [ipare.org](https://github.com/ipare/ipare.org) 以添加

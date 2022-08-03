@@ -55,7 +55,15 @@ export default defineUserConfig({
           children: ["env", "http", "lambda", "alifc", "koa-env"],
         },
       ],
-      "/plugin/": ["intro", "jwt", "swagger", "validator", "static", "koa"],
+      "/plugin/": [
+        "intro",
+        "jwt",
+        "swagger",
+        "validator",
+        "static",
+        "koa",
+        "typeorm",
+      ],
     },
   }),
 });
