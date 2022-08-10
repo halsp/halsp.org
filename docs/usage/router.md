@@ -1,17 +1,5 @@
 # 路由
 
-<p align="center" class="tags">
-    <a href="https://github.com/ipare/router/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
-    <a href=""><img src="https://img.shields.io/npm/v/@ipare/router.svg" alt="npm version"></a>
-    <a href=""><img src="https://badgen.net/npm/dt/@ipare/router" alt="npm downloads"></a>
-    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/router.svg" alt="node compatibility"></a>
-    <a href="#"><img src="https://github.com/ipare/router/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/ipare/router/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/router/main.svg" alt="Test Coverage"></a>
-    <a href="https://github.com/ipare/router/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
-    <a href="https://gitpod.io/#https://github.com/ipare/router"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
-    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-</p>
-
 添加 `@ipare/router` 以支持路由功能
 
 `@ipare/router` 有以下特点
