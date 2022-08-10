@@ -152,7 +152,7 @@ startup
 
 数据库连接实例通过依赖注入 `@ipare/inject` 创建，因此其生命周期符合 `@ipare/inject` 规则
 
-参考 <http://localhost:8080/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
+参考 <http://ipare.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
 
 销毁的行为是在 `startup.useInject` 中间件的返回管道中触发，伪代码逻辑如
 

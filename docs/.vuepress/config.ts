@@ -55,13 +55,22 @@ export default defineUserConfig({
         },
       ],
       "/plugin/": [
-        "static",
-        "jwt",
-        "swagger",
-        "validator",
-        "koa",
-        "typeorm",
-        "redis",
+        {
+          text: "常用",
+          children: ["static", "swagger", "logger"],
+        },
+        {
+          text: "安全性",
+          children: ["jwt", "validator"],
+        },
+        {
+          text: "数据存储",
+          children: ["typeorm", "redis"],
+        },
+        {
+          text: "其他框架",
+          children: ["koa"],
+        },
       ],
     },
   }),
