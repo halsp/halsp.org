@@ -129,21 +129,13 @@ class TestMiddleware extends Middleware {
 只有在 `useTypeorm` 之后的中间件，才能获取到数据库连接实例
 :::
 
-## 生命周期
-
-数据库连接实例通过依赖注入 `@ipare/inject` 创建，因此其生命周期与作用域均符合 `@ipare/inject` 规则
+## 生命周期与作用域
 
 ### 作用域
 
-数据库连接实例有以下三种作用域:
+通过 `startup.useTypeorm` 函数传参 `injectType` 以修改该实例作用域
 
-- Singleton: 单例
-- Scoped: 单次请求作用域
-- Transient: 临时
-
-默认作用域是 `Scoped`
-
-通过 `startup.useTypeorm` 函数传参 `injectType` 以决定该实例作用域
+参考 <https://ipare.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
 
 ```TS
 import '@ipare/typeorm';
@@ -156,25 +148,19 @@ startup
   })
 ```
 
-### 何时创建实例？
+### 生命周期
 
-根据 `@ipare/inject` 规则，数据库实例是按需创建的
+数据库连接实例通过依赖注入 `@ipare/inject` 创建，因此其生命周期符合 `@ipare/inject` 规则
 
-- 使用了数据库实例的中间件或服务，如果被创建，那么数据库实例也会被创建
-- 如果作用域是 `Transient`，将每次使用都会创建数据库连接
+参考 <http://localhost:8080/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
 
-### 实例的销毁
-
-`Scoped` 和 `Transient` 作用域的实例会在请求单次结束后自动销毁，因此一般情况无需手动销毁
-
-`Singleton` 作用域的实例不会被 `@ipare/typeorm` 销毁
-
-销毁的行为是在 `startup.useTypeorm` 中间件的返回管道中触发，逻辑如
+销毁的行为是在 `startup.useInject` 中间件的返回管道中触发，伪代码逻辑如
 
 ```TS
-await initialize(); // 初始化
+await initInject(); // 初始化依赖注入
+await initializeTypeorm(); // 初始化 Typeorm
 await next(); // 执行下个中间件
-await destroy(); // 销毁
+await dispose(); // 销毁
 ```
 
 ## 数据库驱动
