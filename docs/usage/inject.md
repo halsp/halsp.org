@@ -1,18 +1,11 @@
 # 依赖注入
 
-<p align="center" class="tags">
-    <a href="https://github.com/ipare/inject/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
-    <a href=""><img src="https://img.shields.io/npm/v/@ipare/inject.svg" alt="npm version"></a>
-    <a href=""><img src="https://badgen.net/npm/dt/@ipare/inject" alt="npm downloads"></a>
-    <a href="https://nodejs.org/en/about/releases/"><img src="https://img.shields.io/node/v/@ipare/inject.svg" alt="node compatibility"></a>
-    <a href="#"><img src="https://github.com/ipare/inject/actions/workflows/test.yml/badge.svg?branch=main" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/ipare/inject/branch/main"><img src="https://img.shields.io/codecov/c/github/ipare/inject/main.svg" alt="Test Coverage"></a>
-    <a href="https://github.com/ipare/inject/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
-    <a href="https://gitpod.io/#https://github.com/ipare/inject"><img src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod" alt="Gitpod Ready-to-Code"></a>
-    <a href="https://paypal.me/ihalwang" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-</p>
-
 添加 `@ipare/inject` 以实现 `Ipare` 的 依赖注入
+
+## 名词解释
+
+1. 服务：是指通过依赖注入创建的类
+2. 服务实例：是指服务创建的对象
 
 ## 装饰器
 
@@ -90,20 +83,57 @@ const res = await new TestStartup().useInject().add(TestMiddleware).run();
 
 服务的作用域分为三种
 
-1. Singleton：单例，nodejs 运行期间只初始化一次，即同时只会存在一个对象
-2. Scoped：单次访问，每次网络访问会初始化一次，每次网络访问结束后此对象会被丢弃
-3. Transient：瞬时，每处服务都会被单独初始化
+1. Singleton：单例服务，nodejs 运行期间只初始化一次，即多次使用只会存在一个对象
+2. Scoped：单次请求，每次请求会初始化一次，每次请求结束后此对象不会再使用
+3. Transient：瞬时，每次使用都会被实例化
 
 ```TS
 import "@ipare/inject";
-import { InjectType } "@ipare/inject";
+import { InjectType } from "@ipare/inject";
 
-startup.inject(IService, Service, InjectType.Singleton);
-startup.inject(IService, Service, InjectType.Scoped);
-startup.inject(IService, Service, InjectType.Transient);
+startup
+  .inject(IService, Service, InjectType.Singleton)
+  .inject(IService, Service, InjectType.Scoped)
+  .inject(IService, Service, InjectType.Transient)
+  .inject("KEY", Service, InjectType.Scoped)
+  .inject(Service, InjectType.Scoped);
 ```
 
-需要注意的是，在云函数中，不能保证服务是单例的，因为云函数可能在调用完毕即销毁，下次调用启动新实例
+需要注意的是，在云函数中，不能保证服务是单例的，因为云函数在调用完毕可能被销毁，下次调用可能会启动新实例
+
+## 生命周期
+
+不同作用域的服务，生命周期不同
+
+### 创建实例
+
+依赖注入的服务实例是按需创建的
+
+- 中间件在创建时，会同时创建用到的服务
+- 服务在创建时，如果用到了其他服务，那么其他服务也会被创建
+- 如果作用域是 `Transient`，每次都会创建一个新实例
+
+### 销毁实例
+
+`Singleton` 作用域的服务不会被框架销毁，如有特定需求，你需要手动销毁实例
+
+`Scoped` 和 `Transient` 作用域的服务会在每次请求结束后调用实例的 `dispose` 函数
+
+因此如果需要框架自动销毁服务，服务需要继承 `InjectDisposable` 接口并实现 `dispose` 函数
+
+```TS
+class CustomService implements InjectDisposable {
+  dispose() {
+    // TODO
+  }
+}
+```
+
+`dispose` 函数可以返回 `void`，也可以返回 `Promise<void>`
+
+:::tip
+你也可以直接给已有的服务添加 `dispose` 函数，如 `@ipare/logger` 和 `@ipare.redis` 等插件就是这样实现的
+:::
 
 ## 注册服务
 
@@ -312,7 +342,7 @@ const service = await parseInject(ctx, Service);
 `Inject` 传入以下参数将返回装饰器：
 
 - handler: 回调函数，支持异步，返回值将作为装饰的字段值
-- type: 可选，生命周期，`InjectType` 类型，与前面介绍的 **作用域** 的概念相同。这里是用于控制 `handler` 回调函数的生命周期
+- type: 可选，服务的作用域，`InjectType` 类型，与前面介绍的 **作用域** 的概念相同。这里是用于控制 `handler` 回调函数的作用域
   - Singleton: `handler` 回调只会执行一次，因此装饰的不同字段值始终相同，回调函数没有 `HttpContext` 参数
   - Scoped: `handler` 回调每次网络请求只会执行一次，装饰的不同字段值在单次网络访问期间相同，回调函数有参数 `HttpContext`
   - Scoped: `handler` 回调在每个装饰的字段都会执行一次，回调函数有参数 `HttpContext`
