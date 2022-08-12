@@ -68,8 +68,8 @@ export default defineUserConfig({
           children: ["typeorm", "redis"],
         },
         {
-          text: "其他框架",
-          children: ["koa"],
+          text: "其他",
+          children: ["koa", "cors"],
         },
       ],
     },

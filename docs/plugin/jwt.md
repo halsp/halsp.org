@@ -7,6 +7,12 @@
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
 - [@ipare/inject](https://github.com/ipare/inject)
 
+## 安装
+
+```
+npm install @ipare/jwt
+```
+
 ## 快速开始
 
 ```TS
@@ -16,12 +22,10 @@ startup.useJwt(options);
 
 ```TS
 import "@ipare/jwt";
-import { TestStartup } from "@ipare/core";
 
-const res = await new TestStartup()
+startup
   .useJwt(options)
   .useJwtVerify()
-  .run()
 ```
 
 ## 配置
