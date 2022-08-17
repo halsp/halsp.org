@@ -1,6 +1,113 @@
-# 内置结果函数
+# 请求处理
 
-目前 `HttpContext` 和中间件中内置一些返回结果：
+Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些处理返回结果的功能
+
+## 1 请求上下文 HttpContext
+
+中间件管道中的内容都在 `HttpContext` 对象之中，每个中间件都可以调用 `this.ctx` 来获取或修改中间件管道内容
+
+该对象包含以下内容：
+
+- res 字段: `Response` 实例对象
+- req 字段: `Request` 实例对象
+- bag 函数：用于在中间件管道中传递更多内容
+
+### 1.1 Response
+
+作为 API 返回内容（在 Startup 可能会被解析后返回）
+
+包含以下内容
+
+- headers: 返回的头部
+- body: 返回的内容
+- status: 返回状态码
+- isSuccess: 返回值是否成功，status >= 200 && status < 300
+- setHeaders: 设置多个 header
+- setHeader: 设置单个 header
+- hasHeader: 判断 header 是否存在，忽略 key 大小写
+- removeHeader: 移除一个 header，忽略 key 大小写
+- getHeader: 获取一个 header 值，忽略 key 大小写
+
+在每个中间件都可以修改 `this.ctx.res` 中的内容
+
+### 1.2 Request
+
+在中间件中，可通过 `this.ctx.req` 方式获取请求内容
+
+`req` 对象包含以下内容
+
+- path: 访问路径，不带域名和查询参数，自动去除开头 `/`
+- params: 查询参数
+- body: body 内容
+- headers: 获取 header 的深拷贝值，get 属性
+- setHeaders: 设置多个 header
+- setHeader: 设置单个 header
+- hasHeader: 判断 header 是否存在，忽略 key 大小写
+- removeHeader: 移除一个 header，忽略 key 大小写
+- getHeader: 获取一个 header 值，忽略 key 大小写
+
+#### X-HTTP-Method-Override
+
+如果请求头部包含 `X-HTTP-Method-Override` 参数，则访问方法 `httpMethod` 以 `X-HTTP-Method-Override` 值为准
+
+比如 Action 要求 `PATCH` 请求，但微信小程序不支持 `PATCH`，那么可以使用 `POST` 访问，并在头部加上此参数，值为 `PATCH`
+
+```JSON
+"headers":{
+  "X-HTTP-Method-Override": "PATCH"
+}
+```
+
+### 1.3 `bag` 函数
+
+可以在管道中传递更多自定义内容。
+
+如果使用 TS，可以借泛型特性获得更多智能提示。
+
+ipare 支持两种引用类型的 bag
+
+- Singleton: 单例模式，添加后可多次获取同一引用
+- Transient: 临时模式，添加后每次获取都会创建一个新引用
+
+如果是值类型，每次获取的都是该值的拷贝
+
+#### 添加或修改 `bag`
+
+```JS
+// Singleton
+this.ctx.bag("BAG_NAME", { /*bag content*/ });
+```
+
+OR
+
+```JS
+// Transient
+this.ctx.bag("BAG_NAME", () => { /*bag content*/ });
+```
+
+#### 获取 `bag`
+
+```JS
+const val = this.ctx.bag("BAG_NAME")
+```
+
+或 TS
+
+```TS
+const val = this.ctx.bag<string>("BAG_NAME")
+```
+
+### 1.4 ctx 中的头部
+
+`HttpContext` 中的头部处理比较特殊，和 `Response` 或 `Request` 都不一样
+
+获取的头部，都来自于请求头 `Request`，如 `headers`, `hasHeader`, `getHeader`
+
+设置的头部，都位于返回头 `Response`，如 `setHeader`, `setHeaders`, `removeHeader`
+
+## 2 内置结果函数
+
+在 `HttpContext` 和中间件中，内置一些返回结果，用于快速设置返回结果：
 
 - ok, 200
 - created, 201
