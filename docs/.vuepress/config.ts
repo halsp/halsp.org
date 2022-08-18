@@ -47,7 +47,7 @@ export default defineUserConfig({
         },
         {
           text: "进阶",
-          children: ["cli", "view", "filter", "mva", "pipe", "debug"],
+          children: ["cli", "view", "filter", "mva", "pipe", "debug", "error"],
         },
         {
           text: "运行环境",
