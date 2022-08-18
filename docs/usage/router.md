@@ -2,33 +2,46 @@
 
 添加 `@ipare/router` 以支持路由功能
 
-`@ipare/router` 有以下特点
-
 - 支持 RESTful 规范
 - 根据文件系统映射访问路径，彻底解耦无关联功能
 - 按需加载，提升请求速度
 - 轻量化，高可扩展性
 - 移除 controller 层，灵活性更高
 
-## 安装
+## 1 安装
 
-npm i @ipare/router
+```sh
+npm install @ipare/router
+```
 
-## 简单使用
+## 2 开始使用
+
+在 `startup.ts` 中添加 `startup.useRouter`
 
 ```TS
+import "@ipare/router";
 startup.useRouter()
 ```
 
+在 `src/actions` 下创建 `test.get.ts` 文件和 `Action` 派生类
+
 ```TS
-import { TestStartup } from "@ipare/core";
-import "@ipare/router";
-const res = await new TestStartup()
-  .useRouter()
-  .run();
+import { Action } from "@ipare/router";
+
+export default class extends Action{
+  invoke(){
+    this.ok();
+  }
+}
 ```
 
-## 约定
+访问 `GET /test` 即可触发该 `Action` 中间件
+
+:::tip
+`startup.useRouter` 实际上可能会注册多个中间件
+:::
+
+## 3 约定
 
 路由文件夹默认为 `src/actions`
 
@@ -43,55 +56,37 @@ export default defineConfig(({ mode }) => {
 });
 ```
 
-## 编译
+## 4 配置参数
 
-使用 `@ipare/cli` 的编译命令 `ipare build` 时，`@ipare/router` 会扫描路由文件夹并创建映射表
+`startup.useRouter` 接收可选参数 `RouterOptions`，包含以下字段
 
-用于快速匹配路由，增加程序启动速度
-
-### 编译结果
-
-将会在目标文件夹下或缓存文件夹 `.ipare-cache` 生成 `ipare-router.config` 文件
-
-## 注册（useRouter）
-
-注册路由中间件 `startup.useRouter` 以支持路由功能
-
-```TS
-import "@ipare/router";
-const res = await new TestStartup().useRouter().run();
-```
-
-或
-
-```TS
-import "@ipare/router";
-const res = await new OtherStartup().useRouter().run();
-```
-
-> `useRouter` 实际上可能会注册多个中间件
-
-## 配置参数
-
-`startup.useRouter` 接收可选参数 `RouterOptions`：
-
-- dir: 路由文件夹，若设置该参数，在运行阶段（编译时不起作用），将覆盖 `ipare-cli.config.ts` 中的 `routerActionsDir`
-- prefix: 路由前缀
+- prefix: 路由前缀，比如统一添加 `/api` 前缀
 - customMethods: 自定义请求方法数组，如 ['custom-get','custom-post']
 
-## 路由匹配
+## 5 路由匹配
 
-在`@ipare/router`中，路由与文件系统匹配。
+路由匹配有两种方式
 
-路由查询参数命名以 `^` 开头（文件系统中命名不允许出现字符 `:`），如果存在多个查询参数则后面的会覆盖前面的，如 `GET user/^id/todo/^id`，则 `id` 值为 `todoId`。正确命名应如 `user/^userId/todo/^todoId`。
+1. 请求路径与文件系统路径匹配，通过后缀设置请求方法
+2. 通过装饰器指定请求路径和请求方法
 
-如果限制 `httpMethod`, `action` 应以 `.post.ts`、`.get.ts`、`.get.delete.ts` 等结尾（或其他自定义 method，扩展名为.js 效果相同 ），否则任意 `httpMethod` 都可以访问，与 `.any.ts` 效果相同
+两种方式可以混用
 
-#### 例 1
+### 5.1 用文件系统匹配路由
+
+普通路径与文件系统路径完全相同
+
+路由查询参数文件或文件夹，命名要以 `^` 开头
+
+`action` 应以 `.post.ts`、`.get.ts`、`.get.delete.ts` 等结尾（或其他自定义 method，扩展名为.js 效果相同 ）
+
+如果没有请求方法后缀，任意 `httpMethod` 都可以请求，与 `.any.ts` 效果相同
+
+#### 5.1.1 例 1
 
 获取 todo list
 
-##### 方式 1（建议）
+##### 5.1.1.1 指定 HttpMethod（建议）
 
 目录结构如下：
 
@@ -110,7 +105,7 @@ const res = await new OtherStartup().useRouter().run();
 
 访问地址为 `GET /todo`，
 
-##### 方式 2
+##### 5.1.1.1 任意请求方法
 
 目录结构如下：
 
@@ -122,11 +117,11 @@ const res = await new OtherStartup().useRouter().run();
 
 访问地址为 `GET /todo/getTodoList` 、 `POST /todo/getTodoList` 、 `PUT /todo/getTodoList` 等等，效果相同。
 
-#### 例 2
+#### 5.1.2 例 2
 
 获取单个 todo item
 
-##### 方式 1（建议）
+##### 5.1.2.1 指定 HttpMethod（建议）
 
 目录结构如下：
 
@@ -147,7 +142,7 @@ const res = await new OtherStartup().useRouter().run();
 
 访问地址为 `GET /todo/66`
 
-##### 方式 2
+##### 5.1.2.2 任意请求方法
 
 目录结构如下：
 
@@ -159,37 +154,93 @@ const res = await new OtherStartup().useRouter().run();
 
 访问地址为 `GET(POST 等) /todo/getTodoItem`，需要在 `body` 、 `header` 或 `query` 传入 `todoId` 参数
 
-#### 示例建议
+### 5.2 用装饰器匹配路由
 
-上述两个示例都给了两种定义方式，建议使用方式 1 更符合规范，易读性也更好。
+通过装饰器指定请求路径和请求方法
 
-## Action
+和文件系统匹配相比，有更强的灵活性，但需要写更多代码，需要支持装饰器功能
 
-`Action` 也是中间件，该类继承于中间件类 `Middleware`，但 `Action` 中间件会在 `userRouter` 中自动注册，你无需手动注册
+#### 5.2.1 装饰器
 
-正常情况 Action 会终止管道继续向后执行，不会执行 `next`，除非有其他特殊需求
+提供以下装饰器用于指定 `Action` 的请求方法和请求路径
 
-每次调用 API，如果顺利进行，主要执行的是自定义 `Action` 类实例对象中的 `invoke` 函数
+- HttpGet
+- HttpPost
+- HttpPatch
+- HttpDelete
+- HttpPut
+- HttpHead
+- HttpOptions
+- HttpConnect
+- HttpTrace
+- HttpCustom
+
+#### 5.2.2 使用方式
+
+同时指定请求方法和路径
+
+```TS
+import { HttpGet } from '@ipare/router';
+
+@HttpGet("test/^id")
+export default class extends Action {
+  async invoke(): Promise<void> {
+    this.ok("method");
+  }
+}
+```
+
+只指定请求方法，路径按文件系统匹配
+
+```TS
+import { HttpGet } from '@ipare/router';
+
+@HttpGet
+export default class extends Action {
+  async invoke(): Promise<void> {
+    this.ok("method");
+  }
+}
+```
+
+#### 5.2.3 自定义请求方法
+
+使用 `@HttpCustom(method, url)` 支持自定义请求方法
+
+接收两个参数
+
+1. 请求方法
+2. 请求路径，如果不传次参数将按文件系统匹配
+
+## 6 Action
+
+`Action` 也是中间件，该类继承中间件类 `Middleware`，但 `Action` 中间件会在 `useRouter` 中自动注册，无需手动注册
+
+正常情况 Action 会终止管道继续向后执行，不会执行 `next`。如果有其他特殊需求你也可以调用 `this.next()` 以进入下个中间件
+
+每次收到请求，主要执行的是自定义 `Action` 类实例对象中的 `invoke` 函数
 
 所有自定义 `Action` 都应派生自 `Action` 类，并重写 `invoke` 函数
 
-### 创建一个 Action
+### 6.1 创建一个 Action
 
-#### 创建路由文件夹
+根据下面步骤创建一个常规 Action
 
-在项目下任意位置创建一个任意命名的文件夹（如果不存在）
+#### 6.1.1 创建路由文件夹
 
-建议在与 `index.ts` / `index.js` 同级目录下， 创建名为 `actions` 的文件夹
+创建文件夹 `src/actions`，用于存放所有 `Action`
 
-#### 创建 action 文件
+路由文件夹也可以是其他路径，但需要在配置，参考前面 `约定` 部分
+
+#### 6.1.2 创建 action 文件
 
 根据各业务，创建文件夹或 `.ts/.js` 文件，名称自定，但名称和路径会映射为访问路径，每个文件对应一个 `action`
 
 命名格式为 `<actionName>.<httpMethod>.ts` ，其中 `httpMethod` 可以多个，如 `user.get.ts`、`user.delete.put.ts`。
 
-`actionName` 为下划线 `_` 即取上个文件夹名称，如 `/user/_.get.post.ts` 与 `/user.get.post.ts` 相同
+`<actionName>` 可以是划线 `_`，即取自父级文件夹名称，如 `/user/_.get.post.ts` 与 `/user.get.post.ts` 相同
 
-如果命名没有 `httpMethod` 部分，则任意方法都能访问，与 `ANY` 作用相同，如 `user.ts` 等同于 `user.any.ts`
+如果命名没有 `<httpMethod>` 部分，则任意方法都能访问，与 `.any.ts` 作用相同，如 `user.ts` 等同于 `user.any.ts`
 
 ```
 +-- actions
@@ -206,12 +257,13 @@ const res = await new OtherStartup().useRouter().run();
 |   +-- type3.get.post.ts
 ```
 
-#### 创建 action 类
+#### 6.1.3 创建 action 类
 
 在 action 文件 (`.ts/.js`) 中创建继承 `Action` 的类，并重写 `invoke` 函数
 
 ```JS
 import { Action } from "@ipare/router";
+
 export default class extends Action {
   async invoke() {
     this.ok({
@@ -221,16 +273,12 @@ export default class extends Action {
 }
 ```
 
-### metadata
+## 7 Request.params
 
-`Action` 有 `metadata` 字段，该字段内容将在编译阶段添加至路由信息
-
-## params
-
-`params` 内容是 RESTful 路径中的参数，如
+`Request.params` 值是 RESTful 路径中的参数，如
 
 - 访问路径：`/user/66/todo/88`
-- action 文件路径：`/user/^userId/todo/^todoId.get.ts`
+- 路由地址：`/user/^userId/todo/^todoId.get.ts`
 
 那么 `params` 值为
 
@@ -243,7 +291,7 @@ export default class extends Action {
 
 `@ipare/router` 会在 `ctx.req` 中添加 `params` 属性
 
-## 路由元数据
+## 8 路由元数据
 
 你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
 
@@ -310,43 +358,22 @@ export default class extends Action{
 }
 ```
 
-## HttpMethod 装饰器
+## 9 编译
 
-`@ipare/router` 提供以下装饰器用于指定 `Action` 的请求方法和请求路径
+使用 `@ipare/cli` 的编译命令 `ipare build` 时，`@ipare/router` 会扫描路由文件夹并创建映射表
 
-- HttpGet
-- HttpPost
-- HttpPatch
-- HttpDelete
-- HttpPut
-- HttpHead
-- HttpOptions
-- HttpConnect
-- HttpTrace
-- HttpCustom
+用于快速匹配路由，提升程序启动速度，serverless 项目通过编译路由表，能极大的提升启动速度
 
-使用方式如
+### 9.1 编译结果
 
-```TS
-import { HttpGet } from '@ipare/router';
+编译会在目标文件夹下生成 `.ipare-cache/ipare-router.config` 文件
 
-@HttpGet
-export default class extends Action {
-  async invoke(): Promise<void> {
-    this.ok("method");
-  }
-}
-```
+该文件记录了 `@ipare/router` 的配置和路由表，请不要手动修改
 
-或
+### 9.2 发布
 
-```TS
-import { HttpGet } from '@ipare/router';
+发布时需要将 `ipare-router.config` 一同发布，否则程序首次启动会自动重新创建映射表
 
-@HttpGet("test/^id")
-export default class extends Action {
-  async invoke(): Promise<void> {
-    this.ok("method");
-  }
-}
-```
+如果没有 `ipare-router.config` 文件，对于原生 `http` 服务影响不是很大
+
+但 serverless 可能每次请求都会启动一个新程序，即重新创建映射表
