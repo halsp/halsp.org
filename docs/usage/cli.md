@@ -1,11 +1,19 @@
 # CLI 脚手架
 
-`@ipare/cli` 提供新建、编译、调试、升级等功能
+`@ipare/cli` 提供创建、编译、调试、升级等功能
 
 ## 安装
 
+全局安装
+
 ```sh
 npm install @ipare/cli -g
+```
+
+或项目中安装
+
+```sh
+npm install @ipare/cli -D
 ```
 
 ## 支持的命令
@@ -68,11 +76,15 @@ Options:
 
 ## template
 
+根据模板创建项目
+
 该功能暂未完成
 
 ## build
 
-用于编译项目，可以配合其他插件执行特定脚本，如 `@ipare/router` 插件创建路由映射等
+用于编译项目，可以调起其他插件执行特定脚本
+
+如 `@ipare/router` 插件创建路由映射, `@ipare/view` 自动拷贝视图到输出文件夹等等
 
 ### 使用方式
 
@@ -98,16 +110,14 @@ Options:
 
 如果你需要实现一个插件，并且有以下任一需求
 
-- 需要在编译过程执行特定的代码
-- 提供 `ipare-cli.config.ts` 附加的默认配置
-
-那么你需要按下面的方式添加插件的功能
+- 在编译过程执行特定的代码，需要扩展脚本
+- 编译前动态修改配置，需要拓展配置
 
 #### 插件脚本
 
-插件脚本主要分为两种，一种是 ts 编译钩子，一种是编译前后的脚本
+插件脚本主要分为两种，TS 编译钩子和编译前后的脚本
 
-##### TS 编译的钩子
+##### TS 编译钩子
 
 在插件中，导出以下脚本作用于 ts 编译的钩子
 
@@ -128,33 +138,40 @@ Options:
 
 #### 扩展配置
 
-在插件中导出特定内容以支持自动扩展配置 `ipare-cli.config.ts`
+在插件中导出 `cliConfigHook` 函数，可以扩展配置 `ipare-cli.config.ts`
 
-#####
+注意，此操作不会更新 `ipare-cli.config.ts` 文件
 
-导出 `cliConfig`，一般用于简单的配置
+可以在函数中修改当前配置对象，或返回一个新的配置对象
 
-编译阶段会与 `ipare-cli.config.ts` 中的配置做合并操作
+`cliConfigHook` 函数，有两个参数
 
-可以导出两种类型：
+- config: 当前的配置对象，可以修改
+- options: `ConfigEnv` 类型的对象，包含以下字段
+  - mode: CLI 命令传入的 mode 参数
+  - command: 命令类型，`start` 或 `build`
 
-1. Configuration 对象
-2. 回调函数，返回值为 Configuration 对象，参数为 `ConfigEnv` 类型的对象，有以下字段
-   - mode: start/build 命令传入的 mode 参数
-   - command: 命令类型
+```TS
+export const cliConfigHook = (
+  config: any,
+  env: { mode: string; command: "start" | "build" }
+) => {
+  config.build = config.build ?? {};
+  config.build.assets = config.build.assets ?? [];
+  config.build.assets.push({
+    include: "static/*",
+    root: "src",
+  });
+};
+```
 
-#####
+插件导出上述 `cliConfigHook` 函数，即为 CLI 配置添加一个资源文件夹
 
-导出 `cliConfigHook`，可以修改当前配置并返回新的配置
-
-值为回调函数，有两个参数
-
-- config: 当前的配置
-- options: 与前面的导出 `cliConfig` 的回调函数参数相同
+即让 CLI 每次编译都拷贝 `src/static` 文件夹及其中所有文件到目标文件夹 `dist/static`
 
 ## start
 
-用于启动项目，编译过程同 `build` 命令
+用于启动并调试项目，先编译后启动，编译过程同 `build` 命令
 
 启动项目时会在本地创建一个 http 服务，因此 serverless 项目也可以本地运行
 
@@ -180,7 +197,7 @@ Options:
 
 ### Startup 入口
 
-`@ipare/cli` 要求必须按规范有个 src/startup.ts 文件，并导出一个默认回调函数，内容如下
+`@ipare/cli` 要求必须按规范有个 src/startup.ts 文件，并导出一个默认函数，内容如下
 
 ```TS
 // startup.ts
