@@ -10,13 +10,13 @@
 
 因此该类不能直接使用，需要定义派生类，每种运行环境都有对应的 `Startup` 派生类
 
-## 1 运行环境
+## 运行环境
 
 Ipare 提供了多种运行环境
 
 目前已支持的运行环境参考 [运行环境介绍](/usage/env)
 
-## 2 startup.ts
+## startup.ts
 
 为了能够使用 `@ipare/cli` 便捷调试，在 `src` 下需要有 `startup.ts` 文件，导出一个默认回调函数，内容如
 
@@ -38,7 +38,7 @@ export default function <T extends Startup>(startup: T, mode?: string) {
 
 `mode` 参数值为 `@ipare/cli` 的 `build` 或 `start` 命令传入的 `--mode` 参数，如 `development`、`production` 等
 
-## 3 单元测试
+## 单元测试
 
 `@ipare/testing` 提供了 `TestStartup` 和 `TestHttpStartup` 类 ，方便用于单元测试
 

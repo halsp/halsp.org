@@ -2,7 +2,7 @@
 
 Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些处理返回结果的功能
 
-## 1 请求上下文 HttpContext
+## 请求上下文 HttpContext
 
 中间件管道中的内容都在 `HttpContext` 对象之中，每个中间件都可以调用 `this.ctx` 来获取或修改中间件管道内容
 
@@ -12,7 +12,7 @@ Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些�
 - req 字段: `Request` 实例对象
 - bag 函数：用于在中间件管道中传递更多内容
 
-### 1.1 Response
+### Response
 
 作为 API 返回内容（在 Startup 可能会被解析后返回）
 
@@ -30,7 +30,7 @@ Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些�
 
 在每个中间件都可以修改 `this.ctx.res` 中的内容
 
-### 1.2 Request
+### Request
 
 在中间件中，可通过 `this.ctx.req` 方式获取请求内容
 
@@ -58,7 +58,7 @@ Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些�
 }
 ```
 
-### 1.3 `bag` 函数
+### `bag` 函数
 
 可以在管道中传递更多自定义内容。
 
@@ -97,7 +97,7 @@ const val = this.ctx.bag("BAG_NAME")
 const val = this.ctx.bag<string>("BAG_NAME")
 ```
 
-### 1.4 ctx 中的头部
+### ctx 中的头部
 
 `HttpContext` 中的头部处理比较特殊，和 `Response` 或 `Request` 都不一样
 
@@ -105,7 +105,7 @@ const val = this.ctx.bag<string>("BAG_NAME")
 
 设置的头部，都位于返回头 `Response`，如 `setHeader`, `setHeaders`, `removeHeader`
 
-## 2 内置结果函数
+## 内置结果函数
 
 在 `HttpContext` 和中间件中，内置一些返回结果，用于快速设置返回结果：
 

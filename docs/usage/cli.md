@@ -2,13 +2,13 @@
 
 `@ipare/cli` 提供新建、编译、调试、升级等功能
 
-## 1. 安装
+## 安装
 
 ```sh
 npm install @ipare/cli -g
 ```
 
-## 2. 支持的命令
+## 支持的命令
 
 ```
 Usage: ipare <command> [options]
@@ -27,7 +27,7 @@ Commands:
   help [command]                display help for command
 ```
 
-## 3. create
+## create
 
 用于从头新建项目，可以选择插件、运行环境等
 
@@ -35,7 +35,7 @@ Commands:
 ipare create <project-name>
 ```
 
-### 3.1 使用方式
+### 使用方式
 
 ```
 Usage: ipare create|c [options] [name]
@@ -58,7 +58,7 @@ Options:
   -h, --help                              display help for command
 ```
 
-### 3.2 插件
+### 插件
 
 在创建过程中，需要选择插件，也可以用参数 `--plugins` 指定插件
 
@@ -66,15 +66,15 @@ Options:
 
 比如 `pipe` 依赖于 `inject`，若选择了 `pipe` 将自动加入 `inject`
 
-## 4 template
+## template
 
 该功能暂未完成
 
-## 5 build
+## build
 
 用于编译项目，可以配合其他插件执行特定脚本，如 `@ipare/router` 插件创建路由映射等
 
-### 5.1 使用方式
+### 使用方式
 
 ```
 Usage: ipare build|b [options]
@@ -94,7 +94,7 @@ Options:
   -h, --help                    display help for command
 ```
 
-### 5.2 扩展编译功能
+### 扩展编译功能
 
 如果你需要实现一个插件，并且有以下任一需求
 
@@ -103,11 +103,11 @@ Options:
 
 那么你需要按下面的方式添加插件的功能
 
-#### 5.2.1 插件脚本
+#### 插件脚本
 
 插件脚本主要分为两种，一种是 ts 编译钩子，一种是编译前后的脚本
 
-##### 5.2.1.1 TS 编译的钩子
+##### TS 编译的钩子
 
 在插件中，导出以下脚本作用于 ts 编译的钩子
 
@@ -115,7 +115,7 @@ Options:
 - afterCompile
 - afterCompileDeclarations
 
-##### 5.2.1.2 编译前后的脚本
+##### 编译前后的脚本
 
 在插件中，导出以下脚本作用于编译前后运行
 
@@ -126,11 +126,11 @@ Options:
 
 `postbuild` 回调函数如果返回 false， 将终止编译
 
-#### 5.2.2 扩展配置
+#### 扩展配置
 
 在插件中导出特定内容以支持自动扩展配置 `ipare-cli.config.ts`
 
-##### 5.2.2.1
+#####
 
 导出 `cliConfig`，一般用于简单的配置
 
@@ -143,7 +143,7 @@ Options:
    - mode: start/build 命令传入的 mode 参数
    - command: 命令类型
 
-##### 5.2.2.2
+#####
 
 导出 `cliConfigHook`，可以修改当前配置并返回新的配置
 
@@ -152,13 +152,13 @@ Options:
 - config: 当前的配置
 - options: 与前面的导出 `cliConfig` 的回调函数参数相同
 
-## 6. start
+## start
 
 用于启动项目，编译过程同 `build` 命令
 
 启动项目时会在本地创建一个 http 服务，因此 serverless 项目也可以本地运行
 
-### 6.1 使用方式
+### 使用方式
 
 ```
 Usage: ipare start|s [options]
@@ -178,7 +178,7 @@ Options:
   -h, --help                    display help for command
 ```
 
-### 6.2 Startup 入口
+### Startup 入口
 
 `@ipare/cli` 要求必须按规范有个 src/startup.ts 文件，并导出一个默认回调函数，内容如下
 
@@ -197,11 +197,11 @@ export default function <T extends Startup>(startup: T, mode?: string) {
 
 `mode` 参数值为 `@ipare/cli` 的 `build` 或 `start` 命令传入的 `--mode` 参数，如 `development`、`production` 等
 
-## 7. info
+## info
 
 可以显示项目信息，主要用于排查问题
 
-### 7.1 使用方式
+### 使用方式
 
 ```
 Usage: ipare info|i [options]
@@ -238,11 +238,11 @@ Ipare CLI Version : 0.3.1
 @ipare/pipe   : ^1.3.5
 ```
 
-## 8. update
+## update
 
 用于升级 Ipare 依赖版本
 
-### 7.1 使用方式
+### 使用方式
 
 ```
 Usage: ipare update|u [options]

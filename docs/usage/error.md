@@ -4,7 +4,7 @@
 
 Ipare 提供了多种请求异常，也提供了错误处理的功能
 
-## 1 HttpException
+## HttpException
 
 在 Ipare 中，提供了许多派生自 `HttpException` 的错误类
 
@@ -78,7 +78,7 @@ class TestMiddleware extends Middleware{
 }
 ```
 
-## 2 错误处理
+## 错误处理
 
 如果抛出的是请求异常 `HttpException`，那么会根据请求异常返回特定的 body 和 status
 
@@ -91,7 +91,7 @@ class TestMiddleware extends Middleware{
 }
 ```
 
-### 2.1 中间件行为
+### 中间件行为
 
 抛出错误后，对于中间件的运行行为会有以下影响
 
@@ -101,7 +101,7 @@ class TestMiddleware extends Middleware{
 
 不难看出，抛出错误一般只会影响当前中间件和其后的中间件
 
-## 3 异常贯穿中间件
+## 异常贯穿中间件
 
 抛出异常并设置异常 `breakthrough` 的值，可以使所有中间件都中断执行，即请求会立即返回
 
@@ -111,7 +111,7 @@ throw new BadRequestException('error message').setBreakthrough();
 
 当前中间件、之前中间件、只会中间件，都会被中断
 
-### 3.1 确保部分代码执行
+### 确保部分代码执行
 
 异常贯穿将导致无法正常执行中间件 `next()` 之后的代码
 
@@ -125,7 +125,7 @@ try {
 }
 ```
 
-### 3.2 终止贯穿
+### 终止贯穿
 
 可以在之前的中间件中，终止异常继续贯穿中间件，在之前的中间件中这样做
 
@@ -145,7 +145,7 @@ try {
 }
 ```
 
-## 4 错误钩子
+## 错误钩子
 
 `startup.hook()` 可以添加多种钩子，其中也包括异常钩子
 

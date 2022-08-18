@@ -14,7 +14,7 @@ export default defineUserConfig({
     editLinkText: "编辑此页",
     home: "/index.md",
     logo: "/images/logo.png",
-    sidebarDepth: 3,
+    sidebarDepth: 1,
     backToHome: "返回主页",
     notFound: ["你访问的页面不存在"],
     navbar: [
@@ -74,4 +74,13 @@ export default defineUserConfig({
       ],
     },
   }),
+  head: [
+    [
+      "script",
+      {
+        type: "text/javascript",
+        src: "/js/headerIndex.js",
+      },
+    ],
+  ],
 });
