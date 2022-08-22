@@ -8,6 +8,7 @@ export default defineUserConfig({
   theme: defaultTheme({
     docsRepo: "https://github.com/ipare/ipare.org",
     docsBranch: "main",
+    repo: "https://github.com/ipare/ipare",
     docsDir: "docs",
     editLinkPattern: ":repo/edit/:branch/:path",
     editLink: true,
@@ -31,8 +32,17 @@ export default defineUserConfig({
         link: "/plugin/static",
       },
       {
-        text: "GitHub",
-        link: "https://github.com/ipare",
+        text: "社区",
+        children: [
+          {
+            text: "Discussions",
+            link: "https://github.com/ipare/ipare/discussions",
+          },
+          {
+            text: "开黑啦",
+            link: "https://kook.top/qdUuDI",
+          },
+        ],
       },
     ],
     sidebar: {
