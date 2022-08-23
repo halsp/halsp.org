@@ -1,8 +1,8 @@
 # 单元测试 `(@ipare/testing)`
 
-安装 `@ipare/testing` 以添加单元测试
+安装 `@ipare/testing` 以添加单元测试功能
 
-`@ipare/testing` 内建了对 `jest` 的支持
+`@ipare/testing` 内建了对 `jest` 和 `supertest` 的支持
 
 ## Startup
 
