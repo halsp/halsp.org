@@ -61,7 +61,7 @@ export default defineUserConfig({
         },
         {
           text: "运行环境",
-          children: ["env", "http", "lambda", "alifc", "koa-env"],
+          children: ["custom-env", "http", "lambda", "alifc", "koa-env"],
         },
       ],
       "/plugin/": [

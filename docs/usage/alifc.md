@@ -4,7 +4,7 @@
 
 将 Ipare 托管到阿里云函数计算
 
-> 目前只支持 HTTP 函数
+> 只支持 HTTP 请求的函数，事件请求可以使用 `@ipare/lambda`
 
 ## 安装
 
@@ -17,12 +17,11 @@ npm i @ipare/alifc
 ```JS
 import { AlifcStartup } from "@ipare/alifc";
 
+const startup = new AlifcStartup(req, resp, context).use(async (ctx) => {
+  ctx.ok("@ipare/alifc");
+});
 const handler = async function (req, resp, context) {
-  await new AlifcStartup(req, resp, context)
-    .use(async (ctx) => {
-      ctx.ok("@ipare/alifc");
-    })
-    .run();
+  await startup.run();
 };
 module.exports.handler = handler;
 ```
@@ -33,14 +32,13 @@ module.exports.handler = handler;
 import { AlifcStartup } from "@ipare/alifc";
 import "@ipare/router";
 
+const startup = new AlifcStartup(req, resp, context)
+  .use(async (ctx) => {
+    ctx.ok("@ipare/alifc");
+  })
+  .useRouter();
 const handler = async function (req, resp, context) {
-  await new AlifcStartup(req, resp, context)
-    .use(async (ctx, next) => {
-      ctx.res.headers.demo = "@ipare/alifc";
-      await next();
-    })
-    .useRouter()
-    .run();
+  await startup.run();
 };
 module.exports.handler = handler;
 ```

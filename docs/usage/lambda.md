@@ -13,13 +13,12 @@ npm i @ipare/lambda
 ```TS
 import { LambdaStartup } from "@ipare/lambda";
 
+const startup = new LambdaStartup(event, context).use(async (ctx, next) => {
+  ctx.res.headers.demo = "@ipare/lambda";
+  await next();
+});
 const main = async (event, context) => {
-  return await new LambdaStartup(event, context)
-    .use(async (ctx, next) => {
-      ctx.res.headers.demo = "@ipare/lambda";
-      await next();
-    })
-    .run();
+  return await startup.run();
 };
 exports.main = main;
 ```
@@ -30,14 +29,14 @@ exports.main = main;
 import { LambdaStartup } from "@ipare/lambda";
 import "@ipare/router";
 
+const startup = new LambdaStartup(event, context)
+  .use(async (ctx, next) => {
+    ctx.res.headers.demo = "@ipare/lambda";
+    await next();
+  })
+  .useRouter();
 const main = async (event, context) => {
-  return await new LambdaStartup(event, context)
-    .use(async (ctx, next) => {
-      ctx.res.headers.demo = "@ipare/lambda";
-      await next();
-    })
-    .useRouter()
-    .run();
+  return await startup.run();
 };
 exports.main = main;
 ```

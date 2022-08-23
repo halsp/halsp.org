@@ -153,7 +153,7 @@ startup.useHttpMultipartBody({
 
 为了更好的利用 ipare，正常情况使用 `ctx.res` 和 `ctx.req` 即可，并且可以更好的配合其他中间件。
 
-为了应对特殊需求，`@ipare/http` 在 ctx 中可以加入了 `httpRes` 和 `httpReq`，特殊情况下你也可以按原生方法操作 `ctx.httpRes` 和 `ctx.httpReq`，但不建议使用。
+为了应对特殊需求，`@ipare/http` 在 ctx 中也加入了 `httpRes` 和 `httpReq`，特殊情况下你也可以按原生方法操作 `ctx.httpRes` 和 `ctx.httpReq`，但不建议使用。
 
 如果调用了 `httpReq.end()`，`ctx.res` 将不会被写入返回结果
 
