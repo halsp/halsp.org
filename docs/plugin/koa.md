@@ -3,10 +3,10 @@
 安装 `@ipare/koa` 以支持 Koa 功能
 
 - 让 koa 成为 ipare 的中间件
-- 或 ipare 成为 koa 的中间件
-- 并打通二者中间件管道
-- 让 `ipare` 可以使用大部分 `koa` 插件
-- 用 `koa` 托管 `ipare`
+- 或让 ipare 成为 koa 的中间件
+- 打通二者中间件管道
+- `ipare` 可以使用 `koa` 插件
+- 可以用 `koa` 托管 `ipare`
 
 ## 安装
 
@@ -19,11 +19,10 @@ npm i @ipare/koa
 ### 将 koa 作为 ipare 的中间件
 
 ```TS
-import { TestStartup } from "@ipare/core";
 import "@ipare/koa";
 import { Koa } from "@ipare/koa";
 
-const res = await new TestStartup()
+startup
   .use(async (ctx, next) => {
     console.log("step 1");
     await next();
@@ -38,8 +37,7 @@ const res = await new TestStartup()
   )
   .use((ctx) => {
     console.log("step 3");
-  })
-  .run();
+  });
 ```
 
 ### 将 ipare 作为 koa 的中间件
@@ -80,11 +78,10 @@ const server = koa.listen(2333);
 因此你还可以这样玩：
 
 ```TS
-import { TestStartup } from "@ipare/core";
 import { Koa } from "@ipare/koa";
 import cors from "koa-cors";
 
-const res = await new TestStartup()
+startup
   .useKoa(
     new Koa()
       .use(async (ctx, next) => {
@@ -103,8 +100,7 @@ const res = await new TestStartup()
   .useKoa(new Koa().use(cors()))
   .use(async (ctx) => {
     console.log(ctx.res.getHeader("koa")); // "ipare"
-  })
-  .run();
+  });
 ```
 
 ## 使用流
