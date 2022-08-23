@@ -21,15 +21,66 @@ export default defineUserConfig({
     navbar: [
       {
         text: "使用文档",
-        link: "/usage/intro",
+        children: [
+          {
+            text: "新手指南",
+            children: ["/usage/intro", "/usage/quickstart", "/usage/appoint"],
+          },
+          {
+            text: "基础",
+            children: [
+              "/usage/startup",
+              "/usage/middleware",
+              "/usage/result",
+              "/usage/inject",
+              "/usage/router",
+            ],
+          },
+          {
+            text: "进阶",
+            children: [
+              "/usage/cli",
+              "/usage/view",
+              "/usage/pipe",
+              "/usage/filter",
+              "/usage/mva",
+              "/usage/debug",
+              "/usage/error",
+            ],
+          },
+        ],
       },
       {
         text: "运行环境",
-        link: "/usage/env",
+        children: [
+          "/usage/custom-env",
+          "/usage/http",
+          "/usage/lambda",
+          "/usage/alifc",
+          "/usage/koa-env",
+        ],
       },
       {
         text: "拓展和插件",
-        link: "/plugin/static",
+        link: "/plugin/",
+        children: [
+          {
+            text: "常用",
+            children: ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+          },
+          {
+            text: "安全性",
+            children: ["/plugin/jwt", "/plugin/validator"],
+          },
+          {
+            text: "数据存储",
+            children: ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+          },
+          {
+            text: "其他",
+            children: ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
+          },
+        ],
       },
       {
         text: "社区",
