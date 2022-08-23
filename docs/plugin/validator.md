@@ -1,4 +1,4 @@
-# 参数校验
+# 参数校验 `(@ipare/validator)`
 
 安装 `@ipare/validator` 以支持参数校验功能
 

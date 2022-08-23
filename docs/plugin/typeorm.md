@@ -1,4 +1,4 @@
-# TypeORM
+# TypeORM `(@ipare/typeorm)`
 
 添加 `@ipare/typeorm` 插件以使用流行 ORM 工具 [TypeORM](https://github.com/typeorm/typeorm)
 

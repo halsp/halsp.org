@@ -1,4 +1,4 @@
-# Koa 托管
+# Koa 托管 `(@ipare/koa)`
 
 安装 `@ipare/koa` 以支持 Koa 托管功能
 

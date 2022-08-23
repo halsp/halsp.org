@@ -1,4 +1,4 @@
-# 日志
+# 日志 `(@ipare/logger)`
 
 添加 `@ipare/logger` 插件以使用日志功能
 

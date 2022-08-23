@@ -1,4 +1,4 @@
-# CLI 脚手架
+# CLI 脚手架 `(@ipare/cli)`
 
 `@ipare/cli` 提供创建、编译、调试、升级等功能
 

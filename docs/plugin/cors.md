@@ -1,4 +1,4 @@
-# 跨域 CORS
+# 跨域 CORS `(@ipare/cors)`
 
 安装 `@ipare/cors` 以开启 Ipare 的跨域功能
 

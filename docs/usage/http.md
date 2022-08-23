@@ -1,4 +1,4 @@
-# 原生 Http 服务
+# 原生 Http 服务 `(@ipare/http)`
 
 安装 `@ipare/http` 以支持 Http 运行环境
 

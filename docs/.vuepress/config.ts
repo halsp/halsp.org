@@ -44,20 +44,30 @@ export default defineUserConfig({
               "/usage/pipe",
               "/usage/filter",
               "/usage/mva",
-              "/usage/debug",
               "/usage/error",
             ],
+          },
+          {
+            text: "测试",
+            children: ["/usage/debug", "/usage/testing"],
           },
         ],
       },
       {
         text: "运行环境",
         children: [
-          "/usage/custom-env",
-          "/usage/http",
-          "/usage/lambda",
-          "/usage/alifc",
-          "/usage/koa-env",
+          {
+            text: "自定义",
+            children: ["/usage/custom-env"],
+          },
+          {
+            text: "基础",
+            children: ["/usage/http", "/usage/lambda", "/usage/alifc"],
+          },
+          {
+            text: "其他",
+            children: ["/usage/koa-env"],
+          },
         ],
       },
       {
@@ -108,11 +118,15 @@ export default defineUserConfig({
         },
         {
           text: "进阶",
-          children: ["cli", "view", "filter", "mva", "pipe", "debug", "error"],
+          children: ["cli", "view", "filter", "mva", "pipe", "error"],
         },
         {
           text: "运行环境",
           children: ["custom-env", "http", "lambda", "alifc", "koa-env"],
+        },
+        {
+          text: "测试",
+          children: ["debug", "testing"],
         },
       ],
       "/plugin/": [

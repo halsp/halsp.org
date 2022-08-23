@@ -1,4 +1,4 @@
-# MongoDB
+# MongoDB `(@ipare/mongoose)`
 
 添加 `@ipare/mongoose` 插件以连接使用 MongoDB
 

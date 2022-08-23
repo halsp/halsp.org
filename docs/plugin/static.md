@@ -1,4 +1,4 @@
-# 静态资源
+# 静态资源 `(@ipare/static)`
 
 安装 `@ipare/static` 以支持静态资源功能
 

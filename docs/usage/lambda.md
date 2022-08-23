@@ -1,4 +1,4 @@
-# 云函数运行环境 Lambda
+# 云函数运行环境 `(@ipare/lambda)`
 
 安装 `@ipare/lambda` 以支持云函数运行环境
 

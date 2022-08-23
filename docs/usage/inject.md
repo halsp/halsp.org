@@ -1,4 +1,4 @@
-# 依赖注入
+# 依赖注入 `(@ipare/inject)`
 
 添加 `@ipare/inject` 以实现 `Ipare` 的依赖注入
 

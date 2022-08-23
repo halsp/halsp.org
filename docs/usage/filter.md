@@ -1,4 +1,4 @@
-# 过滤器
+# 过滤器 `(@ipare/filter)`
 
 安装 `@ipare/filter` 以支持请求过滤器功能
 

@@ -45,3 +45,5 @@ export default function <T extends Startup>(startup: T, mode?: string) {
 `TestStartup` 类没有任何运行环境
 
 `TestHttpStartup` 类是原生 NodeJS 的 `http` 运行环境
+
+更多内容转至 [单元测试](/usage/testing)

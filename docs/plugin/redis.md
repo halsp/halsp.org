@@ -1,4 +1,4 @@
-# Redis
+# Redis `(@ipare/redis)`
 
 添加 `@ipare/redis` 插件以使用 Redis
 

@@ -1,4 +1,4 @@
-# MVA 框架
+# MVA 框架 `(@ipare/mva)`
 
 安装 `@ipare/mva` 以支持 MVA 功能
 

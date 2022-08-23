@@ -1,4 +1,4 @@
-# 管道
+# 管道 `(@ipare/pipe)`
 
 安装 `@ipare/pipe` 以支持管道功能
 

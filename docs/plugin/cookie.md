@@ -1,4 +1,4 @@
-# Cookie
+# Cookie `(@ipare/cookie)`
 
 安装 `@ipare/cookie` 以开启 Ipare 的 Cookie 功能
 

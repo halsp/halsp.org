@@ -1,4 +1,4 @@
-# Jwt 身份验证
+# Jwt 身份验证 `(@ipare/jwt)`
 
 安装 `@ipare/jwt` 以使用 Jwt 身份验证
 

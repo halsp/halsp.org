@@ -1,4 +1,4 @@
-# 路由
+# 路由 `(@ipare/router)`
 
 添加 `@ipare/router` 以支持路由功能
 

@@ -1,4 +1,4 @@
-# Swagger 文档
+# Swagger 文档 `(@ipare/swagger)`
 
 安装 `@ipare/swagger` 以使用 Swagger 文档，用于生成你的 Ipare 文档
 
