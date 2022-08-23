@@ -20,27 +20,47 @@ import "@ipare/cookie";
 startup.useCookie();
 ```
 
-在其他地方，获取请求 cookies
+### 获取请求 cookies
+
+从 `ctx` 获取
 
 ```TS
 const cookies = ctx.cookies;
-// OR
+```
+
+等价于从 `ctx.req` 获取
+
+```TS
 const cookies = ctx.req.cookies;
-// OR
+```
+
+也可以获取任一 name 的 cookie
+
+```TS
 const name = ctx.cookies.name;
 ```
 
-设置返回 cookies（Set-Cookie）
+### 设置响应 cookies
+
+给 `ctx.cookies` 赋值
 
 ```TS
 ctx.cookies = {
   account: "ipare.org",
 };
-// OR
+```
+
+等价于给 `ctx.res.cookies` 赋值
+
+```TS
 ctx.res.cookies = {
   account: "ipare.org",
 };
-// OR set cookie with options
+```
+
+也可以赋值一个对象以支持参数
+
+```TS
 ctx.cookies = {
   account: {
     value: "ipare.org",
@@ -48,12 +68,29 @@ ctx.cookies = {
     maxAge: 0,
   },
 };
-// OR
-ctx.res.cookies.account = "ipare.org";
+```
 
-// NOT! ctx.cookies is to get request cookies
+还可以给某个 name 的 cookie 赋值
+
+```TS
+ctx.res.cookies.account = "ipare.org";
+```
+
+:::danger 注意不能这样赋值
+
+```TS
 ctx.cookies.account = "ipare.org";
 ```
+
+ctx.cookies 属性的 get 方法是返回请求头的 cookie
+
+因此这种写法其实是给请求头的 cookie 赋值，不会抛出错误但在控制台会提示一个 error
+:::
+
+## 请求头/响应头
+
+- 请求的 cookies 从请求头 `cookie` 取得
+- 响应的 cookies 会写到响应头 `Set-Cookie`
 
 ## 配置
 
