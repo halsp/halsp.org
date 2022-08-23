@@ -75,7 +75,7 @@ export default defineUserConfig({
         },
         {
           text: "数据存储",
-          children: ["typeorm", "redis"],
+          children: ["typeorm", "redis", "mongoose"],
         },
         {
           text: "其他",

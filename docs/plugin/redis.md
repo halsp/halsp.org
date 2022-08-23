@@ -2,7 +2,7 @@
 
 添加 `@ipare/redis` 插件以使用 Redis
 
-`@ipare/redis` 的功能基于 [Redis](https://github.com/redis/node-redis)，使用 `@ipare/redis` 可以简化 Redis 的操作
+`@ipare/redis` 的功能基于 [Redis](https://github.com/redis/node-redis)，使用 `@ipare/redis` 可以简化 Redis 的管理
 
 ## 安装
 
