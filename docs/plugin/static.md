@@ -16,7 +16,7 @@ npm i @ipare/static
 
 使用 `startup.useStatic()`
 
-```JS
+```TS
 import "@ipare/static";
 
 startup.useStatic();
@@ -83,13 +83,11 @@ startup.useStatic({
 - GET file/2.txt
 - ...
 
-```JS
-startup
-  .useStatic({
-    dir: "static",
-    prefix: "file",
-  })
-  .run();
+```TS
+startup.useStatic({
+  dir: "static",
+  prefix: "file",
+});
 ```
 
 #### file404

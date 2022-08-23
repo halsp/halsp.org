@@ -154,8 +154,7 @@ startup
   .useInject()
   .inject("KEY1", 2333)
   .inject("KEY2", true)
-  .add(TestMiddleware)
-  .run();
+  .add(TestMiddleware);
 ```
 
 需要注意的是，添加的中间件必须是中间件的构造器

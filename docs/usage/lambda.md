@@ -25,7 +25,7 @@ exports.main = main;
 
 如果添加 `@ipare/router`
 
-```JS
+```TS
 import { LambdaStartup } from "@ipare/lambda";
 import "@ipare/router";
 

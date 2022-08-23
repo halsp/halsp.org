@@ -12,10 +12,11 @@
 
 ## 快速开始
 
+先创建一个中间件
+
 ```TS
-import "@ipare/inject";
 import { Header, Query, Param, Body, Context } from "@ipare/pipe";
-import { Middleware, ReadonlyDict, TestStartup, HttpContext } from "@ipare/core";
+import { Middleware, ReadonlyDict, HttpContext } from "@ipare/core";
 
 class TestMiddleware extends Middleware {
   @Context
@@ -48,10 +49,13 @@ class TestMiddleware extends Middleware {
   }
 }
 
-const res = await new TestStartup()
-    .useInject()
-    .add(TestMiddleware)
-    .run();
+```
+
+在 `startup.ts` 中
+
+```TS
+import "@ipare/inject";
+startup.useInject().add(TestMiddleware);
 ```
 
 上述代码中的 `useInject` 会启用依赖注入，`@ipare/pipe` 利用依赖注入实现功能

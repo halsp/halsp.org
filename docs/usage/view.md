@@ -12,20 +12,18 @@ npm i @ipare/view
 
 ## 快速开始
 
-1. 添加视图文件夹和文件 `views/index.ejs` 并编写内容
+添加视图文件夹 `views` 和文件 `views/index.ejs` 并编写视图内容
 
-2. 启用中间件 `startup.useViews()`
+然后在 `startup.ts` 中添加 `startup.useViews`
 
 ```TS
-import { TestStartup } from "@ipare/core";
 import "@ipare/view";
 
-const res = await new TestStartup()
+startup
   .useViews()
   .use(async (ctx) => {
     ctx.view("index.ejs");
-  })
-  .run();
+  });
 ```
 
 ## `useViews`
@@ -79,6 +77,6 @@ startup.useViews({
 
 在你使用 `view` 渲染模板时，`@ipare/views` 做了以下类似操作：
 
-```JS
+```TS
 const args = Object.assign({}, options, ctx.state, locals);
 ```

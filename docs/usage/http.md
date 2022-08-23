@@ -16,7 +16,7 @@ npm i @ipare/http
 
 以下示例开启一个服务，端口当然是 2333 啦
 
-```JS
+```TS
 import { HttpStartup } from "@ipare/http";
 
 new HttpStartup()
@@ -32,7 +32,7 @@ new HttpStartup()
 
 ### @ipare/router
 
-```JS
+```TS
 import { HttpStartup } from "@ipare/http";
 import "@ipare/router";
 
@@ -43,7 +43,7 @@ new HttpStartup()
 
 ### @ipare/static
 
-```JS
+```TS
 import { HttpStartup } from "@ipare/http";
 import "@ipare/router";
 
@@ -56,7 +56,7 @@ new HttpStartup()
 
 内置四种 body 解析
 
-```JS
+```TS
 import { HttpStartup } from "@ipare/http";
 new HttpStartup()
   .useHttpJsonBody()
@@ -70,13 +70,13 @@ new HttpStartup()
 
 接收参数参考 [co-body](https://github.com/koajs/koa-body)
 
-```JS
+```TS
 startup.useHttpJsonBody()
 ```
 
 或
 
-```JS
+```TS
 startup.useHttpJsonBody({
   strict: true,
   limit: "1mb",
@@ -90,13 +90,13 @@ startup.useHttpJsonBody({
 
 接收参数参考 [co-body](https://github.com/koajs/koa-body)
 
-```JS
+```TS
 startup.useHttpTextBody()
 ```
 
 或
 
-```JS
+```TS
 startup.useHttpTextBody({
   limit: "1mb",
   encoding: "utf-8",
@@ -109,13 +109,13 @@ startup.useHttpTextBody({
 
 接收参数参考 [co-body](https://github.com/koajs/koa-body)
 
-```JS
+```TS
 startup.useHttpUrlencodedBody()
 ```
 
 或
 
-```JS
+```TS
 startup.useHttpUrlencodedBody({
   queryString:'',
   limit: "1mb",
@@ -129,13 +129,13 @@ startup.useHttpUrlencodedBody({
 
 接收参数参考 [formidable](https://github.com/node-formidable/formidable)
 
-```JS
+```TS
 startup.useHttpMultipartBody()
 ```
 
 或
 
-```JS
+```TS
 startup.useHttpMultipartBody({
   opts: {
     multiples: true,

@@ -14,7 +14,7 @@ npm i @ipare/alifc
 
 ## 开始使用
 
-```JS
+```TS
 import { AlifcStartup } from "@ipare/alifc";
 
 const startup = new AlifcStartup(req, resp, context).use(async (ctx) => {
@@ -28,7 +28,7 @@ module.exports.handler = handler;
 
 如果添加 `@ipare/router`
 
-```JS
+```TS
 import { AlifcStartup } from "@ipare/alifc";
 import "@ipare/router";
 
@@ -54,7 +54,7 @@ module.exports.handler = handler;
 
 使用详情参考 [@ipare/http](https://github.com/ipare/http)
 
-```JS
+```TS
 await new AlifcStartup(req, resp, context)
   .useHttpJsonBody()
   .useHttpTextBody()

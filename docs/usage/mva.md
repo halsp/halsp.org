@@ -12,16 +12,12 @@ npm i @ipare/mva
 
 ## 简单使用
 
-```TS
-startup.useMva()
-```
+在 `startup.ts` 中
 
 ```TS
-import { TestStartup } from "@ipare/core";
 import "@ipare/mva";
-const res = await new TestStartup()
-  .useMva()
-  .run();
+
+startup.useMva();
 ```
 
 参考 `@ipare/router` 在根目录中（ts 项目为 src 目录）添加以下文件夹：

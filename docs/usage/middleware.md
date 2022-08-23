@@ -122,8 +122,7 @@ startup
   )
   .use(async (ctx, next) => {
     await next();
-  })
-  .run();
+  });
 ```
 
 ## 中间件钩子
@@ -162,9 +161,9 @@ startup.hook(HookType, (ctx, md) => {})
 其中参数 1 可省略，默认为 `BeforeInvoke`
 
 ```TS
-  import { Middleware, TestStartup } from "@ipare/core";
+  import { Middleware } from "@ipare/core";
 
-  const startup = new TestStartup()
+startup
     .hook((md) => {
       // 1 before hook
       if (md instanceof TestMiddleware) {

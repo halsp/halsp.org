@@ -73,21 +73,21 @@ ipare 支持两种引用类型的 bag
 
 #### 添加或修改 `bag`
 
-```JS
+```TS
 // Singleton
 this.ctx.bag("BAG_NAME", { /*bag content*/ });
 ```
 
 OR
 
-```JS
+```TS
 // Transient
 this.ctx.bag("BAG_NAME", () => { /*bag content*/ });
 ```
 
 #### 获取 `bag`
 
-```JS
+```TS
 const val = this.ctx.bag("BAG_NAME")
 ```
 

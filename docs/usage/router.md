@@ -261,7 +261,7 @@ export default class extends Action {
 
 在 action 文件 (`.ts/.js`) 中创建继承 `Action` 的类，并重写 `invoke` 函数
 
-```JS
+```TS
 import { Action } from "@ipare/router";
 
 export default class extends Action {
@@ -304,15 +304,13 @@ export default class extends Action{}
 
 ```TS
 import "@ipare/router";
-import { TestStartup } from "@ipare/core"
 
-const res = await new TestStartup()
+startup
   .use(async (ctx, next)=>{
     const role = ctx.actionMetadata.role; // admin
     await next();
   })
-  .useRouter()
-  .run();
+  .useRouter();
 ```
 
 也可以利用 `setActionMetadata` 创建自定义装饰器，更便捷的添加元数据
