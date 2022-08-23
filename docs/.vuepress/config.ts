@@ -79,7 +79,7 @@ export default defineUserConfig({
         },
         {
           text: "其他",
-          children: ["koa", "cors"],
+          children: ["koa", "cors", "cookie"],
         },
       ],
     },
