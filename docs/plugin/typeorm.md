@@ -49,11 +49,11 @@ export class User {
 
 ```TS
 import { Middleware } from '@ipare/core';
-import { TypeormConnectione, TypeormInject } from "@ipare/typeorm";
+import { TypeormConnection, TypeormInject } from "@ipare/typeorm";
 
 class TestMiddleware extends Middleware {
   @TypeormInject()
-  private readonly dataSource!: TypeormConnectione;
+  private readonly dataSource!: TypeormConnection;
 
   async invoke(): Promise<void> {
     const userRepository = this.dataSource.getRepository(User);
