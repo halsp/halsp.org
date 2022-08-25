@@ -26,10 +26,10 @@ startup.useRedis({
 
 ```TS
 import { Middleware } from "@ipare/core";
-import { redis, RedisClient } from "@ipare/redis";
+import { RedisConnection, RedisInject } from "@ipare/redis";
 
 class TestMiddleware extends Middleware {
-  @RedisClient()
+  @RedisInject()
   private readonly redisClient!: RedisConnection;
 
   async invoke(): Promise<void> {
@@ -61,16 +61,16 @@ startup
   });
 ```
 
-在中间件或服务中，给装饰器 `@RedisClient()` 传参字符串以区分连接
+在中间件或服务中，给装饰器 `@RedisInject()` 传参字符串以区分连接
 
 ```TS
 import { Middleware } from "@ipare/core";
-import { RedisConnection, RedisClient } from "@ipare/redis";
+import { RedisConnection, RedisInject } from "@ipare/redis";
 
 class TestMiddleware extends Middleware {
-  @RedisClient("db1")
+  @RedisInject("db1")
   private readonly redisClient1!: RedisConnection;
-  @RedisClient("db2")
+  @RedisInject("db2")
   private readonly redisClient2!: RedisConnection;
 
   async invoke(): Promise<void> {
@@ -91,20 +91,20 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@RedisClient` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+用 `@RedisInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
 
 ```TS
 import { Middleware } from "@ipare/core";
-import { RedisConnection, RedisClient } from "@ipare/redis";
+import { RedisConnection, RedisInject } from "@ipare/redis";
 
 @Inject
 class TestMiddleware extends Middleware {
   constructor(
-    @RedisClient private readonly connection: RedisConnection,
-    @RedisClient("id2") private readonly connection2: RedisConnection
+    @RedisInject private readonly connection: RedisConnection,
+    @RedisInject("id2") private readonly connection2: RedisConnection
   ) {}
 
-  @RedisClient("id1")
+  @RedisInject("id1")
   private readonly connection1!: RedisConnection;
 
   async invoke(): Promise<void> {
