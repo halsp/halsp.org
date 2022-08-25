@@ -24,15 +24,15 @@ startup.useMongoose({
 })
 ```
 
-在中间件或服务通过依赖注入获取数据库连接实例 `mongoose.Connection`
+在中间件或服务通过依赖注入获取数据库连接实例 `MongooseConnection`
 
 ```TS
 import { Middleware } from "@ipare/core";
-import { mongoose, MongoConnection } from "@ipare/mongoose";
+import { MongooseConnection, MongooseInject } from "@ipare/mongoose";
 
 class TestMiddleware extends Middleware {
-  @MongoConnection()
-  private readonly connection!: mongoose.Connection;
+  @MongooseInject()
+  private readonly connection!: MongooseConnection;
 
   async invoke(): Promise<void> {
     const MyModel = this.connection.model("ModelName");
@@ -64,17 +64,17 @@ startup
   });
 ```
 
-在中间件或服务中，给装饰器 `@MongoConnection()` 传参以区分连接
+在中间件或服务中，给装饰器 `@MongooseInject()` 传参以区分连接
 
 ```TS
 import { Middleware } from '@ipare/core';
-import { mongoose, MongoConnection } from "@ipare/mongoose";
+import { MongooseConnection, MongooseInject } from "@ipare/mongoose";
 
 class TestMiddleware extends Middleware {
-  @MongoConnection("db1")
-  private readonly connection1!: mongoose.Connection;
-  @MongoConnection("db2")
-  private readonly connection2!: mongoose.Connection;
+  @MongooseInject("db1")
+  private readonly connection1!: MongooseConnection;
+  @MongooseInject("db2")
+  private readonly connection2!: MongooseConnection;
 
   async invoke(): Promise<void> {
     const MyModel1 = this.connection1.model("ModelName1");
@@ -87,6 +87,48 @@ class TestMiddleware extends Middleware {
 :::warning 注意
 只有在 `useMongoose` 之后的中间件，才能获取到数据库连接实例
 :::
+
+## 获取实例
+
+你可以通过依赖注入的方式获取实例，也可以用 `ctx.getMongoose` 获取实例
+
+### 依赖注入
+
+用 `@MongooseInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+
+```TS
+import { Middleware } from "@ipare/core";
+import { MongooseConnection, MongooseInject } from "@ipare/mongoose";
+
+@Inject
+class TestMiddleware extends Middleware {
+  constructor(
+    @MongooseInject private readonly connection: MongooseConnection,
+    @MongooseInject("id2") private readonly connection2: MongooseConnection
+  ) {}
+
+  @MongooseInject("id1")
+  private readonly connection1!: MongooseConnection;
+
+  async invoke(): Promise<void> {
+    await this.next();
+  }
+}
+```
+
+### `ctx.getMongoose`
+
+使用 `ctx.getMongoose` 的方式更灵活，但代码易读性不如使用依赖注入
+
+```TS
+import "@ipare/mongoose";
+
+startup.use(async (ctx, next) => {
+  const connection1 = await ctx.getMongoose("id1");
+  const connection2 = await ctx.getMongoose("id2");
+  const connection = await ctx.getMongoose();
+});
+```
 
 ## 生命周期与作用域
 

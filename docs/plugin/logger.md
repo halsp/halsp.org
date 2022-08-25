@@ -24,11 +24,11 @@ startup.useLogger()
 
 ```TS
 import { Middleware } from "@ipare/core";
-import { winston, Logger } from "@ipare/logger";
+import { LoggerInject, Logger } from "@ipare/logger";
 
 class TestMiddleware extends Middleware {
-  @Logger()
-  private readonly logger!: winston.Logger;
+  @LoggerInject()
+  private readonly logger!: Logger;
 
   invoke(){
     this.logger.info("info");
@@ -36,7 +36,7 @@ class TestMiddleware extends Middleware {
 }
 ```
 
-## 创建多个日志输出类
+## 创建多个日志输出实例
 
 `@ipare/logger` 支持创建多个日志输出实例，只需调用多次 `useLogger` ，并传参 `identity` 用于区分
 
@@ -54,17 +54,17 @@ startup
   });
 ```
 
-在中间件或服务中，给装饰器 `@Logger()` 传参字符串以区分日志实例
+在中间件或服务中，给装饰器 `@LoggerInject()` 传参字符串以区分日志实例
 
 ```TS
 import { Middleware } from "@ipare/core";
-import { winston, Logger } from "@ipare/logger";
+import { LoggerInject, Logger } from "@ipare/logger";
 
 class TestMiddleware extends Middleware {
-  @Logger("id1")
-  private readonly logger1!: winston.Logger;
-  @Logger("id2")
-  private readonly logger2!: winston.Logger;
+  @LoggerInject("id1")
+  private readonly logger1!: Logger;
+  @LoggerInject("id2")
+  private readonly logger2!: Logger;
 
   async invoke(): Promise<void> {
     this.logger1.info("info");
@@ -77,6 +77,51 @@ class TestMiddleware extends Middleware {
 :::warning 注意
 只有在 `useLogger` 之后的中间件，才能获取到日志输出实例
 :::
+
+## 获取实例
+
+你可以通过依赖注入的方式获取实例，也可以用 `ctx.getLogger` 获取实例
+
+### 依赖注入
+
+用 `@LoggerInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+
+```TS
+import { Middleware } from "@ipare/core";
+import { Logger, LoggerInject } from "@ipare/logger";
+
+@Inject
+class TestMiddleware extends Middleware {
+  constructor(
+    @LoggerInject private readonly logger1: Logger,
+    @LoggerInject("id2") private readonly logger2: Logger
+  ) {}
+
+  @LoggerInject("id1")
+  private readonly logger1!: Logger;
+
+  async invoke(): Promise<void> {
+    this.logger1.info("def");
+    this.logger2.error("err");
+    this.logger3.info("info");
+    await this.next();
+  }
+}
+```
+
+### `ctx.getLogger`
+
+使用 `ctx.getLogger` 的方式更灵活，但代码易读性不如使用依赖注入
+
+```TS
+import "@ipare/logger";
+
+startup.use(async (ctx, next) => {
+  const logger1 = await ctx.getLogger("id1");
+  const logger2 = await ctx.getLogger("id2");
+  const logger = await ctx.getLogger();
+});
+```
 
 ## use...
 

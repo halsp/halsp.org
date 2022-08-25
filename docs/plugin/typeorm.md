@@ -45,15 +45,15 @@ export class User {
 }
 ```
 
-在中间件或服务通过依赖注入获取数据库连接实例 `DataSource`
+在中间件或服务通过依赖注入获取数据库连接实例 `TypeormInject`
 
 ```TS
 import { Middleware } from '@ipare/core';
-import { typeorm, DataSource } from "@ipare/typeorm";
+import { TypeormConnectione, TypeormInject } from "@ipare/typeorm";
 
 class TestMiddleware extends Middleware {
-  @DataSource()
-  private readonly dataSource!: typeorm.DataSource;
+  @TypeormInject()
+  private readonly dataSource!: TypeormConnectione;
 
   async invoke(): Promise<void> {
     const userRepository = this.dataSource.getRepository(User);
@@ -105,17 +105,17 @@ startup
   })
 ```
 
-在中间件或服务中，给装饰器 `@DataSource()` 传参以区分连接
+在中间件或服务中，给装饰器 `@TypeormInject()` 传参以区分连接
 
 ```TS
 import { Middleware } from '@ipare/core';
-import { typeorm, DataSource } from "@ipare/typeorm";
+import { TypeormConnection, TypeormInject } from "@ipare/typeorm";
 
 class TestMiddleware extends Middleware {
-  @DataSource("db1")
-  private readonly dataSource1!: typeorm.DataSource;
-  @DataSource("db2")
-  private readonly dataSource2!: typeorm.DataSource;
+  @TypeormInject("db1")
+  private readonly dataSource1!: TypeormConnection;
+  @TypeormInject("db2")
+  private readonly dataSource2!: TypeormConnection;
 
   async invoke(): Promise<void> {
     const userRepository1 = this.dataSource1.getRepository(User);
@@ -128,6 +128,48 @@ class TestMiddleware extends Middleware {
 :::warning 注意
 只有在 `useTypeorm` 之后的中间件，才能获取到数据库连接实例
 :::
+
+## 获取实例
+
+你可以通过依赖注入的方式获取实例，也可以用 `ctx.getTypeorm` 获取实例
+
+### 依赖注入
+
+用 `@TypeormInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+
+```TS
+import { Middleware } from "@ipare/core";
+import { TypeormConnection, TypeormInject } from "@ipare/typeorm";
+
+@Inject
+class TestMiddleware extends Middleware {
+  constructor(
+    @TypeormInject private readonly connection: TypeormConnection,
+    @TypeormInject("id2") private readonly connection2: TypeormConnection
+  ) {}
+
+  @TypeormInject("id1")
+  private readonly connection1!: TypeormConnection;
+
+  async invoke(): Promise<void> {
+    await this.next();
+  }
+}
+```
+
+### `ctx.getTypeorm`
+
+使用 `ctx.getTypeorm` 的方式更灵活，但代码易读性不如使用依赖注入
+
+```TS
+import "@ipare/typeorm";
+
+startup.use(async (ctx, next) => {
+  const connection1 = await ctx.getTypeorm("id1");
+  const connection2 = await ctx.getTypeorm("id2");
+  const connection = await ctx.getTypeorm();
+});
+```
 
 ## 生命周期与作用域
 
