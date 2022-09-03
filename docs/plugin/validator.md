@@ -1,10 +1,10 @@
 # 参数校验 `(@ipare/validator)`
 
-安装 `@ipare/validator` 以支持参数校验功能
+安装 `@ipare/validator` 以支持参数校验功能，可以自动校验请求参数
 
 基于 [class-validator](https://github.com/typestack/class-validator) 和 [@ipare/pipe](https://github.com/ipare/pipe) 校验请求参数
 
-使用 `class-validator` 风格的装饰器，配合 `@ipare/validator` 可以实现用装饰器自动校验请求参数
+使用链式装饰器，减少引用，改进 `class-validator` 的装饰器风格
 
 ## 安装
 
@@ -14,13 +14,13 @@ npm install @ipare/validator
 
 ## 开始使用
 
-你可以定义数据传输模型，并在数据传输模型中定义校验规则
+可以利用 `@ipare/pipe` 管道功能，在中间件中定义校验规则
 
-也可以利用 `@ipare/pipe` 管道功能，在中间件中定义校验规则
+也可以定义数据传输模型，并在数据传输模型中定义校验规则
 
 ### startup
 
-首先在 `startup.ts` 中添加如下代码，开启 `@ipare/validator` 的功能
+在 `startup.ts` 中添加如下代码，开启 `@ipare/validator` 的功能
 
 ```TS
 import "@ipare/validator";
@@ -30,20 +30,24 @@ startup.useValidator()
 ### 在数据传输模型中定义
 
 ```TS
+import { V } from "@ipare/validator";
+import { Body } from "@ipare/pipe";
+import { Middleware } from "@ipare/core";
+
 // 数据传输模型
 class TestDto {
-  @IsString()
-  b1!: string;
+  @V().IsString().IsNotEmpty()
+  prop1!: string;
 
-  @IsInt()
-  b2!: number;
+  @V().IsInt().Min(6)
+  prop2!: number;
 
-  get b() {
-    return this.b1 + this.b2;
+  get prop3() {
+    return this.prop1 + this.prop2;
   }
 }
 
-// 中间件
+// 中间件 或 服务
 class TestMiddleware extends Middleware {
   @Body
   private readonly body!: TestDto;
@@ -59,15 +63,18 @@ class TestMiddleware extends Middleware {
 ### 使用 `@ipare/pipe`
 
 ```TS
+import { V } from "@ipare/validator";
+import { Body } from "@ipare/pipe";
+import { Middleware } from "@ipare/core";
+
 // 中间件
 class TestMiddleware extends Middleware {
   @Body("prop1")
-  @IsString()
-  @IsBase64()
+  @V().IsString().IsNotEmpty()
   private readonly prop1!: string;
 
   @Body("prop2")
-  @IsNumber()
+  @V().IsInt().Min(6)
   private readonly p2!: any;
 
   async invoke(): Promise<void> {
@@ -109,10 +116,10 @@ startup.useValidator(({ ctx, val, propertyType }) => ({
   stopAtFirstError: true
 })
 class TestDto {
-  @IsString()
+  @V().IsString().IsNotEmpty()
   b1!: string;
 
-  @IsInt()
+  @V().IsInt().Min(6)
   b2!: number;
 
   get b() {
@@ -136,3 +143,105 @@ class TestDto {
 ```
 
 参数 `val` 是该模型对应的值
+
+## 现有校验装饰器
+
+参考 [class-validator](https://github.com/typestack/class-validator)
+
+包含 `class-validator` 全部校验装饰器，装饰器参数也完全相同
+
+此外还提供了 `Is` 装饰器，可以使用自定义校验规则，用于更复杂的需求
+
+也能封装自定义校验，用于重复使用的自定义校验规则
+
+## 自定义校验 @Is
+
+`@Is` 装饰器可以实现自定义校验
+
+```TS
+class TestDto {
+  @V()
+    .Is(
+      (value, property) => typeof value == "number",
+      `${property} must be a number`
+    )
+    .Is((value, property) => (value > 6), `${property} must more than 6`)
+  readonly prop!: number;
+}
+```
+
+上面的代码限制 `prop` 的值必须是一个数字，并且值大于 6
+
+`@Is` 装饰器有两个参数
+
+- `validate` 校验规则回调函数，返回 bool，有三个参数
+  - `value` 请求参数实际值
+  - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
+  - `args` 装饰器输入参数数组
+- `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数参数同 `validate` 回调函数
+
+## 封装的自定义校验
+
+`@Is` 装饰器虽然很灵活，但没法复用
+
+调用函数 `addCustomValidator` 即可增加一个自定义校验，然后在代码中多处重复使用
+
+`@ipare/swagger` 就是基于此功能增加了描述性装饰器（没有校验功能）
+
+如实现一个下面的校验规则，判断请求参数是否为固定值，装饰器参数传入固定值
+
+```TS
+import { addCustomValidator } from '@ipare/validator';
+
+addCustomValidator({
+  validate: (value, property, args) => value == args[0],
+  errorMessage: (value, property, args) => `${property} must equal with ${args[0]}, now is ${value}`,
+  name: "CustomEquals",
+});
+
+class TestDto{
+  @V().CustomEquals(6)
+  readonly prop!: number;
+}
+```
+
+如果请求参数的 prop 值是 7，会校验失败，抛出如下错误
+
+```TS
+{
+  "status": 400
+  "message": 'prop must equal with 6, now is 7'
+}
+```
+
+### 定义声明
+
+虽然 `addCustomValidator` 可以直接添加一个装饰器并且能够使用，但没有智能提示，在 TypeScript 下使用也会报错
+
+因此 TypeScript 还需要添加声明才能更安全、方便的使用
+
+```TS
+import { ValidatorDecoratorReturnType } from "@ipare/validator";
+
+declare module "@ipare/validator" {
+  interface ValidatorLib {
+    CustomEquals: (num: number) => ValidatorDecoratorReturnType;
+    CustomDecorator2: () => ValidatorDecoratorReturnType;
+  }
+}
+```
+
+类型声明代码，可以写在 `.d.ts` 文件中，也可以写在普通 `.ts` 中
+
+如在 types/index.d.ts 文件中声明，即可以全局使用。也可以在 `index.ts` 等文件声明
+
+### `addCustomValidator` 参数
+
+`addCustomValidator` 接收三个参数
+
+- `validate` 校验规则回调函数，返回 bool，与 `@Is` 装饰器不同的是有三个参数，前两个参数相同
+  - `value` 请求参数实际值
+  - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
+  - `args` 装饰器输入参数数组
+- `errorMessage` 与 `@Is` 装饰器第二个参数相同
+- `name` 装饰器名称，必须唯一，且与已有装饰器不同
