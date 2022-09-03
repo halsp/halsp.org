@@ -2,7 +2,7 @@
 
 安装 `@ipare/swagger` 以使用 Swagger 文档，用于生成你的 Ipare 文档
 
-使用装饰器注释文档
+基于 [@ipare/validator](./validator) 参数校验，使用装饰器注释文档，`@ipare/validator` 中的部分装饰器会自动生成文档内容
 
 在浏览器中使用 [swagger-ui](https://github.com/swagger-api/swagger-ui) 渲染文档
 
@@ -25,19 +25,15 @@ startup.useSwagger();
 定义传输模型
 
 ```TS
-import { DtoDescription, DtoFormat, DtoLengthRange } from "@ipare/swagger";
+import "@ipare/swagger";
+import { V } from "@ipare/validator";
 
-@DtoDescription("login info")
+@V().Description("login info")
 export class LoginDto {
-  @DtoDescription("email")
-  @DtoFormat("email")
+  @V().Description("email").IsEmail()
   account!: string;
 
-  @DtoDescription("password")
-  @DtoLengthRange({
-    min: 8,
-    max: 24,
-  })
+  @V().Description("password").MinLength(8).MaxLength(24)
   password!: string;
 }
 ```
@@ -45,11 +41,12 @@ export class LoginDto {
 在 `Action` 中用 `@ipare/pipe` 注入请求参数
 
 ```TS
+import "@ipare/swagger";
+import { V } from "@ipare/validator";
 import { Action } from "@ipare/core";
 import { Body } from "@ipare/pipe";
 
-@ApiTags("user")
-@ApiDescription("Get user info")
+@V().Tags("user").Description("Get user info")
 export default class extends Action {
   @Body
   private readonly loginDto!: LoginDto;
@@ -60,21 +57,27 @@ export default class extends Action {
 }
 ```
 
-## 配置介绍
+## 配置
 
-`startup.useSwagger` 接收一个 `options` 参数，包含以下字段：
+`startup.useSwagger` 接收一个 `options` 参数
 
-- path
-- builder
-- customHtml
+```TS
+export interface SwaggerOptions {
+  path?: string;
+  builder?: SwaggerBuilder;
+  html?: SwaggerHtmlOptions;
+  initOAuth?: any;
+  uiBundleOptions?: SwaggerUIBundleConfig;
+}
+```
 
 ### path
 
-访问 swagger 页面的路径，默认为 `/`
+访问 swagger 页面的路径，默认为 `swagger`
 
 ### builder
 
-回调函数，参数为 `OpenApiBuilder` 对象，返回值为同一个或新的 `OpenApiBuilder` 对象
+回调函数，参数为 `OpenApiBuilder` 对象，返回值为同一个或新的 `OpenApiBuilder` 对象，也可以不返回内容
 
 如
 
@@ -85,7 +88,6 @@ startup.useSwagger({
       title: "@ipare/swagger",
       version: "0.0.1",
     });
-    return builder;
   }
 })
 ```
@@ -102,172 +104,183 @@ startup.useSwagger({
 
 `OpenApiBuilder` 参考 [openapi3-ts](https://github.com/metadevpro/openapi3-ts)
 
-### customHtml
+### html
 
-如果默认页面不能满足需求，可以自定义 swagger html 页面
+网页渲染相关参数
 
-该参数传入一个回调函数，函数参数为 json 字符串，返回值为 html 字符串
+```TS
+export interface SwaggerHtmlOptions {
+  lang?: string;
+  title?: string;
+  removeDefaultStyle?: boolean;
+  favicon?: string | string[];
+  css?: string | string[];
+  style?: string | string[];
+  js?: string | string[];
+  script?: string | string[];
+}
+```
 
-json 字符串参数为生成的 swagger 文档
+#### lang
+
+网页语言的值，如 `cn`/`en`，影响 `<html lang="en">`
+
+#### title
+
+网页标题，取自文档中的 info/title 值，如果没有值，则为 `Swagger UI`
+
+#### favicon
+
+网页图标地址
+
+#### removeDefaultStyle
+
+如果为 true，将移除默认样式资源，你必须添加别的样式
+
+#### css
+
+网页样式文件地址，可以是一个字符串，也可以是字符串数组以添加多个文件
+
+#### style
+
+样式代码，可以是一个字符串添加一个 `<style>`，也可以是字符串数组添加多个 `<style>`
+
+#### js
+
+javascript 文件地址，可以是一个字符串，也可以是字符串数组以添加多个文件
+
+#### script
+
+javascript 代码，可以是一个字符串添加一个 `<script>`，也可以是字符串数组添加多个 `<script>`
+
+### initOAuth
+
+### uiBundleOptions
+
+`swagger-ui-dist` 中的 `SwaggerUIBundle` 参数为
+
+参考 [SwaggerUIBundle](https://swagger.io/docs/open-source-tools/swagger-ui/usage/installation/)
+
+`url` 和 `dom_id` 正常情况使用默认值即可
+
+网页代码请使用 `"% code %"` 的写法，如
 
 ```TS
 startup.useSwagger({
-  customHtml: getHtml,
-});
-
-const getHtml = (jsonStr) => `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.50.0/swagger-ui.min.css" />
-    <style>
-      html
-      {
-        box-sizing: border-box;
-        overflow: -moz-scrollbars-vertical;
-        overflow-y: auth;
-      }
-
-      *,
-      *:before,
-      *:after
-      {
-        box-sizing: inherit;
-      }
-
-      body
-      {
-        margin:0;
-        background: #fafafa;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div id="swagger-ui"></div>
-    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.50.0/swagger-ui-bundle.min.js" charset="UTF-8"> </script>
-    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@3.50.0/swagger-ui-standalone-preset.min.js" charset="UTF-8"> </script>
-    <script>
-    window.onload = function() {
-      const ui = SwaggerUIBundle({
-        spec: ${jsonStr},
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
-        ],
-        plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
-        ],
-        layout: "StandaloneLayout",
-        validatorUrl:null
-      });
-      window.ui = ui;
-    };
-  </script>
-  </body>
-</html>`;
+  presets:[
+    "%SwaggerUIBundle.presets.apis%",
+    "%SwaggerUIBundle.SwaggerUIStandalonePreset%"
+  ]
+})
 ```
 
-上述 `getHtml` 为 `@ipare/swagger` 的默认实现
+在网页会生成如下代码
+
+```JS
+SwaggerUIBundle({
+  url: `./index.json`,
+  dom_id: "#swagger-ui",
+  presets: [
+    SwaggerUIBundle.presets.apis,
+    SwaggerUIBundle.SwaggerUIStandalonePreset,
+  ],
+});
+```
 
 ## 支持的装饰器
 
-文档中大部分内容是根据装饰器生成的
+文档中部分内容是根据装饰器生成的
 
-### Action 类装饰器
+装饰器会影响文档的生成，包含 `@ipare/validator` 中的部分装饰器和 `@ipare/swagger` 中的全部装饰器
 
-装饰 `Action` 的装饰器，用于描述单个接口
+- `@ipare/swagger` 中的装饰器
+  - Ignore
+  - Tags
+  - Summary
+  - Description
+  - ExternalDocs
+  - Deprecated
+  - Servers
+  - Security
+  - OperationId
+  - Style
+  - Explode
+  - AllowReserved
+  - Examples
+  - Example
+  - Discriminator
+  - ReadOnly
+  - WriteOnly
+  - Xml
+  - Format
+  - Items
+  - Default
+  - Title
+  - MaxProperties
+  - MinProperties
+  - Enum
+  - ContentTypes
+  - Response
+  - ResponseHeaders
+  - ResponseDescription
+  - ResponseContentTypes
+- `@ipare/validator` 中影响文档生成的装饰器
+  - IsNotEmpty
+  - IsEmpty
+  - IsInt
+  - IsDate
+  - IsNumber
+  - IsString
+  - IsBoolean
+  - IsObject
+  - IsEmpty
+  - Max
+  - Min
+  - MinLength
+  - MaxLength
+  - Matches
+  - ArrayMaxSize
+  - ArrayMinSize
+  - ArrayUnique
+  - Required
+  - IsOptional
 
-- ApiTags
-- ApiSummary
-- ApiCallback
-- ApiDeprecated
-- ApiDescription
-- ApiExternalDocs
-- ApiOperationId
-- ApiResponses
-- ApiSecurity
-- ApiServers
+### 数组
+
+需要注意，数组类型无法确定其元素类型，需要借助 `Items` 装饰器声明元素类型
 
 ```TS
-import { Action } from "@ipare/core";
-import { Body } from "@ipare/pipe";
+class TestDto1 {
+  readonly prop1!: number;
+}
 
-@ApiTags("tag")
-@ApiDescription("description")
-export default class extends Action {
-  async invoke() {
-    this.ok();
+class TestDto2 {
+  @V().Items(TestDto1)
+  readonly prop2!: TestDto1[];
+}
+
+export default class extends Action{
+  @Body
+  @V().Items(TestDto2)
+  private readonly dto!:TestDto2[];
+
+  invoke(){
+    this.ok(this.dto);
   }
 }
 ```
 
-### Dto 装饰器
-
-装饰数据传输模型的装饰器，也可以装饰 `@ipare/pipe` 的具名字段
-
-- DtoDescription
-- DtoAllowEmptyValue
-- DtoDeprecated
-- DtoIgnore
-- DtoRequired
-- DtoArrayType
-- DtoExample
-- DtoSchema
-- DtoParameterStyle
-- DtoDefault
-- DtoNumRange
-- DtoLengthRange
-- DtoPattern
-- DtoPropertiesRange
-- DtoReadOnly
-- DtoTitle
-- DtoWriteOnly
-- DtoEnum
-- DtoFormat
-- DtoXml
-- DtoExamples
-- DtoType
-
-在数据传输模型中
+二维数组可以这样 `.Item([TestDto2])`，三维数组 `.Item([[TestDto2]])`，更高维数组以此类推
 
 ```TS
-import { DtoDescription, DtoFormat, DtoLengthRange } from "@ipare/swagger";
-
-@DtoDescription("login info")
-export class LoginDto {
-  @DtoDescription("email")
-  @DtoFormat("email")
-  account!: string;
-
-  @DtoDescription("password")
-  @DtoLengthRange({
-    min: 8,
-    max: 24,
-  })
-  password!: string;
+class TestDto2 {
+  @V().Items([TestDto1])
+  readonly prop2!: TestDto1[][];
 }
-```
 
-或在 Action 中
-
-```TS
-import { Action } from "@ipare/core";
-import { Body } from "@ipare/pipe";
-import { DtoRequired, DtoDescription } from "@ipare/swagger";
-
-export default class extends Action {
-  @Body("account")
-  @DtoRequired()
-  @DtoDescription("email")
-  private readonly account!: string;
-
-  async invoke() {
-    this.ok({ account });
-  }
+class TestDto3 {
+  @V().Items([[TestDto1]])
+  readonly prop3!: TestDto2[][][];
 }
 ```
 

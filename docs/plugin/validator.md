@@ -154,9 +154,9 @@ class TestDto {
 
 也能封装自定义校验，用于重复使用的自定义校验规则
 
-## 自定义校验 @Is
+## 自定义校验 Is
 
-`@Is` 装饰器可以实现自定义校验
+`Is` 装饰器可以实现自定义校验
 
 ```TS
 class TestDto {
@@ -172,7 +172,7 @@ class TestDto {
 
 上面的代码限制 `prop` 的值必须是一个数字，并且值大于 6
 
-`@Is` 装饰器有两个参数
+`Is` 装饰器有两个参数
 
 - `validate` 校验规则回调函数，返回 bool，有三个参数
   - `value` 请求参数实际值
@@ -182,7 +182,7 @@ class TestDto {
 
 ## 封装的自定义校验
 
-`@Is` 装饰器虽然很灵活，但没法复用
+`Is` 装饰器虽然很灵活，但没法复用
 
 调用函数 `addCustomValidator` 即可增加一个自定义校验，然后在代码中多处重复使用
 
@@ -239,9 +239,9 @@ declare module "@ipare/validator" {
 
 `addCustomValidator` 接收三个参数
 
-- `validate` 校验规则回调函数，返回 bool，与 `@Is` 装饰器不同的是有三个参数，前两个参数相同
+- `validate` 校验规则回调函数，返回 bool，与 `Is` 装饰器不同的是有三个参数，前两个参数相同
   - `value` 请求参数实际值
   - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
   - `args` 装饰器输入参数数组
-- `errorMessage` 与 `@Is` 装饰器第二个参数相同
+- `errorMessage` 与 `Is` 装饰器第二个参数相同
 - `name` 装饰器名称，必须唯一，且与已有装饰器不同
