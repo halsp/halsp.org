@@ -66,5 +66,6 @@ export default defineConfig(() => {
 });
 ```
 
-- `copyPackage` 如果为 `true` 则拷贝 `package.json` 文件，labmda 环境默认为 `true`
-- `removeDevDeps` 如果为 `true` 则移除拷贝后的 `devDependencies` 中的依赖 `true`，labmda 环境默认为 `true`
+labmda 环境默认为 `true`
+
+配置参考 [@ipare/cli](./cli/#项目配置) 中的 `copyPackage` 和 `removeDevDeps` 配置

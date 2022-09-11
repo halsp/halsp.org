@@ -16,6 +16,224 @@ npm install @ipare/cli -g
 npm install @ipare/cli -D
 ```
 
+## 快速开始
+
+创建一个项目
+
+```sh
+ipare create
+```
+
+编译项目
+
+```
+ipare build
+```
+
+运行项目
+
+```
+ipare start
+```
+
+## 项目配置
+
+项目根目录下的文件 `ipare-cli.config.ts` 用来存放 CLI 的相关配置
+
+### 配置方式
+
+在配置文件中，可以默认导出一个 json 对象，或默认导出一个返回 json 对象的回调函数
+
+#### 导出 json 对象
+
+导出 json 对象比较简单，但不够灵活，只能是固定的一种配置
+
+```TS
+export default {
+  build: {},
+};
+```
+
+或使用智能提示
+
+```TS
+import { defineConfig } from "@ipare/cli";
+
+export default defineConfig({
+  start: {}
+});
+```
+
+#### 导出回调函数
+
+导出回调函数可以实现动态配置，即根据不同编译条件返回不同配置
+
+```TS
+import { defineConfig } from "@ipare/cli";
+
+export default defineConfig(({ mode }) => {
+  return {
+    build: {
+      copyPackage: mode == "production",
+    },
+  };
+});
+```
+
+### 配置内容
+
+配置内容是一个 json 对象，该 json 对象目前有如下内容
+
+```TS
+export interface Configuration {
+    build?: {
+        prebuild?: Prebuild[];
+        postbuild?: Postbuild[];
+        beforeHooks?: CompilerHook<ts.SourceFile>[];
+        afterHooks?: CompilerHook<ts.SourceFile>[];
+        afterDeclarationsHooks?: CompilerHook<ts.SourceFile | ts.Bundle>[];
+        deleteOutDir?: boolean;
+        assets?: AssetConfig[];
+        watch?: boolean;
+        watchAssets?: boolean;
+        preserveWatchOutput?: boolean;
+        sourceMap?: boolean;
+        copyPackage?: boolean;
+        removeDevDeps?: boolean;
+    };
+    start?: {
+        port?: number;
+        binaryToRun?: string;
+        inspect?: boolean | string;
+        startupFile?: string;
+    };
+}
+```
+
+- build: 编译相关的配置
+- start: 调试相关的配置，调试的配置也包含 `build` 部分
+
+#### prebuild
+
+编译前钩子
+
+#### postbuild
+
+编译后钩子
+
+#### beforeHooks
+
+ts 编译钩子
+
+ts 代码编译前触发，可以更改编译行为
+
+#### afterHooks
+
+ts 编译钩子
+
+ts 代码编译完，生成目标代码前触发，可以更改编译行为
+
+#### afterDeclarationsHooks
+
+ts 编译钩子
+
+ts 类型解析后触发，可以更改编译行为
+
+#### deleteOutDir
+
+编译前删除目标文件夹
+
+#### assets
+
+资源文件，数组类型，编译时会将指定资源文件拷贝到目标文件夹
+
+支持 glob 语法
+
+数组元素有两种类型
+
+```TS
+export type AssetConfig =
+  | {
+      include: string | string[];
+      exclude?: string | string[];
+      outDir?: string;
+      root?: string;
+    }
+  | string;
+```
+
+字符串表示哪些文件是资源文件
+
+对象结构可以配置更复杂的资源文件
+
+- include 包含哪些文件，可以是 glob 字符串，也可以是 glob 字符串数组
+- exclude 排除哪些文件，是从 `include` 中的文件排除，可以是 glob 字符串，也可以是 glob 字符串数组
+- outDir 目标文件夹
+- root 根目录地址
+
+root 参数用于路径提升，如 `include` 为 `src/static/**` 需要拷到 `dist/static`, 此值应设为 `src`
+
+如果不设置 `root`，则会拷贝到 `dist/src/static`
+
+#### watch
+
+是否开启 watch 模式
+
+`start` 命令默认默认值为 `true`
+`build` 命令默认默认值为 `false`
+
+#### watchAssets
+
+是否监控资源文件，监控所有 `assets` 参数指定的文件
+
+默认值为 `false`
+
+#### preserveWatchOutput
+
+是否保留控制台输出
+
+默认为取自 `tsconfig.json` 中的 `compilerOptions.preserveWatchOutput` 值
+
+如果 `tsconfig.json` 中也没有配置，则默认值为 `false`
+
+#### sourceMap
+
+是否输出 map 文件
+
+用于断点调试时定位编译后的 js 和源文件 ts 的代码
+
+调试模式 `start` 命令，会忽略该配置，值始终为 `true`
+
+#### copyPackage
+
+如果为 `true` 则拷贝 `package.json` 文件
+
+使用云函数环境 `@ipare/lambda` 和 `@ipare/alifc` 时，该值默认为 `true`
+
+#### removeDevDeps
+
+如果为 `true` 则移除拷贝后 `package.json` 文件 `devDependencies` 中的依赖
+
+使用云函数环境 `@ipare/lambda` 和 `@ipare/alifc` 时，该值默认为 `true`
+
+#### port
+
+调试时启动的端口
+
+#### binaryToRun
+
+调试时启动的环境，默认为 `node`
+
+#### inspect
+
+V8 引擎的调试工具
+
+#### startupFile
+
+启动文件的路径，默认为 CLI 调试时生成的文件
+
+如果有其他需求，如希望使用其他运行环境调试，而不使用默认的 `@ipare/http`，可以创建一个入口文件，并通过此参数指定该文件
+
 ## 支持的命令
 
 ```

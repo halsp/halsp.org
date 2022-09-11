@@ -49,10 +49,12 @@ export default class extends Action{
 
 ```ts
 import { defineConfig, Configuration } from "@ipare/cli";
-export default defineConfig(({ mode }) => {
+import "@ipare/router/dist/cli-config";
+
+export default defineConfig(() => {
   return {
     routerActionsDir: "custom-actions",
-  } as Configuration;
+  };
 });
 ```
 
