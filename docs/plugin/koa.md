@@ -2,10 +2,9 @@
 
 安装 `@ipare/koa` 以支持 Koa 功能
 
-- 让 koa 成为 ipare 的中间件
+- 让 `ipare` 可以使用 `koa` 中间件
 - 或让 ipare 成为 koa 的中间件
 - 打通二者中间件管道
-- `ipare` 可以使用 `koa` 插件
 - 可以用 `koa` 托管 `ipare`
 
 ## 安装
@@ -16,31 +15,33 @@ npm i @ipare/koa
 
 ## 快速开始
 
-### 将 koa 作为 ipare 的中间件
+### 在 Ipare 中使用 Koa 的中间件
 
 ```TS
 import "@ipare/koa";
-import { Koa } from "@ipare/koa";
 
 startup
   .use(async (ctx, next) => {
     console.log("step 1");
     await next();
+    console.log("step 7");
+  })
+  .koa(async (ctx, next) => {
+    console.log("step 2");
+    await next();
+    console.log("step 6");
+  })
+  .koa(async (ctx, next) => {
+    console.log("step 3");
+    await next();
     console.log("step 5");
   })
-  .useKoa(
-    new Koa().use(async (ctx, next) => {
-      console.log("step 2");
-      await next();
-      console.log("step 4");
-    })
-  )
   .use((ctx) => {
-    console.log("step 3");
+    console.log("step 4");
   });
 ```
 
-### 将 ipare 作为 koa 的中间件
+### 将 Ipare 作为 Koa 的中间件
 
 ```TS
 import { Koa } from "@ipare/koa";
@@ -72,67 +73,64 @@ const server = koa.listen(2333);
 
 管道流向：
 
-1. 在 useKoa 后仍有 ipare 中间件：ipare -> koa -> ipare -> koa -> ipare
-2. 在 useKoa 后没有 ipare 中间件，或 koa 某个中间件是管道终点：ipare -> koa -> ipare
+1. 如果在 `startup.koa` 后仍有 ipare 中间件：ipare -> koa -> ipare -> koa -> ipare
+2. 如果在 `startup.koa` 后没有 ipare 中间件，或 koa 某个中间件是管道终点：ipare -> koa -> ipare
 
 因此你还可以这样玩：
 
 ```TS
-import { Koa } from "@ipare/koa";
 import cors from "koa-cors";
 
 startup
-  .useKoa(
-    new Koa()
-      .use(async (ctx, next) => {
-        ctx.body = "Ipare loves Koa";
-        await next();
-      })
-      .use(async (ctx) => {
-        ctx.setHeader("koa", "ipare");
-        await next();
-      })
-  )
+  .koa(async (ctx, next) => {
+    ctx.body = "Ipare loves Koa";
+    await next();
+  })
+  .koa(async (ctx) => {
+    ctx.setHeader("koa", "ipare");
+    await next();
+  })
   .use(async (ctx, next) => {
     console.log(ctx.res.body); // "Ipare loves Koa"
     await next();
   })
-  .useKoa(new Koa().use(cors()))
+  .koa(cors())
   .use(async (ctx) => {
     console.log(ctx.res.getHeader("koa")); // "ipare"
   });
 ```
 
+## 参数
+
+连续不间断的 `startup.koa` 会组成一个中间件组
+
+执行请求时，Ipare 内部每个中间件组创建一个 `Koa` 实例对象，并执行这组中间件
+
+`startup.koa` 第二个参数即用来创建这个 `Koa` 实例对象的参数 `KoaOptions`
+
+```TS
+export interface KoaOptions {
+  env?: string | undefined;
+  keys?: string[] | undefined;
+  proxy?: boolean | undefined;
+  subdomainOffset?: number | undefined;
+  proxyIpHeader?: string | undefined;
+  maxIpsCount?: number | undefined;
+}
+```
+
+Ipare 内部有类似如下代码
+
+```TS
+new Koa(options)
+```
+
+因此连续不间断的 `startup.koa` 只有最后一个 `startup.koa` 的参数 `KoaOptions` 会生效
+
 ## 使用流
 
 为了兼容各运行环境，ipare 的 ctx.body 都是已解析好的数据
 
-因此如果涉及到流，你有两种做法可以让 `@ipare/koa` 正确解析
+因此如果涉及到流，你需要先解析流并将解析后的内容放入 `ctx.body`
 
-1. 先解析
-
-在 `startup.useKoa` 之前的中间件中，先解析流，将解析后的内容放入 `ctx.body`，在 koa 中间件中即可使用该数据
-
-1. 配置传入可读流
-
-useKoa 第二个参数的 streamingBody 传入一个函数，函数参数为 ipare 的 `ctx`，返回值类型为 `ReadableStream`
-
-如 http(s) 环境下
-
-```TS
-import { HttpStartup } from "@ipare/http";
-
-new HttpStartup().useKoa(new Koa(), {
-  streamingBody: (ctx) => ctx.httpReq,
-});
-```
-
-如 阿里云函数 环境下
-
-```TS
-import { AlifcStartup } from "@ipare/alifc";
-
-new AlifcStartup(req, resp, context).useKoa(new Koa(), {
-  streamingBody: (ctx) => ctx.aliReq,
-});
-```
+如 `co-body`, `formidable` 等工具
