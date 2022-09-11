@@ -68,3 +68,25 @@ await new AlifcStartup(req, resp, context)
 `AlifcStartup` 作为 `Ipare` 运行于阿里云函数计算的入口
 
 该类继承于 `Startup` 并实现阿里云函数计算功能
+
+## CLI 编译
+
+使用 `@ipare/cli` 编译，会自动拷贝 `package.json` 文件至目标目录，并移除 `devDependencies` 中的依赖
+
+你可以通过配置 `ipare-cli.config.ts` 修改默认行为
+
+```TS
+import { defineConfig } from "@ipare/cli";
+
+export default defineConfig(() => {
+  return {
+    build: {
+      copyPackage: true,
+      removeDevDeps: true,
+    },
+  };
+});
+```
+
+- `copyPackage` 如果为 `true` 则拷贝 `package.json` 文件，alifc 环境默认为 `true`
+- `removeDevDeps` 如果为 `true` 则移除拷贝后的 `devDependencies` 中的依赖 `true`，alifc 环境默认为 `true`
