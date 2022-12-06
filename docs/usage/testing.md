@@ -9,7 +9,7 @@
 `@ipare/testing` 提供了两种 `Startup` 用于单元测试
 
 1. `TestStartup`
-2. `TestHttpStartup`
+2. `TestNativeStartup`
 
 ### TestStartup
 
@@ -52,7 +52,7 @@ new TestStartup()
   });
 ```
 
-### TestHttpStartup
+### TestNativeStartup
 
 用于模仿 http 运行环境
 
@@ -61,9 +61,9 @@ new TestStartup()
 `create` 函数会返回 `supertest` 的 `Test` 对象
 
 ```TS
-import { TestHttpStartup } from "@ipare/testing";
+import { TestNativeStartup } from "@ipare/testing";
 
-await new TestHttpStartup()
+await new TestNativeStartup()
   .use((ctx) => {
     ctx.ok({
       method: ctx.req.method,

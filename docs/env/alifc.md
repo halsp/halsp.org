@@ -45,14 +45,14 @@ module.exports.handler = handler;
 
 ## 解析 body
 
-阿里云函数计算没有解析 body，但 `@ipare/alifc` 支持四种 body 解析
+阿里云函数计算没有解析 body，但 `@ipare/alifc` 基于 `@ipare/body` 支持四种 body 解析
 
 - json
 - text
 - urlencoded
 - multipart
 
-使用详情参考 [@ipare/http](https://github.com/ipare/http)
+使用详情参考 [@ipare/native](https://github.com/ipare/native)
 
 ```TS
 await new AlifcStartup(req, resp, context)

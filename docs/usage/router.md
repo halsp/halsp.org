@@ -374,6 +374,6 @@ export default class extends Action{
 
 发布时需要将 `ipare-router.config` 一同发布，否则程序首次启动会自动重新创建映射表
 
-如果没有 `ipare-router.config` 文件，对于原生 `http` 服务影响不是很大
+如果没有 `ipare-router.config` 文件，对于原生服务 `@ipare/native` 影响不是很大
 
 但 serverless 可能每次请求都会启动一个新程序，即重新创建映射表

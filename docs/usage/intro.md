@@ -19,7 +19,7 @@
 
 Ipare 是一个高效可伸缩的渐进式 nodejs 框架
 
-可以启动原生 http 服务，也可以运行于 serverless
+可以使用原生 NodeJS 服务，也可以运行于 serverless，还支持多种微服务通信
 
 ## 优势
 

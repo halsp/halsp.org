@@ -40,10 +40,10 @@ export default function <T extends Startup>(startup: T, mode?: string) {
 
 ## 单元测试
 
-`@ipare/testing` 提供了 `TestStartup` 和 `TestHttpStartup` 类 ，方便用于单元测试
+`@ipare/testing` 提供了 `TestStartup` ,`TestNativeStartup` 等类 ，方便用于单元测试
 
 `TestStartup` 类没有任何运行环境
 
-`TestHttpStartup` 类是原生 NodeJS 的 `http` 运行环境
+`TestNativeStartup` 类是原生 NodeJS 运行环境
 
 更多内容转至 [单元测试](/usage/testing)

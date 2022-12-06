@@ -232,7 +232,7 @@ V8 引擎的调试工具
 
 启动文件的路径，默认为 CLI 调试时生成的文件
 
-如果有其他需求，如希望使用其他运行环境调试，而不使用默认的 `@ipare/http`，可以创建一个入口文件，并通过此参数指定该文件
+如果有其他需求，如希望使用其他运行环境调试，而不使用默认的 `@ipare/native`，可以创建一个入口文件，并通过此参数指定该文件
 
 ## 支持的命令
 
@@ -464,13 +464,13 @@ OS Release     : 10.0.22000
 NodeJS Version : v16.15.0
 
 [Ipare CLI]
-Ipare CLI Version : 0.3.1
+Ipare CLI Version : 0.7.0
 
 [Ipare Packages Version]
-@ipare/core   : ^1.6.3
-@ipare/http   : ^1.2.4
-@ipare/inject : ^1.2.3
-@ipare/pipe   : ^1.3.5
+@ipare/core   : ^3.0.0
+@ipare/native   : ^3.0.0
+@ipare/inject : ^3.0.0
+@ipare/pipe   : ^3.0.0
 ```
 
 ## update

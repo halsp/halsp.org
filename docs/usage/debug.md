@@ -7,9 +7,7 @@
 如果当前没有使用 `@ipare/cli`，也可以根据后面的 [新增 CLI](#新增-cli) 配置
 
 :::tip 注意
-`@ipare/cli` 使用 `@ipare/http` 模拟 Http 环境启动应用
-
-如果运行环境非 `@ipare/http`，如 `lambda`，可能需要注意到这点
+Serverless 环境下（`@ipare/lambda`, `@ipare/alifc`），是使用 `@ipare/native` 模拟 Http 环境启动应用
 :::
 
 ## 开始调试

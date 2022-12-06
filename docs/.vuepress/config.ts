@@ -89,7 +89,7 @@ export default defineUserConfig({
           },
           {
             text: "基础",
-            children: ["/env/http", "/env/lambda", "/env/alifc"],
+            children: ["/env/native", "/env/lambda", "/env/alifc"],
           },
           {
             text: "微服务",
@@ -167,7 +167,7 @@ export default defineUserConfig({
         text: "运行环境",
         children: [
           "/env/custom-env",
-          "/env/http",
+          "/env/native",
           "/env/lambda",
           "/env/alifc",
           "/env/koa-env",
