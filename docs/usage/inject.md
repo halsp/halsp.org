@@ -13,7 +13,7 @@
 ## 安装
 
 ```sh
-npm install @ipare/redis
+npm install @ipare/inject
 ```
 
 ## 名词解释

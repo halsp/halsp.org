@@ -58,21 +58,21 @@ export default defineUserConfig({
         children: [
           {
             text: "自定义",
-            children: ["/usage/custom-env"],
+            children: ["/env/custom-env"],
           },
           {
             text: "基础",
-            children: ["/usage/http", "/usage/lambda", "/usage/alifc"],
+            children: ["/env/http", "/env/lambda", "/env/alifc"],
           },
           {
             text: "其他",
-            children: ["/usage/koa-env"],
+            children: ["/env/koa-env"],
           },
         ],
       },
       {
         text: "拓展和插件",
-        link: "/plugin/",
+        link: "/usage/",
         children: [
           {
             text: "常用",
@@ -106,48 +106,68 @@ export default defineUserConfig({
         ],
       },
     ],
-    sidebar: {
-      "/usage/": [
-        {
-          text: "新手指南",
-          children: ["intro", "quickstart", "appoint"],
-        },
-        {
-          text: "基础",
-          children: ["startup", "middleware", "result", "inject", "router"],
-        },
-        {
-          text: "进阶",
-          children: ["cli", "view", "filter", "mva", "pipe", "error"],
-        },
-        {
-          text: "运行环境",
-          children: ["custom-env", "http", "lambda", "alifc", "koa-env"],
-        },
-        {
-          text: "测试",
-          children: ["debug", "testing"],
-        },
-      ],
-      "/plugin/": [
-        {
-          text: "常用",
-          children: ["static", "swagger", "logger"],
-        },
-        {
-          text: "安全性",
-          children: ["jwt", "validator"],
-        },
-        {
-          text: "数据存储",
-          children: ["typeorm", "redis", "mongoose"],
-        },
-        {
-          text: "其他",
-          children: ["koa", "cors", "cookie"],
-        },
-      ],
-    },
+    sidebar: [
+      {
+        text: "新手指南",
+        children: ["/usage/intro", "/usage/quickstart", "/usage/appoint"],
+      },
+      {
+        text: "基础",
+        children: [
+          "/usage/startup",
+          "/usage/middleware",
+          "/usage/result",
+          "/usage/inject",
+          "/usage/router",
+        ],
+      },
+      {
+        text: "进阶",
+        children: [
+          "/usage/cli",
+          "/usage/view",
+          "/usage/filter",
+          "/usage/mva",
+          "/usage/pipe",
+          "/usage/error",
+        ],
+      },
+      {
+        text: "运行环境",
+        children: [
+          "/env/custom-env",
+          "/env/http",
+          "/env/lambda",
+          "/env/alifc",
+          "/env/koa-env",
+        ],
+      },
+      {
+        text: "测试",
+        children: ["/usage/debug", "/usage/testing"],
+      },
+      {
+        text: "扩展和插件",
+        children: [
+          {
+            text: "常用",
+            children: ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+          },
+          {
+            text: "安全性",
+            children: ["/plugin/jwt", "/plugin/validator"],
+          },
+          {
+            text: "数据存储",
+            children: ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+          },
+          {
+            text: "其他",
+            children: ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
+          },
+        ],
+      },
+    ],
   }),
   head: [
     [
@@ -157,5 +177,6 @@ export default defineUserConfig({
         src: "/js/headerIndex.js",
       },
     ],
+    ["link", { rel: "icon", href: "/favicon.ico" }],
   ],
 });
