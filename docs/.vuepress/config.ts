@@ -1,4 +1,31 @@
-import { defaultTheme, defineUserConfig } from "vuepress";
+import { defaultTheme, defineUserConfig, NavLink } from "vuepress";
+
+const microLinks: NavLink[] = [
+  {
+    text: "概览",
+    link: "/env/micro-common",
+  },
+  {
+    text: "TCP (@ipare/micro-tcp)",
+    link: "/env/micro-tcp",
+  },
+  {
+    text: "gRPC (@ipare/micro-grpc)",
+    link: "/env/micro-grpc",
+  },
+  {
+    text: "Redis (@ipare/micro-redis)",
+    link: "/env/micro-redis",
+  },
+  {
+    text: "MQTT (@ipare/micro-mqtt)",
+    link: "/env/micro-mqtt",
+  },
+  {
+    text: "Nats (@ipare/micro-nats)",
+    link: "/env/micro-nats",
+  },
+];
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -63,6 +90,10 @@ export default defineUserConfig({
           {
             text: "基础",
             children: ["/env/http", "/env/lambda", "/env/alifc"],
+          },
+          {
+            text: "微服务",
+            children: microLinks,
           },
           {
             text: "其他",
@@ -140,6 +171,10 @@ export default defineUserConfig({
           "/env/lambda",
           "/env/alifc",
           "/env/koa-env",
+          {
+            text: "微服务",
+            children: microLinks,
+          },
         ],
       },
       {
