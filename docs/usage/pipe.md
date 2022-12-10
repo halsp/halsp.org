@@ -4,23 +4,23 @@
 
 请求参数管道，用于校验、转换、格式化请求参数
 
-此处管道不同于管道上下文 `HttpContext`
+此处管道不同于管道上下文 `Context`
 
 你需要使用装饰器并引入 `@ipare/inject` 以使用此功能
 
-用 `Query`, `Header`, `Param`, `Body`, `Context` 装饰字段，该字段在特定生命周期会被自动赋值
+用 `Query`, `Header`, `Param`, `Body`, `InjectContext` 装饰字段，该字段在特定生命周期会被自动赋值
 
 ## 快速开始
 
 先创建一个中间件
 
 ```TS
-import { Header, Query, Param, Body, Context } from "@ipare/pipe";
-import { Middleware, ReadonlyDict, HttpContext } from "@ipare/core";
+import { Header, Query, Param, Body, InjectContext } from "@ipare/pipe";
+import { Middleware, ReadonlyDict, Context } from "@ipare/core";
 
 class TestMiddleware extends Middleware {
-  @Context
-  private readonly ctx1!: HttpContext;
+  @InjectContext
+  private readonly ctx1!: Context;
   @Header
   private readonly header!: ReadonlyDict;
   @Query
@@ -68,12 +68,12 @@ startup.useInject().add(TestMiddleware);
 
 ```TS
 import { parseInject } from "@ipare/inject";
-import { HttpContext } from "@ipare/core";
-import { Header, Query, Context } from "@ipare/pipe";
+import { Context } from "@ipare/core";
+import { Header, Query, InjectContext } from "@ipare/pipe";
 
 class TestClass {
-  @Context
-  private readonly ctx!: HttpContext;
+  @InjectContext
+  private readonly ctx!: Context;
   @Header
   private readonly header!: any;
   @Query("property")
@@ -150,11 +150,11 @@ query: any;
 创建一个类，实现 `PipeTransform` 接口，如
 
 ```TS
-import { Context, PipeTransform } from "@ipare/pipe"
+import { InjectContext, PipeTransform } from "@ipare/pipe"
 
 class ToStringPipe implements PipeTransform<any, string> {
-  @Context
-  readonly ctx: HttpContext;
+  @InjectContext
+  readonly ctx: Context;
 
   transform(value: any) {
     return "" + value;

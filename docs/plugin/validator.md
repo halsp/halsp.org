@@ -139,7 +139,7 @@ class TestDto {
 `ValidatorEnable` 接收一个回调函数
 
 ```TS
-(args: { ctx: HttpContext; val: any }) => boolean | Promise<boolean>
+(args: { ctx: Context; val: any }) => boolean | Promise<boolean>
 ```
 
 参数 `val` 是该模型对应的值

@@ -17,11 +17,11 @@
       nums.splice(index + 1);
 
       const prefix = nums.join(".") + " ";
-      const lastChild = node.lastChild;
-      if (!lastChild.textContent.startsWith(prefix)) {
+      const targetNode = node.childNodes[1];
+      if (!targetNode.textContent.startsWith(prefix)) {
         node.replaceChild(
-          document.createTextNode(prefix + lastChild.textContent),
-          lastChild
+          document.createTextNode(prefix + targetNode.textContent.trimStart()),
+          targetNode
         );
       }
     }

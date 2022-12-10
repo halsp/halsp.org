@@ -170,7 +170,7 @@ startup.hook(HookType.Exception, (ctx, md, ex) => {
 
 1. `HookType.Exception`, 表示该钩子是异常钩子
 2. 回调函数，有三个参数
-   - ctx: HttpContext 对象
+   - ctx: Context 对象
    - middleware: 抛出异常的中间件
    - exception: 抛出的异常
 

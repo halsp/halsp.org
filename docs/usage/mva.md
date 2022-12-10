@@ -29,7 +29,7 @@ startup.useMva();
 
 `useMvc` 接收一个可选配置参数
 
-- viewOptions: 与 `useViews` 参数相同
+- viewOptions: 与 `useView` 参数相同
 - routerOptions: 与 `useRouter` 参数相同
 - codes: 指定状态码对应的模板
 
@@ -49,11 +49,11 @@ startup.useMva();
 import { ResultFilter } from "@ipare/mva";
 
 class TestFilter implements ResultFilter {
-  onResultExecuted(ctx: HttpContext): void | Promise<void> {
+  onResultExecuted(ctx: Context): void | Promise<void> {
     ctx.res.setHeader("result2", 2);
   }
   onResultExecuting(
-    ctx: HttpContext
+    ctx: Context
   ): boolean | void | Promise<void> | Promise<boolean> {
     ctx.res.setHeader("result1", 1);
   }

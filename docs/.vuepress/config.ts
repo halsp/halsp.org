@@ -42,7 +42,7 @@ export default defineUserConfig({
     editLinkText: "编辑此页",
     home: "/index.md",
     logo: "/images/logo.png",
-    sidebarDepth: 1,
+    sidebarDepth: 2,
     backToHome: "返回主页",
     notFound: ["你访问的页面不存在"],
     navbar: [

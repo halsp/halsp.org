@@ -12,32 +12,34 @@ npm i @ipare/view
 
 ## 快速开始
 
-添加视图文件夹 `views` 和文件 `views/index.ejs` 并编写视图内容
+以 `ejs` 为例
 
-然后在 `startup.ts` 中添加 `startup.useViews`
+添加视图模板文件夹 `views` 和文件 `views/index.ejs` 并编写 `ejs` 视图模板内容
+
+在 `startup.ts` 中添加 `startup.useView`
 
 ```TS
 import "@ipare/view";
 
 startup
-  .useViews()
+  .useView()
   .use(async (ctx) => {
-    ctx.view("index.ejs");
+    ctx.res.view("index.ejs");
   });
 ```
 
-## `useViews`
+## `useView`
 
-`useViews` 接收一个可选配置参数
+`useView` 接收一个可选配置参数，包括以下属性
 
 - dir: 视图文件夹
-- options: 通用参数，如网站名称和其他通用信息
-- engines: 视图渲染引擎列表
+- options: 渲染页面用的通用参数，如网站名称和其他通用信息
+- engines: 视图渲染引擎
 
 `engines` 用于文件扩展名与 [consolidate](https://github.com/tj/consolidate.js) 对应，如
 
 ```TS
-startup.useViews({
+startup.useView({
   dir: "views",
   engines: [
     { ext: "hbs", render: "handlebars" },
@@ -52,31 +54,62 @@ startup.useViews({
 
 默认为 `views`, 所有视图将在视图文件夹中查找
 
-## 渲染函数 `view()`
+## 渲染函数 .view()
 
-你可以在三个地方使用 `view()` 函数渲染视图
+你可以在两个地方使用 `view()` 函数渲染视图
 
-- ctx.view(): 管道 HttpContext 类实例方法
-- md.view(): 中间件中可以使用 `this.view()` 实例方法渲染视图
-- res.view(): Response 类实例方法
+- ctx.view()
+- res.view()
 
-`view` 函数接收两个参数
+### ctx.view()
 
-- tmpPath: 视图文件夹中的相对路径
+管道 Context 类实例方法
+
+返回值为渲染后的 html 字符串，不会修改 Response
+
+### res.view()
+
+Response 类的实例方法
+
+没有返回值，会修改 Response
+
+如果当前环境是微服务，则修改 Response.body 值为渲染后的 html 字符串
+
+如果当前环境是 http，则做如下以下操作
+
+1. 设置返回 body 为渲染后的 html 字符串
+2. 设置状态码为 200
+3. 设置返回头 `content-type` 为 `text/html`
+
+### 参数
+
+`.view()` 函数接收两个参数
+
+- tmpPath: 模板文件夹中的相对路径
 - locals: 渲染参数
 
-其中 `tmpPath` 可省略模板文件扩展名，也可省略 `index` 命名的文件
+其中 `tmpPath` 可省略模板文件扩展名，也可省略以 `index.xxx` 命名的文件
 
-值为 `user/todo/index.ejs`, `user/todo/index`, `user/todo` 效果相同
+如 `tmpPath` 以下值效果相同
+
+1. `user/todo/index.ejs`
+2. `user/todo/index`
+3. `user/todo`
 
 ## ctx.state
 
-`ctx.state` 作为访问级别的模板参数
+`ctx.state` 作为请求级别的模板参数
 
-比如你需要在权限验证之后，将登录信息放入 `ctx.state`
+比如你需要在权限验证之后，每次请求都将登录信息放入 `ctx.state`
 
-在你使用 `view` 渲染模板时，`@ipare/views` 做了以下类似操作：
+在你使用 `view` 渲染模板时，`@ipare/view` 做了以下类似操作：
 
 ```TS
 const args = Object.assign({}, options, ctx.state, locals);
 ```
+
+## CLI
+
+已内置 `@ipare/cli` 的支持
+
+`views` 文件夹不需要配置为资源文件

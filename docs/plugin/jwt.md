@@ -56,7 +56,7 @@ RSA 和 ECDSA 加密的 PEM 公钥
 
 `getToken` 是一个回调函数，用于指示 `jwt token` 的位置，如 `headers`/`query` 中
 
-使用 `useJwt` 后会给 `HttpContext` 对象增加 `jwtToken` 属性，默认取自请求头部 `Authorization` 值
+使用 `useJwt` 后会给 `Context` 对象增加 `jwtToken` 属性，默认取自请求头部 `Authorization` 值
 
 设置 `getToken` 后可以从其他位置获取 `jwt token`
 

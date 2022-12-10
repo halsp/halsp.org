@@ -129,11 +129,11 @@ startup.useGlobalFilter(Filter, order)
 
 ```TS
 class TestActionFilter implements ActionFilter {
-  onActionExecuted(ctx: HttpContext): void | Promise<void> {
+  onActionExecuted(ctx: Context): void | Promise<void> {
     ctx.res.setHeader("action2", 2);
   }
   onActionExecuting(
-    ctx: HttpContext
+    ctx: Context
   ): boolean | void | Promise<void> | Promise<boolean> {
     ctx.res.setHeader("action1", 1);
     return true;
@@ -166,13 +166,13 @@ class TestActionFilter implements ActionFilter {
 @CustomFilter(CustomFilterType.BeforeAction)
 export class CustomBeforeActionFilter implements Filter {
   @CustomFilterExecuted
-  onExecuted(ctx: HttpContext): void | Promise<void> {
+  onExecuted(ctx: Context): void | Promise<void> {
     //
   }
 
   @CustomFilterExecuting
   onExecuting(
-    ctx: HttpContext
+    ctx: Context
   ): boolean | void | Promise<void> | Promise<boolean> {
     //
   }

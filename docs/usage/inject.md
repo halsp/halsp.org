@@ -217,27 +217,40 @@ startup
 
 `Scoped` 和 `Transient` 作用域的服务会在每次请求结束后调用实例的 `dispose` 函数
 
-因此如果需要框架自动销毁服务，服务需要继承 `InjectDisposable` 接口并实现 `dispose` 函数
+因此如果需要框架自动销毁服务，服务需要继承 `IService` 接口并实现 `dispose` 函数
 
 ```TS
-class CustomService implements InjectDisposable {
+import { IService } from "@ipare/inject";
+
+class CustomService implements IService {
   dispose() {
     // TODO
   }
 }
 ```
 
-`dispose` 函数可以返回 `void`，也可以返回 `Promise<void>`
+`dispose` 函数可以返回 `void` 或 `Promise<void>`
 
 :::tip
 你也可以直接给已有的服务添加 `dispose` 函数，如 `@ipare/logger` 和 `@ipare.redis` 等插件就是这样实现的
 :::
 
-## 注册服务
+## 服务的注册
+
+服务的注册总体分为两类
+
+1. 通过类注册
+2. 使用键值对注册
+
+通过类注册比较简单，使用时可以通过 TypeScript 的类型声明找到服务
+
+通过键值对方式注册，需要定义唯一的字符串，用于标识服务，可以处理更复杂的情况
+
+### 通过类注册服务
 
 服务的注册分为自动注册和显式注册
 
-### 显式注册
+#### 显式注册
 
 可以指定实例化派生类或服务的作用域，以实现控制反转
 
@@ -249,11 +262,11 @@ import "@ipare/inject";
 // 类映射本身实例对象
 startup.inject(Service);
 // 父类映射实例对象（实现控制反转）
-startup.inject(IService, Service);
+startup.inject(ParentService, Service);
 // 类映射特定实例对象，注意此方式仅能用于单例，因为服务没有交给框架实例化，若用于其他类型的依赖注入，可能会出现不可预知的问题。
-startup.inject(IService, new Service(), InjectType.Singleton);
+startup.inject(ParentService, new Service(), InjectType.Singleton);
 // 类映射特定值，值可以是实例对象，也可以是其他任意值如 Number/Date/Stream 等类型
-startup.inject(IService, async (ctx) => await createService(ctx));
+startup.inject(ParentService, async (ctx) => await createService(ctx));
 ```
 
 显式注册并不会立即实例化服务，依赖注入都是按需实例化，因此显式注册并不会占用多少计算资源，本质仅添加了一条字典记录
@@ -268,17 +281,32 @@ startup.inject(IService, async (ctx) => await createService(ctx));
 如上面代码的 `IService` 和 `Service` 都必须是类
 :::
 
-### 自动注册
+#### 自动注册
 
 `@ipare/inject` 可以自动实例化服务和中间件，自动注册服务的作用域都是 `Scoped`
 
 没有使用 `startup.inject` 显式注册的服务和中间件，都会被自动注册
 
-## 键值注入
+#### 使用
 
-显式注册除了上面的类映射的方式，你还可以使用特定的 Key 注入服务
+在其他服务或中间件中使用
 
-Key 是字符串，即指定字符串映射指定实例对象或其他值
+```TS
+class TestMiddleware extends Middleware {
+  @Inject
+  private readonly service1!: TestService;
+  @Inject
+  private readonly service2!: ParentService;
+
+  invoke(){
+    this.ok();
+  }
+}
+```
+
+### 通过键值注册服务
+
+键是字符串，即指定字符串映射指定实例对象或其他值
 
 在 `startup.ts` 中
 
@@ -287,7 +315,7 @@ import "@ipare/inject";
 
 // 字符串映射服务
 startup.inject("SERVICE_KEY", Service);
-// 字符串映射特定服务实例，注意此方式仅能用于单例，因为服务没有交给框架实例化，若用于其他类型的依赖注入，可能会出现不可预知的问题。
+// 字符串映射特定服务实例，注意此方式仅能用于单例，因为服务没有交给框架实例化
 startup.inject("SERVICE_KEY", new Service(), InjectType.Singleton);
 // 字符串映射特定值，值可以是实例对象，也可以是其他任意值如 Number/Date/Stream 等类型
 startup.inject("SERVICE_KEY", async (ctx) => await createService(ctx));
@@ -297,8 +325,10 @@ startup.inject("SERVICE_KEY", async (ctx) => await createService(ctx));
 
 ```TS
 class TestMiddleware extends Middleware {
-  @Inject("SERVICE_KEY")
-  private readonly testService!: TestService;
+  @Inject("KEY1")
+  private readonly service1!: TestService;
+  @Inject("KEY2")
+  private readonly service2!: any;
 
   invoke(){
     this.ok();
@@ -314,7 +344,7 @@ startup.inject("KEY2", "str");
 startup.inject("KEY3", () => 2333);
 startup.inject(
   "KEY4",
-  async (ctx) => new Promise<symbol>((resolve) => resolve(Symbol()))
+  (ctx) => new Promise<symbol>((resolve) => resolve(Symbol()))
 );
 ```
 
@@ -327,7 +357,7 @@ class TestMiddleware extends Middleware {
   @Inject("KEY3")
   private readonly key3!: number; // 2333
   @Inject("KEY4")
-  private readonly key3!: Symbol; // symbol
+  private readonly key4!: Symbol; // symbol
 }
 ```
 
@@ -365,63 +395,85 @@ class TestMiddleware extends Middleware{
 
 ## 手动创建服务
 
-有些服务可能没有写在其他服务中，也没有写在中间件中，就无法自动获取服务，需要手动获取服务
+有些服务可能没有写在其他服务或中间件中，就无法自动获取服务
 
-有两种方式手动获取服务
-
-### 使用控制反转
-
-也可以利用控制反转，创建或获取一个服务实例
+利用 `parseInject` 函数可手动获取一个服务实例
 
 ```TS
 import { parseInject } from '@ipare/inject'
 
-const service = await parseInject(ctx, Service);
+const service1 = await parseInject(ctx, ParentService);
+const service2 = await parseInject(ctx, "KEY");
+const service3 = await parseInject(ctx, new Service()); // 不推荐
 ```
 
-这种方式可以同时实例化属性服务或构造器服务，推荐使用这种方式
+上述 `service3` 方式无法控制服务的生命周期，也无法实例化构造函数中的服务
 
-### 先创建后注入
-
-可以先创建对象，然后再注入服务
-
-```TS
-import { parseInject } from '@ipare/inject'
-
-const service = new Service();
-await parseInject(ctx, service);
-
-// OR
-const service = await parseInject(ctx, new Service());
-```
-
-但是这种方式无法实例化 `服务写在构造函数中` 的类，仅可注入实例对象字段的服务
-
-由于服务是手动创建的，其作用域等同于 `Transient`
-
-可以针对需要特殊实例化的服务
+由于 `service3` 的实例是手动创建的，其作用域等同于 `Transient`
 
 ## 自定义注入
 
-可以利用并拓展提供的 `Inject` 和 `createInject` 创建自定义注入
+可以利用提供的装饰器 `Inject` 和函数 `createInject` ，创建自定义注入
+
+自定义注入的自由性比较高，不局限于服务
+
+如你可以从 `ctx` 实例对象中取值，也可以创建一个新的装饰器
 
 ### 自定义 `Inject`
 
-如前所述，`Inject` 本身也可以作为装饰器
+`Inject` 即是装饰器，也是能够创建装饰器的函数
 
-同时 `Inject` 也可以作为函数，传入以下参数返回一个新的装饰器：
+传入以下参数返回一个新的装饰器：
 
-- handler: 回调函数，支持异步，返回值将作为装饰的字段值
+- handler: 回调函数，支持异步，返回值将作为装饰的字段值。当下面第二个的参数 type 不为 `Singleton` 时，参数为中间件管道对象 `Context`
 - type: 可选，服务的作用域，`InjectType` 类型，与前面介绍的 **作用域** 的概念相同。这里是用于控制 `handler` 回调函数的作用域
-  - Singleton: `handler` 回调只会执行一次，因此装饰的不同字段值始终相同，回调函数没有 `HttpContext` 参数
-  - Scoped: `handler` 回调每次网络请求只会执行一次，装饰的不同字段值在单次网络访问期间相同，回调函数有参数 `HttpContext`
-  - Scoped: `handler` 回调在每个装饰的字段都会执行一次，回调函数有参数 `HttpContext`
+  - Singleton: `handler` 回调只会执行一次，因此装饰的不同字段值始终相同，回调函数没有 `Context` 参数
+  - Scoped: `handler` 回调每次网络请求只会执行一次，装饰的不同字段值在单次网络访问期间相同，回调函数有参数 `Context`
+  - Transient: `handler` 回调在每个装饰的字段都会执行一次，回调函数有参数 `Context`
+
+```TS
+import { Inject } from "@ipare/inject";
+
+// 创建一个 @CustomHost 装饰器
+const CustomHost = Inject((ctx) => ctx.req.get("Host"));
+// 创建一个 @CustomUserID 装饰器
+const CustomUserID = Inject((ctx) => ctx.req.query["uid"]);
+
+// 在中间件或服务中使用
+class TestMiddleware extends Middleware {
+  @CustomHost
+  readonly host!: string;
+  @CustomUserID
+  private userId!: string;
+
+  invoke() {
+    this.ok({
+      host: this.host,
+      userId: this.userId,
+    });
+  }
+}
+
+// 或通过构造函数注入
+class TestMiddleware extends Middleware {
+  constructor(
+    @CustomHost readonly host: string,
+    @CustomUserID private userId: string
+  ) {
+    super();
+  }
+
+  invoke() { }
+}
+```
 
 ### 自定义 `createInject`
 
+用于创建更复杂的自定义注入装饰器，一般在已有装饰器函数内部使用
+
 比自定义 `Inject` 能实现的功能更多，但同时需要传入更多参数
 
-`createInject` 无返回值，用于创建更复杂的自定义注入装饰器， 接收以下参数
+`createInject` 无返回值， 接收以下参数
 
 - handle: 同自定义 `Inject` 中的 `handler` 回调函数
 - target: 装饰的类或类的原型，从装饰器参数取得
@@ -429,67 +481,31 @@ const service = await parseInject(ctx, new Service());
 - parameterIndex: 装饰的参数索引，从参数装饰器参数取得
 - type: `InjectType` 类型，作用同上面自定义 `Inject` 的 `type` 参数
 
-### 例 1
-
-实现获取请求 `Host` 和获取当前请求用户 ID
-
-定义装饰器
-
 ```TS
 import { Inject } from "@ipare/inject";
 
-// 创建一个 @Host 装饰器
-const Host = Inject((ctx) => ctx.req.getHeader("Host"));
-
-// 创建一个 @UserID 装饰器
-const UserID = Inject((ctx) => ctx.req.query["uid"]);
-// 或使用 `createInject` 创建 @UserID 装饰器，二者功能相同
-function UserID(target:any, propertyKey: string|symbol){
+// 创建一个 @CustomUserID 装饰器
+function CustomUserID(target:any, propertyKey: string|symbol){
+  // do more work
   return createInject((ctx) => ctx.req.query["uid"], target, propertyKey);
 }
-```
 
-在中间件或服务中使用
-
-```TS
-import { Middleware } from "@ipare/core";
-
+// 在中间件或服务中使用
 class TestMiddleware extends Middleware {
-  @Host
-  readonly host!: string;
-  @UserID
+  @CustomUserID
   readonly userId!: string;
 
-  async invoke(): Promise<void> {
+  async invoke() {
     this.ok({
-      host: this.host,
       userId: this.userId,
     });
   }
 }
 ```
 
-OR
+### 自定义支持嵌套服务
 
-```TS
-@Inject
-class TestMiddleware extends Middleware {
-  constructor(@Host readonly host: string, @UserID readonly userId: string) {
-    super();
-  }
-
-  async invoke(): Promise<void> {
-    this.ok({
-      host: this.host,
-      userId: this.userId,
-    });
-  }
-}
-```
-
-### 例 2
-
-通过自定义装饰器，嵌套服务
+通过自定义装饰器，也支持嵌套服务，示例代码如下
 
 定义
 

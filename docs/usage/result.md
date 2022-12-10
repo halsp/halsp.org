@@ -2,9 +2,9 @@
 
 Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些处理返回结果的功能
 
-## 请求上下文 HttpContext
+## 请求上下文 Context
 
-中间件管道中的内容都在 `HttpContext` 对象之中，每个中间件都可以调用 `this.ctx` 来获取或修改中间件管道内容
+中间件管道中的内容都在 `Context` 对象之中，每个中间件都可以调用 `this.ctx` 来获取或修改中间件管道内容
 
 该对象包含以下内容：
 
@@ -99,7 +99,7 @@ const val = this.ctx.bag<string>("BAG_NAME")
 
 ### ctx 中的头部
 
-`HttpContext` 中的头部处理比较特殊，和 `Response` 或 `Request` 都不一样
+`Context` 中的头部处理比较特殊，和 `Response` 或 `Request` 都不一样
 
 获取的头部，都来自于请求头 `Request`，如 `headers`, `hasHeader`, `getHeader`
 
@@ -107,7 +107,7 @@ const val = this.ctx.bag<string>("BAG_NAME")
 
 ## 内置结果函数
 
-在 `HttpContext` 和中间件中，内置一些返回结果，用于快速设置返回结果：
+在 `Context` 和中间件中，内置一些返回结果，用于快速设置返回结果：
 
 - ok, 200
 - created, 201

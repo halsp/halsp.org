@@ -145,7 +145,7 @@ startup.hook(HookType, (ctx, md) => {})
    - `Constructor`：用于构造中间件，利用这种钩子可以动态使用中间件。但注册的中间件，必须是中间件的构造器，即 `startup.add(YourMiddleware)` 的方式
    - `Exception`：中间件抛出异常时会执行这类钩子
 2. 钩子回调函数，有两个或三个参数
-   - 参数 1：管道 HttpContext 对象
+   - 参数 1：管道 Context 对象
    - 参数 2：中间件对象或中间件构造函数
      - 如果钩子类型为 `Constructor`，则参数为中间件构造函数
      - 如果钩子类型为 `Exception`，则参数为 `HttpException` 对象或其派生对象

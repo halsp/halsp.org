@@ -5,9 +5,9 @@
 主要操作如下
 
 - 创建入口类并继承 `Startup`
-- 每次请求创建一个 `Request` 对象和 `HttpContext` 对象
-- 执行 `await super.invoke(ctx)` 将 `HttpContext` 对象传入 `super.invoke` 函数
-- 解析 `HttpContext` 对象和 `Request` 对象设置请求返回
+- 每次请求创建一个 `Request` 对象和 `Context` 对象
+- 执行 `await super.invoke(ctx)` 将 `Context` 对象传入 `super.invoke` 函数
+- 解析 `Context` 对象和 `Request` 对象设置请求返回
 
 ## 伪代码
 
@@ -40,7 +40,7 @@ new CustomEnvStartup()
 
 该函数简单来说就三步操作
 
-1. 根据 lambda 的参数 `event` 和 `context` 解析请求内容，并创建 HttpContext 对象
+1. 根据 lambda 的参数 `event` 和 `context` 解析请求内容，并创建 Context 对象
 2. 执行 `super.invoke(ctx)`，这一步将执行各个中间件，是 ipare 的核心部分
 3. 格式化返回内容
 
@@ -56,19 +56,19 @@ export class LambdaStartup extends Startup {
 }
 ```
 
-### 创建 HttpContext
+### 创建 Context
 
-`HttpContext` 构造函数接收 `Request` 对象，因此只需创建 `Request` 对象
+`Context` 构造函数接收 `Request` 对象，因此只需创建 `Request` 对象
 
 1. 新建一个 `Request` 对象 `new Request()`
 2. 解析 lambda 的参数 `event` 和 `context`，设置 `Request` 对象的请求参数
-3. 新建一个 `HttpContext` 对象 `new HttpContext(req)`
+3. 新建一个 `Context` 对象 `new Context(req)`
 
 ### 格式化返回内容
 
-在 `super.invoke` 执行完毕后，`HttpContext` 和 `Request` 对象已经在各个中间件被更新
+在 `super.invoke` 执行完毕后，`Context` 和 `Request` 对象已经在各个中间件被更新
 
-需要解析 `HttpContext` 和 `Request` 对象并返回符合 lambda 要求的结果
+需要解析 `Context` 和 `Request` 对象并返回符合 lambda 要求的结果
 
 ```TS
 export interface ResponseStruct {
