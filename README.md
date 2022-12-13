@@ -29,16 +29,8 @@ gh-pages 分支为 GitHub Pages 托管的网站
 
 欢迎对网站内容做出改善，帮助更多的人使用 Ipare
 
-同时欢迎开发插件并更新此本地
-
 ### 文档贡献列表
 
 <a href="https://github.com/ipare/ipare.org/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ipare/ipare.org" />
-</a>
-
-### Ipare 贡献列表
-
-<a href="https://github.com/ipare/ipare/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=ipare/ipare" />
 </a>
