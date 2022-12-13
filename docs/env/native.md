@@ -153,7 +153,7 @@ startup.useHttpMultipartBody({
   limit: "1mb",
   encoding: "utf-8",
   onFileBegin: async (ctx, formName, file) => {
-    ctx.res.setHeader("file-name", file.name ?? "");
+    ctx.res.set("file-name", file.name ?? "");
   },
   onError: (ctx, err) => {},
 });

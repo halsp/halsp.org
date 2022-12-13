@@ -18,19 +18,21 @@ npm install @ipare/cli -D
 
 ## 快速开始
 
-创建一个项目
+下面列出的是常用命令
+
+1. 创建一个项目
 
 ```sh
 ipare create
 ```
 
-编译项目
+2. 编译项目
 
 ```
 ipare build
 ```
 
-运行项目
+3. 运行项目
 
 ```
 ipare start
@@ -42,7 +44,7 @@ ipare start
 
 ### 配置方式
 
-在配置文件中，可以默认导出一个 json 对象，或默认导出一个返回 json 对象的回调函数
+在配置文件中，可以导出一个 json 对象，或导出一个返回 json 对象的回调函数
 
 #### 导出 json 对象
 
@@ -111,7 +113,7 @@ export interface Configuration {
 ```
 
 - build: 编译相关的配置
-- start: 调试相关的配置，调试的配置也包含 `build` 部分
+- start: 调试相关的配置，`build` 部分的配置也起作用
 
 #### prebuild
 
@@ -171,9 +173,17 @@ export type AssetConfig =
 - outDir 目标文件夹
 - root 根目录地址
 
-root 参数用于路径提升，如 `include` 为 `src/static/**` 需要拷到 `dist/static`, 此值应设为 `src`
+root 参数用于路径提升，如以下示例：
 
-如果不设置 `root`，则会拷贝到 `dist/src/static`
+> **目标**
+>
+> - 资源文件为 `src/imgs/**`，而不是 `imgs/**`
+> - 编译中需要拷贝到 `dist/imgs`，而不是 `dist/src/imgs`
+>
+> **设置参数**
+>
+> 1. 设置 `include` 为 `src/imgs/**`
+> 2. 设置 `root` 为 `src`
 
 #### watch
 
@@ -202,13 +212,13 @@ root 参数用于路径提升，如 `include` 为 `src/static/**` 需要拷到 `
 
 用于断点调试时定位编译后的 js 和源文件 ts 的代码
 
-调试模式 `start` 命令，会忽略该配置，值始终为 `true`
+`start` 命令会忽略该配置，值始终为 `true`
 
 #### copyPackage
 
-如果为 `true` 则拷贝 `package.json` 文件
+值为 `true` 则拷贝 `package.json` 文件
 
-使用云函数环境 `@ipare/lambda` 和 `@ipare/alifc` 时，该值默认为 `true`
+默认为 `false`
 
 #### removeDevDeps
 
@@ -263,6 +273,8 @@ ipare create <project-name>
 
 ### 使用方式
 
+命令如下
+
 ```
 Usage: ipare create|c [options] [name]
 
@@ -273,14 +285,18 @@ Arguments:
 
 Options:
   -f, --force                             Force create application, delete existing files.  (default: false)
-  -e, --env [env]                         The environment to run application
-  --skipEnv                               Skip adding environment files
-  -pm, --packageManager [packageManager]  Specify package manager. (npm/yarn/pnpm/cnpm)
-  -cv, --cliVersion [version]             Version of @ipare/cli (default: "^0.3.1")
-  -ps, --plugins [plugins]                Plugins to add (e.g. view,router,inject)
+  -y, --y                                 Override existing files.  (default: false)
+  -e, --env <env>                         The environment to run application. (lambda/native/azure/micro-tcp/...)
+  -pm, --packageManager <packageManager>  Specify package manager. (npm/yarn/pnpm/cnpm)
+  --registry <url>                        Override configuration registry
+  --debug                                 Debug mode
+  -ps, --plugins <plugins>                Plugins to add (e.g. view,router,inject)
+  -si, --skipInstall                      Skip install project
+  -se, --skipEnv                          Skip adding environment files
   -sg, --skipGit                          Skip git repository initialization
   -sp, --skipPlugins                      No plugins will be added
   -sr, --skipRun                          Skip running after completion
+  --forseInit                             Forse init template
   -h, --help                              display help for command
 ```
 
@@ -300,11 +316,17 @@ Options:
 
 ## build
 
-用于编译项目，可以调起其他插件执行特定脚本
+用于编译项目
 
-如 `@ipare/router` 插件创建路由映射, `@ipare/view` 自动拷贝视图到输出文件夹等等
+:::tip
+CLI 支持极高的扩展性，在编译过程中可以调起其他插件执行脚本，或动态修改配置
+
+如 `@ipare/router` 编译时创建路由映射, `@ipare/view` 编译时自动修改配置，添加 `views` 文件夹为资源文件
+:::
 
 ### 使用方式
+
+命令如下
 
 ```
 Usage: ipare build|b [options]
@@ -312,15 +334,16 @@ Usage: ipare build|b [options]
 Build ipare application
 
 Options:
-  -m, --mode [mode]             Run mode (e.g., development,production). (default: "production")
-  -c, --config [path]           Path to ipare-cli configuration file. (default: "ipare-cli.config.ts")
-  -jc, --jsonConfig [json]      Json string of ipare-cli configuration.
-  -fc, --funcConfig [function]  Function string to build ipare-cli configuration.
-  -tc, --tsconfigPath [path]    Path to tsconfig.json file.
+  -m, --mode <mode>             Run mode (e.g., development,production). (default: "production")
+  -c, --config <path>           Path to ipare-cli configuration file. (default: "ipare-cli.config.ts")
+  -jc, --jsonConfig <json>      Json string of ipare-cli configuration.
+  -fc, --funcConfig <function>  Function string to build ipare-cli configuration.
+  -tc, --tsconfigPath <path>    Path to tsconfig.json file.
   -w, --watch                   Run in watch mode (live-reload).
   -wa, --watchAssets            Watch non-ts (e.g., .views) files mode.
   -sm, --sourceMap              Whether to generate source map files.
   -cp, --copyPackage            Copy package.json to out dir.
+  --removeDevDeps               Remove devDependencies in package.json file when --copyPackage is true.
   -h, --help                    display help for command
 ```
 
@@ -330,6 +353,12 @@ Options:
 
 - 在编译过程执行特定的代码，需要扩展脚本
 - 编译前动态修改配置，需要拓展配置
+
+插件命名需要满足以下任意一个条件
+
+- 以 `@ipare/` 开头的 scope 包，属于 Ipare 官方插件
+- 以 `ipare-` 开头，如 `ipare-xxx`
+- 以 `@<score>/ipare-` 开头的 scope 包，如 `@my-package/ipare-xxx`
 
 #### 插件脚本
 
@@ -354,9 +383,9 @@ Options:
 
 `postbuild` 回调函数如果返回 false， 将终止编译
 
-#### 扩展配置
+#### 动态修改配置
 
-在插件中导出 `cliConfigHook` 函数，可以扩展配置 `ipare-cli.config.ts`
+在插件中导出 `cliConfigHook` 函数，可以在编译阶段动态修改 `ipare-cli.config.ts` 中所读取的配置
 
 注意，此操作不会更新 `ipare-cli.config.ts` 文件
 
@@ -370,28 +399,23 @@ Options:
   - command: 命令类型，`start` 或 `build`
 
 ```TS
-export const cliConfigHook = (
-  config: any,
-  env: { mode: string; command: "start" | "build" }
-) => {
+import { Configuration, ConfigEnv } from "@ipare/cli";
+
+export const cliConfigHook = (config: Configuration, env: ConfigEnv) => {
   config.build = config.build ?? {};
   config.build.assets = config.build.assets ?? [];
   config.build.assets.push({
-    include: "static/*",
+    include: "your-assets/*",
     root: "src",
   });
 };
 ```
 
-插件导出上述 `cliConfigHook` 函数，即为 CLI 配置添加一个资源文件夹
-
-即让 CLI 每次编译都拷贝 `src/static` 文件夹及其中所有文件到目标文件夹 `dist/static`
+若插件导出上述 `cliConfigHook` 函数，每次 CLI 编译都会执行该函数以动态修改配置
 
 ## start
 
 用于启动并调试项目，先编译后启动，编译过程同 `build` 命令
-
-启动项目时会在本地创建一个 http 服务，因此 serverless 项目也可以本地运行
 
 ### 使用方式
 
@@ -415,28 +439,23 @@ Options:
 
 ### Startup 入口
 
-`@ipare/cli` 要求必须按规范有个 src/startup.ts 文件，并导出一个默认函数，内容如下
+入口文件默认为 `index.ts`
 
-```TS
-// startup.ts
-export default function <T extends Startup>(startup: T, mode?: string) {
-  return startup
-    .use(async (ctx, next) => {
-      ctx.res.setHeader("mode", mode ?? "");
-      await next();
-    })
-    .useInject()
-    .useRouter();
-}
-```
+:::tip
+如果存在 `native.ts` 文件，则入口文件优先取 `native.ts`
 
-`mode` 参数值为 `@ipare/cli` 的 `build` 或 `start` 命令传入的 `--mode` 参数，如 `development`、`production` 等
+Serverless 环境的本地调试用到了这个特性
+:::
+
+启动项目时会在本地创建一个 http 服务，因此 serverless 项目也可以本地运行
 
 ## info
 
 可以显示项目信息，主要用于排查问题
 
 ### 使用方式
+
+命令如下
 
 ```
 Usage: ipare info|i [options]
@@ -479,17 +498,20 @@ Ipare CLI Version : 0.7.0
 
 ### 使用方式
 
+命令如下
+
 ```
 Usage: ipare update|u [options]
 
 Update ipare dependencies
 
 Options:
-  -n, --name [name]                      Specify to update a package
+  -n, --name <name>                      Specify to update a package
   -a, --all                              Update all dependencies (default: false)
   -t, --tag <tag>                        Upgrade to tagged packages (latest | beta | rc | next tag) (default: "latest")
   -su, --skipUpgrade                     Display version information without upgrading (default: false)
-  -p, --packageManager [packageManager]  Specify package manager. (npm/yarn/pnpm/cnpm)
   -si, --skipInstall                     Skip installation (default: false)
+  -p, --packageManager <packageManager>  Specify package manager. (npm/yarn/pnpm/cnpm)
+  --registry <url>                       Override configuration registry
   -h, --help                             display help for command
 ```

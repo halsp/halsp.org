@@ -87,7 +87,7 @@ startup
     await next();
   })
   .koa(async (ctx) => {
-    ctx.setHeader("koa", "ipare");
+    ctx.set("koa", "ipare");
     await next();
   })
   .use(async (ctx, next) => {

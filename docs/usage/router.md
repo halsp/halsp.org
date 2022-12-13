@@ -2,7 +2,8 @@
 
 添加 `@ipare/router` 以支持路由功能
 
-- 支持 RESTful 规范
+- 支持 HTTP RESTful
+- 支持微服务路由
 - 根据文件系统映射访问路径，彻底解耦无关联功能
 - 按需加载，提升请求速度
 - 轻量化，高可扩展性
@@ -41,7 +42,7 @@ export default class extends Action{
 `startup.useRouter` 实际上可能会注册多个中间件
 :::
 
-## 约定
+## 路由文件夹
 
 路由文件夹默认为 `src/actions`
 
@@ -58,12 +59,14 @@ export default defineConfig(() => {
 });
 ```
 
+配置后，`@ipare/cli` 编译时才能正确发现路由
+
 ## 配置参数
 
 `startup.useRouter` 接收可选参数 `RouterOptions`，包含以下字段
 
-- prefix: 路由前缀，比如统一添加 `/api` 前缀
-- customMethods: 自定义请求方法数组，如 ['custom-get','custom-post']
+- prefix: 路由前缀，比如统一添加 `/api` 或 `/v3` 前缀
+- customMethods: 如果内置请求方法不满足需求，可以自定义请求方法，如 ['custom-get','custom-method']
 
 ## 路由匹配
 
@@ -72,15 +75,19 @@ export default defineConfig(() => {
 1. 请求路径与文件系统路径匹配，通过后缀设置请求方法
 2. 通过装饰器指定请求路径和请求方法
 
-两种方式可以混用
+在一个项目中，两种方式可以混用，但装饰器的优先级更高
+
+:::warning
+微服务项目只能使用装饰器的方式来匹配路由
+:::
 
 ### 用文件系统匹配路由
 
 普通路径与文件系统路径完全相同
 
-路由查询参数文件或文件夹，命名要以 `^` 开头
+作为路由查询参数的文件或文件夹，命名要以 `^` 开头
 
-`action` 应以 `.post.ts`、`.get.ts`、`.get.delete.ts` 等结尾（或其他自定义 method，扩展名为.js 效果相同 ）
+`action` 文件应以 `.post.ts`、`.get.ts`、`.get.delete.put .ts` 等结尾（或其他自定义请求方法）
 
 如果没有请求方法后缀，任意 `httpMethod` 都可以请求，与 `.any.ts` 效果相同
 
@@ -218,7 +225,7 @@ export default class extends Action {
 
 `Action` 也是中间件，该类继承中间件类 `Middleware`，但 `Action` 中间件会在 `useRouter` 中自动注册，无需手动注册
 
-正常情况 Action 会终止管道继续向后执行，不会执行 `next`。如果有其他特殊需求你也可以调用 `this.next()` 以进入下个中间件
+如果有特殊需求，正常情况 Action 会作为最终中间件，不应调用 `this.next()`
 
 每次收到请求，主要执行的是自定义 `Action` 类实例对象中的 `invoke` 函数
 
@@ -232,11 +239,11 @@ export default class extends Action {
 
 创建文件夹 `src/actions`，用于存放所有 `Action`
 
-路由文件夹也可以是其他路径，但需要在配置，参考前面 `约定` 部分
+路由文件夹也可以是其他路径，但需要修改配置，参考前面 [路由文件夹](#路由文件夹) 部分
 
 #### 创建 action 文件
 
-根据各业务，创建文件夹或 `.ts/.js` 文件，名称自定，但名称和路径会映射为访问路径，每个文件对应一个 `action`
+根据各业务，创建文件夹和 `.ts` 文件，名称自定，但名称和路径会映射为访问路径，每个文件对应一个 `action`
 
 命名格式为 `<actionName>.<httpMethod>.ts` ，其中 `httpMethod` 可以多个，如 `user.get.ts`、`user.delete.put.ts`。
 
@@ -261,7 +268,7 @@ export default class extends Action {
 
 #### 创建 action 类
 
-在 action 文件 (`.ts/.js`) 中创建继承 `Action` 的类，并重写 `invoke` 函数
+在 action 文件 (`.ts`) 中创建继承 `Action` 的类，并重写 `invoke` 函数
 
 ```TS
 import { Action } from "@ipare/router";
@@ -277,10 +284,10 @@ export default class extends Action {
 
 ## Request.params
 
-`Request.params` 值是 RESTful 路径中的参数，如
+`Request.params` 是 RESTful 路径中的参数，如
 
+- 路由/文件地址：`/user/^userId/todo/^todoId.get.ts`
 - 访问路径：`/user/66/todo/88`
-- 路由地址：`/user/^userId/todo/^todoId.get.ts`
 
 那么 `params` 值为
 
@@ -358,11 +365,15 @@ export default class extends Action{
 }
 ```
 
+:::warning
+元数据会被转为 json，因此元数据的值不能是函数等内容，因为其不能被解析为 json
+:::
+
 ## 编译
 
 使用 `@ipare/cli` 的编译命令 `ipare build` 时，`@ipare/router` 会扫描路由文件夹并创建映射表
 
-用于快速匹配路由，提升程序启动速度，serverless 项目通过编译路由表，能极大的提升启动速度
+用于快速匹配路由，提升程序启动速度，serverless 项目通过编译路由表，能极大的提升启动速度和响应速度
 
 ### 编译结果
 
@@ -376,4 +387,4 @@ export default class extends Action{
 
 如果没有 `ipare-router.config` 文件，对于原生服务 `@ipare/native` 影响不是很大
 
-但 serverless 可能每次请求都会启动一个新程序，即重新创建映射表
+但 serverless 项目可能每次请求都会启动一个新程序，即重新创建映射表，将失去编译路由表的优势

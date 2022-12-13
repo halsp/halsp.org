@@ -15,7 +15,7 @@ Ipare 在很多方面都是约定大于配置
 export default function <T extends Startup>(startup: T, mode?: string) {
   return startup
     .use(async (ctx, next) => {
-      ctx.res.setHeader("mode", mode ?? "");
+      ctx.res.set("mode", mode ?? "");
       await next();
     })
     .useInject()
