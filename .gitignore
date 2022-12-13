@@ -1,6 +1,5 @@
 node_modules
 .temp
 .cache
-yarn.lock
 dist
 yarn-error.log
