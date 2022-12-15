@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">Ipare - 面向云的现代渐进式轻量 <a href="http://nodejs.org" target="_blank">Node.js</a> 框架</p>
-<p align="center">
+<p align="center" class="tags">
     <a href="https://github.com/ipare/ipare/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="GitHub license" /></a>
     <a href=""><img src="https://img.shields.io/npm/v/@ipare/core.svg" alt="npm version"></a>
     <a href=""><img src="https://badgen.net/npm/dt/@ipare/core" alt="npm downloads"></a>

@@ -1,4 +1,5 @@
 import { defaultTheme, defineUserConfig, NavLink } from "vuepress";
+import { searchPlugin } from "@vuepress/plugin-search";
 
 const microLinks: NavLink[] = [
   {
@@ -213,5 +214,10 @@ export default defineUserConfig({
       },
     ],
     ["link", { rel: "icon", href: "/favicon.ico" }],
+  ],
+  plugins: [
+    searchPlugin({
+      maxSuggestions: 10,
+    }),
   ],
 });
