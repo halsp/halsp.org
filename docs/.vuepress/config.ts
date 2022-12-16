@@ -218,6 +218,14 @@ export default defineUserConfig({
   plugins: [
     searchPlugin({
       maxSuggestions: 10,
+      locales: {
+        "": {
+          placeholder: "输入搜索内容",
+        },
+        "zh-cn": {
+          placeholder: "输入搜索内容",
+        },
+      },
     }),
   ],
 });
