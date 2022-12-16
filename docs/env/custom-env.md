@@ -47,6 +47,8 @@ new CustomEnvStartup()
 函数代码如下
 
 ```TS
+import { Startup, Dict} from "@ipare/core";
+
 export class LambdaStartup extends Startup {
   async run(event: Dict, context: Dict): Promise<ResponseStruct> {
     const ctx = this.createContext(event, context);
@@ -58,7 +60,7 @@ export class LambdaStartup extends Startup {
 
 ### 创建 Context
 
-`Context` 构造函数接收 `Request` 对象，因此只需创建 `Request` 对象
+`Context` 构造函数接收 `Request` 对象，因此需要先创建 `Request` 对象
 
 1. 新建一个 `Request` 对象 `new Request()`
 2. 解析 lambda 的参数 `event` 和 `context`，设置 `Request` 对象的请求参数
@@ -68,7 +70,7 @@ export class LambdaStartup extends Startup {
 
 在 `super.invoke` 执行完毕后，`Context` 和 `Request` 对象已经在各个中间件被更新
 
-需要解析 `Context` 和 `Request` 对象并返回符合 lambda 要求的结果
+然后需要解析 `Context` 和 `Request` 对象并返回符合 lambda 要求的结果
 
 ```TS
 export interface ResponseStruct {
@@ -93,7 +95,7 @@ export interface ResponseStruct {
 import { LambdaStartup } from "@ipare/lambda";
 import startup from "./startup";
 
-const app = startup(new LambdaStartup(), "production");
+const app = startup(new LambdaStartup());
 export const main = async (event, context) => await app.run(event, context);
 ```
 

@@ -4,10 +4,12 @@
 
 使用 `@ipare/cli` 可以更方便的调试项目，下面的教程均使用了 `@ipare/cli`
 
-如果当前没有使用 `@ipare/cli`，也可以根据后面的 [新增 CLI](#新增-cli) 配置
+如果当前没有使用 `@ipare/cli`，也可以根据后面的 [新增 CLI](#新增-cli) 部分配置 `@ipare/cli`
 
 :::tip 注意
-Serverless 环境下（`@ipare/lambda`, `@ipare/alifc`），是使用 `@ipare/native` 模拟 Http 环境启动应用
+Serverless 环境下（`@ipare/lambda`, `@ipare/alifc` 等），默认是使用 `@ipare/native` 模拟 Http 环境启动应用
+
+如果不需要，删除 `native.ts` 文件即可
 :::
 
 ## 开始调试
@@ -26,11 +28,20 @@ ipare start
 npx ipare start
 ```
 
-## 规范
+## 入口文件
 
-在 `src` 目录下，必须要有一个 `startup.ts` 文件，并导出一个函数，函数返回 `Startup` 派生类对象
+建议 `src` 目录下，有以下两个文件
 
-使用 CLI 生成的项目已有这个文件，内容如
+1. `index.ts` 入口文件
+1. `startup.ts`，导出一个函数，函数返回 `Startup` 派生类实例对象
+
+这样的好处是方便切换环境，如 `lambda` 项目通过增加一个 `native` 入口文件，即可本地模拟调试
+
+### CLI 生成的内容示例
+
+使用 CLI 生成的项目已有这两个文件（根据选择插件不同，生成的内容也不同）
+
+`startup.ts` 内容如
 
 ```TS
 import { Startup } from "@ipare/core";
@@ -38,22 +49,54 @@ import "@ipare/mva";
 import "@ipare/env";
 import "@ipare/logger";
 
-export default <T extends Startup>(startup: T, mode: string) =>
+export default <T extends Startup>(startup: T) =>
   startup
     .useEnv()
     .useConsoleLogger()
     .useMva();
 ```
 
-如果没有这个文件，或文件内容有误，`@ipare/cli` 将无法调试
+`index.ts` 如果选择 `lambda` 环境内容如下
 
-## 新增 CLI
+```TS
+const app = startup(new LambdaStartup());
+export const main = (event: any, context: any) => app.run(event, context);
+```
+
+使用 `native` 本地模拟调试的入口文件 `native.ts` 文件内容如下
+
+```TS
+import { NativeStartup } from "@ipare/native";
+import setupStartup from "./startup";
+
+async function bootstrap() {
+  const startup = setupStartup(new NativeStartup().useHttpJsonBody());
+  await startup.dynamicListen();
+}
+bootstrap();
+```
+
+### 指定入口文件
+
+默认入口文件按以下顺序查找
+
+- native.ts
+- index.ts
+- main.ts
+
+通过参数 `--startupFile` 可以指定入口文件，如
+
+```sh
+ipare start --startupFile demo.ts
+```
+
+## 已有项目新增 CLI
 
 如果当前项目没有 `@ipare/cli`，可以参考以下步骤配置
 
 ### 安装
 
-确保已在项目内已安装或全局安装 `@ipare/cli`
+确保已在项目内安装或全局安装 `@ipare/cli`
 
 ```bash
 # 项目中安装
@@ -69,7 +112,6 @@ npm install @ipare/cli -g
 
 ```JSON
   "scripts": {
-    "dev": "ipare start",
     "start": "ipare start",
     "build": "ipare build"
   },
@@ -78,6 +120,8 @@ npm install @ipare/cli -g
 ### 增加调试配置
 
 在项目下创建 `.vscode/launch.json` 文件
+
+用于配合 `vscode` 的断点调试
 
 ```JSON
 {
@@ -93,24 +137,18 @@ npm install @ipare/cli -g
 }
 ```
 
-### 创建 `startup.ts` 文件
+### 创建入口文件
 
-如果没有按规范使用 `startup.ts` 文件
+按建议创建文件 `startup.ts` 和 `index.ts`
 
-创建 `src/startup.ts` 文件，在这个文件中配置中间件，内容参考 [规范](#规范)
-
-修改原有的中间件配置文件 `index.ts`，改为使用从 `startup.ts` 中导出的 `Startup` 对象。如 lambda 运行环境
-
-```TS
-import { LambdaStartup } from "@ipare/lambda";
-import startup from "./startup";
-
-const app = startup(new LambdaStartup(), "production");
-export const main = async (event, context) => await app.run(event, context);
-```
+参考 [入口文件](#入口文件)
 
 ### 开始调试
 
 上述配置完毕
 
 按下 F5 即可开始断点调试
+
+## CLI 调试命令
+
+参考 [CLI 脚手架](/usage/cli.html) 的文档

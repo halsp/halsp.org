@@ -425,15 +425,17 @@ Usage: ipare start|s [options]
 Run ipare application
 
 Options:
-  -m, --mode [mode]             Run mode (e.g., development,production). (default: "development")
-  -c, --config [path]           Path to ipare-cli configuration file. (default: "ipare-cli.config.ts")
-  -jc, --jsonConfig [json]      Json string of ipare-cli configuration.
-  -fc, --funcConfig [function]  Function string to build ipare-cli configuration.
-  -tc, --tsconfigPath [path]    Path to tsconfig.json file.
+  -m, --mode <mode>             Run mode (e.g., development,production). (default: "development")
+  -c, --config <path>           Path to ipare-cli configuration file. (default: "ipare-cli.config.ts")
+  -jc, --jsonConfig <json>      Json string of ipare-cli configuration.
+  -fc, --funcConfig <function>  Function string to build ipare-cli configuration.
+  -tc, --tsconfigPath <path>    Path to tsconfig.json file.
   -w, --watch                   Run in watch mode (live-reload).
   -wa, --watchAssets            Watch non-ts (e.g., .views) files mode.
-  -b, --binaryToRun [program]   Binary to run application (e.g., node, ts-node).
-  -p, --port [port]             The port on http listens
+  --startupFile <path>          The file to startup
+  -b, --binaryToRun <program>   Binary to run application (e.g., node, ts-node)
+  -p, --port <port>             The port on http listens
+  --inspect <hostport>          Run in inspect mode
   -h, --help                    display help for command
 ```
 
