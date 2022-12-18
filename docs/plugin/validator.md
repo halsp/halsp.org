@@ -36,10 +36,10 @@ import { Middleware } from "@ipare/core";
 
 // 数据传输模型
 class TestDto {
-  @V().IsString().IsNotEmpty()
+  @V.IsString().IsNotEmpty()
   prop1!: string;
 
-  @V().IsInt().Min(6)
+  @V.IsInt().Min(6)
   prop2!: number;
 
   get prop3() {
@@ -70,11 +70,11 @@ import { Middleware } from "@ipare/core";
 // 中间件
 class TestMiddleware extends Middleware {
   @Body("prop1")
-  @V().IsString().IsNotEmpty()
+  @V.IsString().IsNotEmpty()
   private readonly prop1!: string;
 
   @Body("prop2")
-  @V().IsInt().Min(6)
+  @V.IsInt().Min(6)
   private readonly p2!: any;
 
   async invoke(): Promise<void> {
@@ -109,17 +109,17 @@ startup.useValidator(({ ctx, val, propertyType }) => ({
 
 ### 局部配置
 
-使用装饰器 `UseValidatorOptions` 定义传输模型
+使用装饰器 `UseValidatorOptions` 装饰 dto 类
 
 ```TS
 @UseValidatorOptions({
   stopAtFirstError: true
 })
 class TestDto {
-  @V().IsString().IsNotEmpty()
+  @V.IsString().IsNotEmpty()
   b1!: string;
 
-  @V().IsInt().Min(6)
+  @V.IsInt().Min(6)
   b2!: number;
 
   get b() {
@@ -139,10 +139,18 @@ class TestDto {
 `ValidatorEnable` 接收一个回调函数
 
 ```TS
-(args: { ctx: Context; val: any }) => boolean | Promise<boolean>
+({ ctx: Context; val: any }) => boolean | Promise<boolean>
 ```
 
 参数 `val` 是该模型对应的值
+
+```TS
+@ValidatorEnable(({ ctx: Context; val: any }) => ctx.bag("test") == val)
+class TestClass {
+  @V.IsInt()
+  b1!: number;
+}
+```
 
 ## 现有校验装饰器
 
@@ -152,15 +160,15 @@ class TestDto {
 
 此外还提供了 `Is` 装饰器，可以使用自定义校验规则，用于更复杂的需求
 
-也能封装自定义校验，用于重复使用的自定义校验规则
+也能封装自定义校验，用于复用自定义校验规则
 
-## 自定义校验 Is
+## 自定义校验装饰器 `Is()`
 
 `Is` 装饰器可以实现自定义校验
 
 ```TS
 class TestDto {
-  @V()
+  @V
     .Is(
       (value, property) => typeof value == "number",
       `${property} must be a number`
@@ -170,7 +178,7 @@ class TestDto {
 }
 ```
 
-上面的代码限制 `prop` 的值必须是一个数字，并且值大于 6
+上面的代码限制字段 `prop` 的值必须是一个数字，并且值大于 6
 
 `Is` 装饰器有两个参数
 
@@ -178,7 +186,7 @@ class TestDto {
   - `value` 请求参数实际值
   - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
   - `args` 装饰器输入参数数组
-- `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数参数同 `validate` 回调函数
+- `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数的参数同 `validate` 回调函数
 
 ## 封装的自定义校验
 
@@ -188,19 +196,19 @@ class TestDto {
 
 `@ipare/swagger` 就是基于此功能增加了描述性装饰器（没有校验功能）
 
-如实现一个下面的校验规则，判断请求参数是否为固定值，装饰器参数传入固定值
+如实现一个下面的校验规则：判断请求参数是否为指定值
 
 ```TS
 import { addCustomValidator } from '@ipare/validator';
 
 addCustomValidator({
+  name: "CustomEquals",
   validate: (value, property, args) => value == args[0],
   errorMessage: (value, property, args) => `${property} must equal with ${args[0]}, now is ${value}`,
-  name: "CustomEquals",
 });
 
 class TestDto{
-  @V().CustomEquals(6)
+  @V.CustomEquals(6)
   readonly prop!: number;
 }
 ```
@@ -243,5 +251,5 @@ declare module "@ipare/validator" {
   - `value` 请求参数实际值
   - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
   - `args` 装饰器输入参数数组
-- `errorMessage` 与 `Is` 装饰器第二个参数相同
+- `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数的参数同 `validate` 回调函数
 - `name` 装饰器名称，必须唯一，且与已有装饰器不同

@@ -28,12 +28,12 @@ startup.useSwagger();
 import "@ipare/swagger";
 import { V } from "@ipare/validator";
 
-@V().Description("login info")
+@V.Description("login info")
 export class LoginDto {
-  @V().Description("email").IsEmail()
+  @V.Description("email").IsEmail()
   account!: string;
 
-  @V().Description("password").MinLength(8).MaxLength(24)
+  @V.Description("password").MinLength(8).MaxLength(24)
   password!: string;
 }
 ```
@@ -46,7 +46,7 @@ import { V } from "@ipare/validator";
 import { Action } from "@ipare/core";
 import { Body } from "@ipare/pipe";
 
-@V().Tags("user").Description("Get user info")
+@V.Tags("user").Description("Get user info")
 export default class extends Action {
   @Body
   private readonly loginDto!: LoginDto;
@@ -73,7 +73,7 @@ export interface SwaggerOptions {
 
 ### path
 
-访问 swagger 页面的路径，默认为 `swagger`
+访问 swagger 页面的路径，默认为 `swagger`，即访问路径为 `/swagger`
 
 ### builder
 
@@ -155,9 +155,13 @@ javascript 代码，可以是一个字符串添加一个 `<script>`，也可以�
 
 ### initOAuth
 
+`swagger-ui-dist` 中的 `SwaggerUIBundle.initOAuth` 参数
+
+参考 [SwaggerUIBundle OAuth](https://swagger.io/docs/open-source-tools/swagger-ui/usage/oauth2/)
+
 ### uiBundleOptions
 
-`swagger-ui-dist` 中的 `SwaggerUIBundle` 参数为
+`swagger-ui-dist` 中的 `new SwaggerUIBundle()` 参数
 
 参考 [SwaggerUIBundle](https://swagger.io/docs/open-source-tools/swagger-ui/usage/installation/)
 
@@ -189,7 +193,7 @@ SwaggerUIBundle({
 
 ## 支持的装饰器
 
-文档中部分内容是根据装饰器生成的
+文档中很多内容是根据装饰器生成的
 
 装饰器会影响文档的生成，包含 `@ipare/validator` 中的部分装饰器和 `@ipare/swagger` 中的全部装饰器
 
@@ -255,13 +259,13 @@ class TestDto1 {
 }
 
 class TestDto2 {
-  @V().Items(TestDto1)
+  @V.Items(TestDto1)
   readonly prop2!: TestDto1[];
 }
 
 export default class extends Action{
   @Body
-  @V().Items(TestDto2)
+  @V.Items(TestDto2)
   private readonly dto!:TestDto2[];
 
   invoke(){
@@ -274,12 +278,12 @@ export default class extends Action{
 
 ```TS
 class TestDto2 {
-  @V().Items([TestDto1])
+  @V.Items([TestDto1])
   readonly prop2!: TestDto1[][];
 }
 
 class TestDto3 {
-  @V().Items([[TestDto1]])
+  @V.Items([[TestDto1]])
   readonly prop3!: TestDto2[][][];
 }
 ```

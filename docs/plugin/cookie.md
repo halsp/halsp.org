@@ -82,7 +82,11 @@ ctx.res.cookies.account = "ipare.org";
 ctx.cookies.account = "ipare.org";
 ```
 
-ctx.cookies 属性的 get 方法是返回请求头的 cookie
+ctx.cookies 属性的 get 方法是返回请求头的 cookie，等同于
+
+```TS
+ctx.req.cookies.account = "ipare.org";
+```
 
 因此这种写法其实是给请求头的 cookie 赋值，不会抛出错误但在控制台会提示一个 error
 :::
