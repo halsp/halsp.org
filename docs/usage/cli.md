@@ -1,19 +1,19 @@
-# CLI 脚手架 `(@ipare/cli)`
+# CLI 脚手架 `(@halsp/cli)`
 
-`@ipare/cli` 提供创建、编译、调试、升级等功能
+`@halsp/cli` 提供创建、编译、调试、升级等功能
 
 ## 安装
 
 全局安装
 
 ```sh
-npm install @ipare/cli -g
+npm install @halsp/cli -g
 ```
 
 或项目中安装
 
 ```sh
-npm install @ipare/cli -D
+npm install @halsp/cli -D
 ```
 
 ## 快速开始
@@ -23,24 +23,24 @@ npm install @ipare/cli -D
 1. 创建一个项目
 
 ```sh
-ipare create
+halsp create
 ```
 
 2. 编译项目
 
 ```
-ipare build
+halsp build
 ```
 
 3. 运行项目
 
 ```
-ipare start
+halsp start
 ```
 
 ## 项目配置
 
-项目根目录下的文件 `ipare-cli.config.ts` 用来存放 CLI 的相关配置
+项目根目录下的文件 `halsp-cli.config.ts` 用来存放 CLI 的相关配置
 
 ### 配置方式
 
@@ -59,7 +59,7 @@ export default {
 或使用智能提示
 
 ```TS
-import { defineConfig } from "@ipare/cli";
+import { defineConfig } from "@halsp/cli";
 
 export default defineConfig({
   start: {}
@@ -71,7 +71,7 @@ export default defineConfig({
 导出回调函数可以实现动态配置，即根据不同编译条件返回不同配置
 
 ```TS
-import { defineConfig } from "@ipare/cli";
+import { defineConfig } from "@halsp/cli";
 
 export default defineConfig(({ mode }) => {
   return {
@@ -224,7 +224,7 @@ root 参数用于路径提升，如以下示例：
 
 如果为 `true` 则移除拷贝后 `package.json` 文件 `devDependencies` 中的依赖
 
-使用云函数环境 `@ipare/lambda` 和 `@ipare/alifc` 时，该值默认为 `true`
+使用云函数环境 `@halsp/lambda` 和 `@halsp/alifc` 时，该值默认为 `true`
 
 #### port
 
@@ -242,24 +242,24 @@ V8 引擎的调试工具
 
 启动文件的路径，默认为 CLI 调试时生成的文件
 
-如果有其他需求，如希望使用其他运行环境调试，而不使用默认的 `@ipare/native`，可以创建一个入口文件，并通过此参数指定该文件
+如果有其他需求，如希望使用其他运行环境调试，而不使用默认的 `@halsp/native`，可以创建一个入口文件，并通过此参数指定该文件
 
 ## 支持的命令
 
 ```
-Usage: ipare <command> [options]
+Usage: halsp <command> [options]
 
 Options:
   -V, --version                 output the version number
   -h, --help                    display help for command
 
 Commands:
-  create|c [options] [name]     Generate ipare application
+  create|c [options] [name]     Generate halsp application
   template|t <template> <name>  Generate a project from a remote template
-  build|b [options]             Build ipare application
-  start|s [options]             Run ipare application
-  info|i                        Display ipare project details
-  update|u [options]            Update ipare dependencies
+  build|b [options]             Build halsp application
+  start|s [options]             Run halsp application
+  info|i                        Display halsp project details
+  update|u [options]            Update halsp dependencies
   help [command]                display help for command
 ```
 
@@ -268,7 +268,7 @@ Commands:
 用于从头新建项目，可以选择插件、运行环境等
 
 ```sh
-ipare create <project-name>
+halsp create <project-name>
 ```
 
 ### 使用方式
@@ -276,9 +276,9 @@ ipare create <project-name>
 命令如下
 
 ```
-Usage: ipare create|c [options] [name]
+Usage: halsp create|c [options] [name]
 
-Generate ipare application
+Generate halsp application
 
 Arguments:
   name                                    Aapplication name
@@ -321,7 +321,7 @@ Options:
 :::tip
 CLI 支持极高的扩展性，在编译过程中可以调起其他插件执行脚本，或动态修改配置
 
-如 `@ipare/router` 编译时创建路由映射, `@ipare/view` 编译时自动修改配置，添加 `views` 文件夹为资源文件
+如 `@halsp/router` 编译时创建路由映射, `@halsp/view` 编译时自动修改配置，添加 `views` 文件夹为资源文件
 :::
 
 ### 使用方式
@@ -329,15 +329,15 @@ CLI 支持极高的扩展性，在编译过程中可以调起其他插件执行�
 命令如下
 
 ```
-Usage: ipare build|b [options]
+Usage: halsp build|b [options]
 
-Build ipare application
+Build halsp application
 
 Options:
   -m, --mode <mode>             Run mode (e.g., development,production). (default: "production")
-  -c, --config <path>           Path to ipare-cli configuration file. (default: "ipare-cli.config.ts")
-  -jc, --jsonConfig <json>      Json string of ipare-cli configuration.
-  -fc, --funcConfig <function>  Function string to build ipare-cli configuration.
+  -c, --config <path>           Path to halsp-cli configuration file. (default: "halsp-cli.config.ts")
+  -jc, --jsonConfig <json>      Json string of halsp-cli configuration.
+  -fc, --funcConfig <function>  Function string to build halsp-cli configuration.
   -tc, --tsconfigPath <path>    Path to tsconfig.json file.
   -w, --watch                   Run in watch mode (live-reload).
   -wa, --watchAssets            Watch non-ts (e.g., .views) files mode.
@@ -356,9 +356,9 @@ Options:
 
 插件命名需要满足以下任意一个条件
 
-- 以 `@ipare/` 开头的 scope 包，属于 Ipare 官方插件
-- 以 `ipare-` 开头，如 `ipare-xxx`
-- 以 `@<score>/ipare-` 开头的 scope 包，如 `@my-package/ipare-xxx`
+- 以 `@halsp/` 开头的 scope 包，属于 Halsp 官方插件
+- 以 `halsp-` 开头，如 `halsp-xxx`
+- 以 `@<score>/halsp-` 开头的 scope 包，如 `@my-package/halsp-xxx`
 
 #### 插件脚本
 
@@ -385,9 +385,9 @@ Options:
 
 #### 动态修改配置
 
-在插件中导出 `cliConfigHook` 函数，可以在编译阶段动态修改 `ipare-cli.config.ts` 中所读取的配置
+在插件中导出 `cliConfigHook` 函数，可以在编译阶段动态修改 `halsp-cli.config.ts` 中所读取的配置
 
-注意，此操作不会更新 `ipare-cli.config.ts` 文件
+注意，此操作不会更新 `halsp-cli.config.ts` 文件
 
 可以在函数中修改当前配置对象，或返回一个新的配置对象
 
@@ -399,7 +399,7 @@ Options:
   - command: 命令类型，`start` 或 `build`
 
 ```TS
-import { Configuration, ConfigEnv } from "@ipare/cli";
+import { Configuration, ConfigEnv } from "@halsp/cli";
 
 export const cliConfigHook = (config: Configuration, env: ConfigEnv) => {
   config.build = config.build ?? {};
@@ -420,15 +420,15 @@ export const cliConfigHook = (config: Configuration, env: ConfigEnv) => {
 ### 使用方式
 
 ```
-Usage: ipare start|s [options]
+Usage: halsp start|s [options]
 
-Run ipare application
+Run halsp application
 
 Options:
   -m, --mode <mode>             Run mode (e.g., development,production). (default: "development")
-  -c, --config <path>           Path to ipare-cli configuration file. (default: "ipare-cli.config.ts")
-  -jc, --jsonConfig <json>      Json string of ipare-cli configuration.
-  -fc, --funcConfig <function>  Function string to build ipare-cli configuration.
+  -c, --config <path>           Path to halsp-cli configuration file. (default: "halsp-cli.config.ts")
+  -jc, --jsonConfig <json>      Json string of halsp-cli configuration.
+  -fc, --funcConfig <function>  Function string to build halsp-cli configuration.
   -tc, --tsconfigPath <path>    Path to tsconfig.json file.
   -w, --watch                   Run in watch mode (live-reload).
   -wa, --watchAssets            Watch non-ts (e.g., .views) files mode.
@@ -460,9 +460,9 @@ Serverless 环境的本地调试用到了这个特性
 命令如下
 
 ```
-Usage: ipare info|i [options]
+Usage: halsp info|i [options]
 
-Display ipare project details
+Display halsp project details
 
 Options:
   -h, --help  display help for command
@@ -484,28 +484,28 @@ OS Platform    : win32
 OS Release     : 10.0.22000
 NodeJS Version : v16.15.0
 
-[Ipare CLI]
-Ipare CLI Version : 0.7.0
+[Halsp CLI]
+Halsp CLI Version : 0.7.0
 
-[Ipare Packages Version]
-@ipare/core   : ^3.0.0
-@ipare/native   : ^3.0.0
-@ipare/inject : ^3.0.0
-@ipare/pipe   : ^3.0.0
+[Halsp Packages Version]
+@halsp/common   : ^3.0.0
+@halsp/native   : ^3.0.0
+@halsp/inject : ^3.0.0
+@halsp/pipe   : ^3.0.0
 ```
 
 ## update
 
-用于升级 Ipare 依赖版本
+用于升级 Halsp 依赖版本
 
 ### 使用方式
 
 命令如下
 
 ```
-Usage: ipare update|u [options]
+Usage: halsp update|u [options]
 
-Update ipare dependencies
+Update halsp dependencies
 
 Options:
   -n, --name <name>                      Specify to update a package

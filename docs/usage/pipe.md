@@ -1,12 +1,12 @@
-# 管道 `(@ipare/pipe)`
+# 管道 `(@halsp/pipe)`
 
-安装 `@ipare/pipe` 以支持管道功能
+安装 `@halsp/pipe` 以支持管道功能
 
 请求参数管道，用于校验、转换、格式化请求参数
 
 此处管道不同于管道上下文 `Context`
 
-你需要使用装饰器并引入 `@ipare/inject` 以使用此功能
+你需要使用装饰器并引入 `@halsp/inject` 以使用此功能
 
 用 `Query`, `Header`, `Param`, `Body`, `InjectContext` 装饰字段，该字段在特定生命周期会被自动赋值
 
@@ -15,8 +15,8 @@
 先创建一个中间件
 
 ```TS
-import { Header, Query, Param, Body, InjectContext } from "@ipare/pipe";
-import { Middleware, ReadonlyDict, Context } from "@ipare/core";
+import { Header, Query, Param, Body, InjectContext } from "@halsp/pipe";
+import { Middleware, ReadonlyDict, Context } from "@halsp/common";
 
 class TestMiddleware extends Middleware {
   @InjectContext
@@ -54,11 +54,11 @@ class TestMiddleware extends Middleware {
 在 `startup.ts` 中
 
 ```TS
-import "@ipare/inject";
+import "@halsp/inject";
 startup.useInject().add(TestMiddleware);
 ```
 
-上述代码中的 `useInject` 会启用依赖注入，`@ipare/pipe` 利用依赖注入实现功能
+上述代码中的 `useInject` 会启用依赖注入，`@halsp/pipe` 利用依赖注入实现功能
 
 需要注意的是，该功能只会在 `useInject` 之后的中间件中生效，因此你需要把 `useInject` 放在靠前的位置，根据实际项目决定
 
@@ -67,9 +67,9 @@ startup.useInject().add(TestMiddleware);
 在其他任意类中，你也可以利用控制反转实现实例化
 
 ```TS
-import { parseInject } from "@ipare/inject";
-import { Context } from "@ipare/core";
-import { Header, Query, InjectContext } from "@ipare/pipe";
+import { parseInject } from "@halsp/inject";
+import { Context } from "@halsp/common";
+import { Header, Query, InjectContext } from "@halsp/pipe";
 
 class TestClass {
   @InjectContext
@@ -93,7 +93,7 @@ const obj = parseInject(new TestClass());
 
 例如不能使用单例类或单例中间件，否则可能会在高并发下出现不可预知的问题
 
-在这样的中间件中不能使用 `@ipare/pipe`，因为中间件是单例的：
+在这样的中间件中不能使用 `@halsp/pipe`，因为中间件是单例的：
 
 ```TS
 startup.use(new YourMiddleware())
@@ -113,7 +113,7 @@ startup.use((ctx) => md);
 传入类
 
 ```TS
-import { Query, ParseIntPipe } from "@ipare/pipe"
+import { Query, ParseIntPipe } from "@halsp/pipe"
 
 @Query("field", ParseIntPipe)
 queryField: number;
@@ -150,7 +150,7 @@ query: any;
 创建一个类，实现 `PipeTransform` 接口，如
 
 ```TS
-import { InjectContext, PipeTransform } from "@ipare/pipe"
+import { InjectContext, PipeTransform } from "@halsp/pipe"
 
 class ToStringPipe implements PipeTransform<any, string> {
   @InjectContext

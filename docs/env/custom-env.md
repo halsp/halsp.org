@@ -14,7 +14,7 @@
 伪代码如下
 
 ```TS
-import { Startup } from "@ipare/core";
+import { Startup } from "@halsp/common";
 
 class CustomEnvStartup extends Startup{
   async run(event: any){
@@ -32,7 +32,7 @@ new CustomEnvStartup()
 
 ## 分析 lambda
 
-以 `@ipare/lambda` 为例，分析 `LambdaStartup` 的大致实现
+以 `@halsp/lambda` 为例，分析 `LambdaStartup` 的大致实现
 
 ### run 函数
 
@@ -41,13 +41,13 @@ new CustomEnvStartup()
 该函数简单来说就三步操作
 
 1. 根据 lambda 的参数 `event` 和 `context` 解析请求内容，并创建 Context 对象
-2. 执行 `super.invoke(ctx)`，这一步将执行各个中间件，是 ipare 的核心部分
+2. 执行 `super.invoke(ctx)`，这一步将执行各个中间件，是 halsp 的核心部分
 3. 格式化返回内容
 
 函数代码如下
 
 ```TS
-import { Startup, Dict} from "@ipare/core";
+import { Startup, Dict} from "@halsp/common";
 
 export class LambdaStartup extends Startup {
   async run(event: Dict, context: Dict): Promise<ResponseStruct> {
@@ -92,7 +92,7 @@ export interface ResponseStruct {
 在 index.ts 中
 
 ```TS
-import { LambdaStartup } from "@ipare/lambda";
+import { LambdaStartup } from "@halsp/lambda";
 import startup from "./startup";
 
 const app = startup(new LambdaStartup());

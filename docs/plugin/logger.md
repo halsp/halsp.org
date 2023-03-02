@@ -1,13 +1,13 @@
-# 日志 `(@ipare/logger)`
+# 日志 `(@halsp/logger)`
 
-添加 `@ipare/logger` 插件以使用日志功能
+添加 `@halsp/logger` 插件以使用日志功能
 
-`@ipare/logger` 的功能基于 [winston](https://github.com/winstonjs/winston)，使用 `@ipare/winston` 可以简化记录日志的操作
+`@halsp/logger` 的功能基于 [winston](https://github.com/winstonjs/winston)，使用 `@halsp/winston` 可以简化记录日志的操作
 
 ## 安装
 
 ```sh
-npm install @ipare/logger
+npm install @halsp/logger
 ```
 
 ## 快速开始
@@ -15,7 +15,7 @@ npm install @ipare/logger
 在 `startup.ts` 中
 
 ```TS
-import '@ipare/logger';
+import '@halsp/logger';
 
 startup.useLogger()
 ```
@@ -23,8 +23,8 @@ startup.useLogger()
 在中间件或服务通过依赖注入获取日志输出类的实例
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { LoggerInject, Logger } from "@ipare/logger";
+import { Middleware } from "@halsp/common";
+import { LoggerInject, Logger } from "@halsp/logger";
 
 class TestMiddleware extends Middleware {
   @LoggerInject()
@@ -38,10 +38,10 @@ class TestMiddleware extends Middleware {
 
 ## 创建多个日志输出实例
 
-`@ipare/logger` 支持创建多个日志输出实例，只需调用多次 `useLogger` ，并传参 `identity` 用于区分
+`@halsp/logger` 支持创建多个日志输出实例，只需调用多次 `useLogger` ，并传参 `identity` 用于区分
 
 ```TS
-import "@ipare/logger";
+import "@halsp/logger";
 
 startup
   .useLogger({
@@ -57,8 +57,8 @@ startup
 在中间件或服务中，给装饰器 `@LoggerInject()` 传参字符串以区分日志实例
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { LoggerInject, Logger } from "@ipare/logger";
+import { Middleware } from "@halsp/common";
+import { LoggerInject, Logger } from "@halsp/logger";
 
 class TestMiddleware extends Middleware {
   @LoggerInject("id1")
@@ -84,11 +84,11 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@LoggerInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+用 `@LoggerInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { Logger, LoggerInject } from "@ipare/logger";
+import { Middleware } from "@halsp/common";
+import { Logger, LoggerInject } from "@halsp/logger";
 
 @Inject
 class TestMiddleware extends Middleware {
@@ -114,7 +114,7 @@ class TestMiddleware extends Middleware {
 使用 `ctx.getLogger` 的方式更灵活，但代码易读性不如使用依赖注入
 
 ```TS
-import "@ipare/logger";
+import "@halsp/logger";
 
 startup.use(async (ctx, next) => {
   const logger1 = await ctx.getLogger("id1");
@@ -125,7 +125,7 @@ startup.use(async (ctx, next) => {
 
 ## use...
 
-除 `useLogger` 外，`@ipare/logger` 还提供了以下两种便捷方式
+除 `useLogger` 外，`@halsp/logger` 还提供了以下两种便捷方式
 
 1. `startup.useConsoleLogger` 可以快速创建一个控制台输出的日志实例
 2. `startup.useFileLogger` 可以快速创建一个文件输出的日志实例
@@ -138,10 +138,10 @@ startup.use(async (ctx, next) => {
 
 通过 `startup.useLogger` 函数传参 `injectType` 以修改该实例作用域
 
-参考 <https://ipare.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
+参考 <https://halsp.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
 
 ```TS
-import '@ipare/logger';
+import '@halsp/logger';
 
 startup
   .useLogger({
@@ -151,9 +151,9 @@ startup
 
 ### 生命周期
 
-日志输出实例通过依赖注入 `@ipare/inject` 创建，因此其生命周期符合 `@ipare/inject` 规则
+日志输出实例通过依赖注入 `@halsp/inject` 创建，因此其生命周期符合 `@halsp/inject` 规则
 
-参考 <http://ipare.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
+参考 <http://halsp.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
 
 销毁的行为是在 `startup.useInject` 中间件的返回管道中触发，伪代码逻辑如
 

@@ -1,19 +1,19 @@
 {
-  "name": "ipare.org",
+  "name": "halsp.org",
   "version": "0.0.2",
-  "description": "ipare.org 官方网站",
+  "description": "halsp.org 官方网站",
   "author": "hal-wang",
   "license": "MIT",
-  "homepage": "https://ipare.org",
+  "homepage": "https://halsp.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ipare/ipare.org"
+    "url": "https://github.com/halsp/halsp.org"
   },
   "keywords": [
-    "ipare"
+    "halsp"
   ],
   "bugs": {
-    "url": "https://github.com/ipare/ipare.org/issues",
+    "url": "https://github.com/halsp/halsp.org/issues",
     "email": "support@hal.wang"
   },
   "scripts": {

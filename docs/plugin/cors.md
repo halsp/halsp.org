@@ -1,11 +1,11 @@
-# 跨域 CORS `(@ipare/cors)`
+# 跨域 CORS `(@halsp/cors)`
 
-安装 `@ipare/cors` 以开启 Ipare 的跨域功能
+安装 `@halsp/cors` 以开启 Halsp 的跨域功能
 
 ## 安装
 
 ```
-npm install @ipare/cors
+npm install @halsp/cors
 ```
 
 ## 快速开始
@@ -13,7 +13,7 @@ npm install @ipare/cors
 在 `startup.ts` 中
 
 ```TS
-import "@ipare/cors";
+import "@halsp/cors";
 
 startup.useCors();
 ```
@@ -23,7 +23,7 @@ startup.useCors();
 `useCors` 接收一个配置参数
 
 ```TS
-import "@ipare/cors";
+import "@halsp/cors";
 
 startup.useCors({
   allowMethods: ["GET", "POST"],

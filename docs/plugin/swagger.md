@@ -1,15 +1,15 @@
-# Swagger 文档 `(@ipare/swagger)`
+# Swagger 文档 `(@halsp/swagger)`
 
-安装 `@ipare/swagger` 以使用 Swagger 文档，用于生成你的 Ipare 文档
+安装 `@halsp/swagger` 以使用 Swagger 文档，用于生成你的 Halsp 文档
 
-基于 [@ipare/validator](./validator) 参数校验，使用装饰器注释文档，`@ipare/validator` 中的部分装饰器会自动生成文档内容
+基于 [@halsp/validator](./validator) 参数校验，使用装饰器注释文档，`@halsp/validator` 中的部分装饰器会自动生成文档内容
 
 在浏览器中使用 [swagger-ui](https://github.com/swagger-api/swagger-ui) 渲染文档
 
 ## 安装
 
 ```
-npm install @ipare/swagger
+npm install @halsp/swagger
 ```
 
 ## 快速开始
@@ -17,7 +17,7 @@ npm install @ipare/swagger
 在 `startup.ts` 中
 
 ```TS
-import "@ipare/swagger";
+import "@halsp/swagger";
 
 startup.useSwagger();
 ```
@@ -25,8 +25,8 @@ startup.useSwagger();
 定义传输模型
 
 ```TS
-import "@ipare/swagger";
-import { V } from "@ipare/validator";
+import "@halsp/swagger";
+import { V } from "@halsp/validator";
 
 @V.Description("login info")
 export class LoginDto {
@@ -38,13 +38,13 @@ export class LoginDto {
 }
 ```
 
-在 `Action` 中用 `@ipare/pipe` 注入请求参数
+在 `Action` 中用 `@halsp/pipe` 注入请求参数
 
 ```TS
-import "@ipare/swagger";
-import { V } from "@ipare/validator";
-import { Action } from "@ipare/core";
-import { Body } from "@ipare/pipe";
+import "@halsp/swagger";
+import { V } from "@halsp/validator";
+import { Action } from "@halsp/common";
+import { Body } from "@halsp/pipe";
 
 @V.Tags("user").Description("Get user info")
 export default class extends Action {
@@ -85,7 +85,7 @@ export interface SwaggerOptions {
 startup.useSwagger({
   builder: (builder) => {
     builder.addInfo({
-      title: "@ipare/swagger",
+      title: "@halsp/swagger",
       version: "0.0.1",
     });
   }
@@ -195,9 +195,9 @@ SwaggerUIBundle({
 
 文档中很多内容是根据装饰器生成的
 
-装饰器会影响文档的生成，包含 `@ipare/validator` 中的部分装饰器和 `@ipare/swagger` 中的全部装饰器
+装饰器会影响文档的生成，包含 `@halsp/validator` 中的部分装饰器和 `@halsp/swagger` 中的全部装饰器
 
-- `@ipare/swagger` 中的装饰器
+- `@halsp/swagger` 中的装饰器
   - Ignore
   - Tags
   - Summary
@@ -228,7 +228,7 @@ SwaggerUIBundle({
   - ResponseHeaders
   - ResponseDescription
   - ResponseContentTypes
-- `@ipare/validator` 中影响文档生成的装饰器
+- `@halsp/validator` 中影响文档生成的装饰器
   - IsNotEmpty
   - IsEmpty
   - IsInt

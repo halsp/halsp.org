@@ -1,15 +1,15 @@
-# MongoDB `(@ipare/mongoose)`
+# MongoDB `(@halsp/mongoose)`
 
-添加 `@ipare/mongoose` 插件以连接使用 MongoDB
+添加 `@halsp/mongoose` 插件以连接使用 MongoDB
 
-`@ipare/mongoose` 的功能基于 [mongoose](https://github.com/Automattic/mongoose)，使用 `@ipare/mongoose` 可以简化数据库的管理
+`@halsp/mongoose` 的功能基于 [mongoose](https://github.com/Automattic/mongoose)，使用 `@halsp/mongoose` 可以简化数据库的管理
 
 更多数据库操作请参考 [mongoose](https://github.com/Automattic/mongoose)
 
 ## 安装
 
 ```sh
-npm install @ipare/mongoose
+npm install @halsp/mongoose
 ```
 
 ## 快速开始
@@ -17,7 +17,7 @@ npm install @ipare/mongoose
 在 `startup.ts` 中
 
 ```TS
-import '@ipare/mongoose';
+import '@halsp/mongoose';
 
 startup.useMongoose({
   url: "mongodb://test"
@@ -27,8 +27,8 @@ startup.useMongoose({
 在中间件或服务通过依赖注入获取数据库连接实例 `MongooseConnection`
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { MongooseConnection, MongooseInject } from "@ipare/mongoose";
+import { Middleware } from "@halsp/common";
+import { MongooseConnection, MongooseInject } from "@halsp/mongoose";
 
 class TestMiddleware extends Middleware {
   @MongooseInject()
@@ -46,10 +46,10 @@ class TestMiddleware extends Middleware {
 
 ## 多数据库连接
 
-`@ipare/mongoose` 支持多数据库连接，只需调用多次 `useMongoose` ，并传参 `identity` 用于区分
+`@halsp/mongoose` 支持多数据库连接，只需调用多次 `useMongoose` ，并传参 `identity` 用于区分
 
 ```TS
-import "@ipare/mongoose";
+import "@halsp/mongoose";
 
 startup
   .useMongoose({
@@ -67,8 +67,8 @@ startup
 在中间件或服务中，给装饰器 `@MongooseInject()` 传参以区分连接
 
 ```TS
-import { Middleware } from '@ipare/core';
-import { MongooseConnection, MongooseInject } from "@ipare/mongoose";
+import { Middleware } from '@halsp/common';
+import { MongooseConnection, MongooseInject } from "@halsp/mongoose";
 
 class TestMiddleware extends Middleware {
   @MongooseInject("db1")
@@ -94,11 +94,11 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@MongooseInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+用 `@MongooseInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { MongooseConnection, MongooseInject } from "@ipare/mongoose";
+import { Middleware } from "@halsp/common";
+import { MongooseConnection, MongooseInject } from "@halsp/mongoose";
 
 @Inject
 class TestMiddleware extends Middleware {
@@ -121,7 +121,7 @@ class TestMiddleware extends Middleware {
 使用 `ctx.getMongoose` 的方式更灵活，但代码易读性不如使用依赖注入
 
 ```TS
-import "@ipare/mongoose";
+import "@halsp/mongoose";
 
 startup.use(async (ctx, next) => {
   const connection1 = await ctx.getMongoose("id1");
@@ -136,10 +136,10 @@ startup.use(async (ctx, next) => {
 
 通过 `startup.useMongoose` 函数传参 `injectType` 以修改该实例作用域
 
-参考 <https://ipare.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
+参考 <https://halsp.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
 
 ```TS
-import '@ipare/mongoose';
+import '@halsp/mongoose';
 
 startup
   .useMongoose({
@@ -150,9 +150,9 @@ startup
 
 ### 生命周期
 
-数据库连接实例通过依赖注入 `@ipare/inject` 创建，因此其生命周期符合 `@ipare/inject` 规则
+数据库连接实例通过依赖注入 `@halsp/inject` 创建，因此其生命周期符合 `@halsp/inject` 规则
 
-参考 <http://ipare.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
+参考 <http://halsp.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
 
 销毁的行为是在 `startup.useInject` 中间件的返回管道中触发，伪代码逻辑如
 

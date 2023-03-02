@@ -1,6 +1,6 @@
-# 静态资源 `(@ipare/static)`
+# 静态资源 `(@halsp/static)`
 
-安装 `@ipare/static` 以支持静态资源功能
+安装 `@halsp/static` 以支持静态资源功能
 
 - 能够返回静态资源，如图片、html、css、js 等文件
 - 能够匹配单个文件或整个文件夹
@@ -9,7 +9,7 @@
 ## 安装
 
 ```
-npm i @ipare/static
+npm i @halsp/static
 ```
 
 ## 快速开始
@@ -17,7 +17,7 @@ npm i @ipare/static
 使用 `startup.useStatic()`
 
 ```TS
-import "@ipare/static";
+import "@halsp/static";
 
 startup.useStatic();
 ```
@@ -32,7 +32,7 @@ startup.useStatic({
 
 ## 匹配文件
 
-`@ipare/static` 有两种匹配文件的方式
+`@halsp/static` 有两种匹配文件的方式
 
 1. 匹配单个文件
 2. 匹配文件夹中的所有文件，路由与文件相对路径相同
@@ -69,7 +69,7 @@ startup.useStatic({
 
 > 必选参数
 
-`@ipare/static` 会在该文件夹中按访问路径匹配文件，路由与文件相对路径相同
+`@halsp/static` 会在该文件夹中按访问路径匹配文件，路由与文件相对路径相同
 
 #### prefix
 
@@ -94,7 +94,7 @@ startup.useStatic({
 
 > 可选参数
 
-`@ipare/static` 如果找不到匹配的静态文件，会根据此参数寻找 404 文件
+`@halsp/static` 如果找不到匹配的静态文件，会根据此参数寻找 404 文件
 
 - 如果未设置此参数，将进入下一个中间件（如果存在下一个中间件）
 - 如果值为文件相对路径，将查找 `dir` 参数文件夹下的相对文件
@@ -157,7 +157,7 @@ startup.useStatic({
 
 ## CLI 编译
 
-如果使用 `@ipare/cli` 编译项目
+如果使用 `@halsp/cli` 编译项目
 
 `static` 目录或 `src/static` 目录以及其中的文件，会被自动拷贝到输出目录
 
@@ -166,4 +166,4 @@ startup.useStatic({
 - `/static -> dist/static`
 - `/src/static -> dist/static`
 
-你也可以通过添加 `ipare-cli.config.ts` 文件的 `build.assets` 数组元素，以增加编译时自动拷贝的文件或文件夹
+你也可以通过添加 `halsp-cli.config.ts` 文件的 `build.assets` 数组元素，以增加编译时自动拷贝的文件或文件夹

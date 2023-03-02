@@ -1,19 +1,19 @@
-# 过滤器 `(@ipare/filter)`
+# 过滤器 `(@halsp/filter)`
 
-安装 `@ipare/filter` 以支持请求过滤器功能
+安装 `@halsp/filter` 以支持请求过滤器功能
 
-另选择安装 `@ipare/mva` 以支持视图渲染过滤器
+另选择安装 `@halsp/mva` 以支持视图渲染过滤器
 
-请求过滤器基于 `@ipare/router`
+请求过滤器基于 `@halsp/router`
 
-`@ipare/filter` 提供以下过滤器
+`@halsp/filter` 提供以下过滤器
 
 - ActionFilter: Action 运行前和运行后执行，比较通用，可以改变传入内容和返回结果，可以用于统一返回
 - AuthorizationFilter: Action 运行前执行，一般用于身份认证
 - ResourceFilter: Action 运行前和运行后执行，一般用于资源缓存
 - ExceptionFilter: Action 运行抛出异常时执行，一般用于自定义异常处理
 
-`@ipare/mva` 提供以下过滤器
+`@halsp/mva` 提供以下过滤器
 
 - ResultFilter: 视图渲染前和渲染后执行，可以改变渲染模型和渲染模板，也可以改变渲染结果
 
@@ -28,7 +28,7 @@
 如
 
 ```TS
-import "@ipare/filter"
+import "@halsp/filter"
 
 startup.useFilter()
 // OR
@@ -76,12 +76,12 @@ startup.useGlobalFilter(filter)
 
 ## 依赖注入
 
-过滤器支持 `@ipare/inject` 依赖注入，要在 `startup.useInject` 之后引入过滤器
+过滤器支持 `@halsp/inject` 依赖注入，要在 `startup.useInject` 之后引入过滤器
 
 ```TS
-import "@ipare/filter"
-import "@ipare/router"
-import "@ipare/inject"
+import "@halsp/filter"
+import "@halsp/router"
+import "@halsp/inject"
 
 startup
   .useInject()
@@ -112,7 +112,7 @@ startup
 
 `ResourceFilter`/`ActionFilter`/`ResultFilter` 这三种过滤器都有两个函数，他们之间的执行顺序和中间件类似
 
-_`ResultFilter` 是 `@ipare/mva` 提供的_
+_`ResultFilter` 是 `@halsp/mva` 提供的_
 
 ### 同类型执行顺序
 

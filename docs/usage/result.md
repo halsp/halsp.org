@@ -1,6 +1,6 @@
 # 请求处理
 
-Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些处理返回结果的功能
+Halsp 有开箱即用的获取请求参数的方式，同时也内置了一些处理返回结果的功能
 
 ## 请求上下文 Context
 
@@ -64,7 +64,7 @@ Ipare 有开箱即用的获取请求参数的方式，同时也内置了一些�
 
 如果使用 TS，可以借泛型特性获得更多智能提示。
 
-ipare 支持两种引用类型的 bag
+halsp 支持两种引用类型的 bag
 
 - Singleton: 单例模式，添加后可多次获取同一引用
 - Transient: 临时模式，添加后每次获取都会创建一个新引用
@@ -170,7 +170,7 @@ this.ctx.res.status = 200;
 ```
 
 ```TS
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 export class extends Middleware {
   async invoke() {
     this.noContent();
@@ -180,7 +180,7 @@ export class extends Middleware {
 ```
 
 ```TS
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 export class extends Middleware {
   async invoke() {
     const { account, password } = this.ctx.req.query;

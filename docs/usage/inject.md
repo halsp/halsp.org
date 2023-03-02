@@ -1,19 +1,19 @@
-# 依赖注入 `(@ipare/inject)`
+# 依赖注入 `(@halsp/inject)`
 
-添加 `@ipare/inject` 以实现 `Ipare` 的依赖注入
+添加 `@halsp/inject` 以实现 `Halsp` 的依赖注入
 
-在 Ipare 中，有很多插件基于依赖注入
+在 Halsp 中，有很多插件基于依赖注入
 
 通过装饰器使用依赖注入，能够更好的管理代码
 
 项目中的业务逻辑一般写在服务（Service）中，相关的操作会被抽象到一个或多个服务中，服务方便被多处使用
 
-为了管理这些服务，`@ipare/inject` 可以集中托管服务的创建、获取、销毁
+为了管理这些服务，`@halsp/inject` 可以集中托管服务的创建、获取、销毁
 
 ## 安装
 
 ```sh
-npm install @ipare/inject
+npm install @halsp/inject
 ```
 
 ## 名词解释
@@ -26,7 +26,7 @@ npm install @ipare/inject
 定义服务，主要写业务逻辑
 
 ```TS
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 
 class TestService1 {}
 
@@ -39,8 +39,8 @@ class TestService2 {
 定义中间件类，派生自 `Middleware`，或其他派生自 `Middleware` 的类
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { Inject } from "@ipare/inject";
+import { Middleware } from "@halsp/common";
+import { Inject } from "@halsp/inject";
 
 class TestMiddleware extends Middleware {
   @Inject
@@ -57,7 +57,7 @@ class TestMiddleware extends Middleware {
 在 `startup.ts` 中
 
 ```TS
-import "@ipare/inject";
+import "@halsp/inject";
 startup.useInject().add(TestMiddleware);
 ```
 
@@ -84,11 +84,11 @@ startup.useInject().add(TestMiddleware);
 
 ### 修饰声明字段
 
-在服务或中间件的字段声明，使用装饰器 `@Inject`，`@ipare/inject` 将在服务初始化后注入对应服务
+在服务或中间件的字段声明，使用装饰器 `@Inject`，`@halsp/inject` 将在服务初始化后注入对应服务
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { Inject } from "@ipare/inject";
+import { Middleware } from "@halsp/common";
+import { Inject } from "@halsp/inject";
 
 class TestService1 {}
 
@@ -115,11 +115,11 @@ class TestMiddleware extends Middleware {
 
 ### 修饰服务类
 
-在服务类定义时使用装饰器 `@Inject`，并在类构造函数中添加服务，`@ipare/inject` 会在初始化类时注入对应服务
+在服务类定义时使用装饰器 `@Inject`，并在类构造函数中添加服务，`@halsp/inject` 会在初始化类时注入对应服务
 
 ```TS
-import { Inject } from "@ipare/inject";
-import { Middleware } from "@ipare/core";
+import { Inject } from "@halsp/inject";
+import { Middleware } from "@halsp/common";
 
 class OtherService(){}
 
@@ -181,8 +181,8 @@ startup.add(async () => await Factory.creatMiddleware());
 3. Transient：瞬时，每次使用都会被实例化
 
 ```TS
-import "@ipare/inject";
-import { InjectType } from "@ipare/inject";
+import "@halsp/inject";
+import { InjectType } from "@halsp/inject";
 
 startup
   .inject(IService, Service, InjectType.Singleton)
@@ -220,7 +220,7 @@ startup
 因此如果需要框架自动销毁服务，服务需要继承 `IService` 接口并实现 `dispose` 函数
 
 ```TS
-import { IService } from "@ipare/inject";
+import { IService } from "@halsp/inject";
 
 class CustomService implements IService {
   dispose() {
@@ -232,7 +232,7 @@ class CustomService implements IService {
 `dispose` 函数可以返回 `void` 或 `Promise<void>`
 
 :::tip
-你也可以直接给已有的服务添加 `dispose` 函数，如 `@ipare/logger` 和 `@ipare.redis` 等插件就是这样实现的
+你也可以直接给已有的服务添加 `dispose` 函数，如 `@halsp/logger` 和 `@halsp/redis` 等插件就是这样实现的
 :::
 
 ## 服务的注册
@@ -257,7 +257,7 @@ class CustomService implements IService {
 使用 `startup.inject()` 显式注册
 
 ```TS
-import "@ipare/inject";
+import "@halsp/inject";
 
 // 类映射本身实例对象
 startup.inject(Service);
@@ -283,7 +283,7 @@ startup.inject(ParentService, async (ctx) => await createService(ctx));
 
 #### 自动注册
 
-`@ipare/inject` 可以自动实例化服务和中间件，自动注册服务的作用域都是 `Scoped`
+`@halsp/inject` 可以自动实例化服务和中间件，自动注册服务的作用域都是 `Scoped`
 
 没有使用 `startup.inject` 显式注册的服务和中间件，都会被自动注册
 
@@ -311,7 +311,7 @@ class TestMiddleware extends Middleware {
 在 `startup.ts` 中
 
 ```TS
-import "@ipare/inject";
+import "@halsp/inject";
 
 // 字符串映射服务
 startup.inject("SERVICE_KEY", Service);
@@ -400,7 +400,7 @@ class TestMiddleware extends Middleware{
 利用 `parseInject` 函数可手动获取一个服务实例
 
 ```TS
-import { parseInject } from '@ipare/inject'
+import { parseInject } from '@halsp/inject'
 
 const service1 = await parseInject(ctx, ParentService);
 const service2 = await parseInject(ctx, "KEY");
@@ -432,7 +432,7 @@ const service3 = await parseInject(ctx, new Service()); // 不推荐
   - Transient: `handler` 回调在每个装饰的字段都会执行一次，回调函数有参数 `Context`
 
 ```TS
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 
 // 创建一个 @CustomHost 装饰器
 const CustomHost = Inject((ctx) => ctx.req.get("Host"));
@@ -482,7 +482,7 @@ class TestMiddleware extends Middleware {
 - type: `InjectType` 类型，作用同上面自定义 `Inject` 的 `type` 参数
 
 ```TS
-import { Inject } from "@ipare/inject";
+import { Inject } from "@halsp/inject";
 
 // 创建一个 @CustomUserID 装饰器
 function CustomUserID(target:any, propertyKey: string|symbol){
@@ -510,7 +510,7 @@ class TestMiddleware extends Middleware {
 定义
 
 ```TS
-import { Inject,parseInject } from "@ipare/inject";
+import { Inject,parseInject } from "@halsp/inject";
 
 class TestService1{}
 class TestService2{
@@ -530,7 +530,7 @@ const Service3 = Inject((ctx) => new TestService3());
 中间件
 
 ```TS
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 
 class TestMiddleware extends Middleware {
   @Service3

@@ -1,38 +1,38 @@
-# 参数校验 `(@ipare/validator)`
+# 参数校验 `(@halsp/validator)`
 
-安装 `@ipare/validator` 以支持参数校验功能，可以自动校验请求参数
+安装 `@halsp/validator` 以支持参数校验功能，可以自动校验请求参数
 
-基于 [class-validator](https://github.com/typestack/class-validator) 和 [@ipare/pipe](https://github.com/ipare/pipe) 校验请求参数
+基于 [class-validator](https://github.com/typestack/class-validator) 和 [@halsp/pipe](https://github.com/halsp/pipe) 校验请求参数
 
 使用链式装饰器，减少引用，改进 `class-validator` 的装饰器风格
 
 ## 安装
 
 ```
-npm install @ipare/validator
+npm install @halsp/validator
 ```
 
 ## 开始使用
 
-可以利用 `@ipare/pipe` 管道功能，在中间件中定义校验规则
+可以利用 `@halsp/pipe` 管道功能，在中间件中定义校验规则
 
 也可以定义数据传输模型，并在数据传输模型中定义校验规则
 
 ### startup
 
-在 `startup.ts` 中添加如下代码，开启 `@ipare/validator` 的功能
+在 `startup.ts` 中添加如下代码，开启 `@halsp/validator` 的功能
 
 ```TS
-import "@ipare/validator";
+import "@halsp/validator";
 startup.useValidator()
 ```
 
 ### 在数据传输模型中定义
 
 ```TS
-import { V } from "@ipare/validator";
-import { Body } from "@ipare/pipe";
-import { Middleware } from "@ipare/core";
+import { V } from "@halsp/validator";
+import { Body } from "@halsp/pipe";
+import { Middleware } from "@halsp/common";
 
 // 数据传输模型
 class TestDto {
@@ -60,12 +60,12 @@ class TestMiddleware extends Middleware {
 
 上面的中间件 `TestMiddleware` 会在使用前自动校验 `TestDto` 中的字段值
 
-### 使用 `@ipare/pipe`
+### 使用 `@halsp/pipe`
 
 ```TS
-import { V } from "@ipare/validator";
-import { Body } from "@ipare/pipe";
-import { Middleware } from "@ipare/core";
+import { V } from "@halsp/validator";
+import { Body } from "@halsp/pipe";
+import { Middleware } from "@halsp/common";
 
 // 中间件
 class TestMiddleware extends Middleware {
@@ -184,7 +184,7 @@ class TestDto {
 
 - `validate` 校验规则回调函数，返回 bool，有三个参数
   - `value` 请求参数实际值
-  - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
+  - `property` 数据传输模型属性名，或 `@halsp/pipe` 取的属性名如 `@Header('prop')`
   - `args` 装饰器输入参数数组
 - `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数的参数同 `validate` 回调函数
 
@@ -194,12 +194,12 @@ class TestDto {
 
 调用函数 `addCustomValidator` 即可增加一个自定义校验，然后在代码中多处重复使用
 
-`@ipare/swagger` 就是基于此功能增加了描述性装饰器（没有校验功能）
+`@halsp/swagger` 就是基于此功能增加了描述性装饰器（没有校验功能）
 
 如实现一个下面的校验规则：判断请求参数是否为指定值
 
 ```TS
-import { addCustomValidator } from '@ipare/validator';
+import { addCustomValidator } from '@halsp/validator';
 
 addCustomValidator({
   name: "CustomEquals",
@@ -229,9 +229,9 @@ class TestDto{
 因此 TypeScript 还需要添加声明才能更安全、方便的使用
 
 ```TS
-import { ValidatorDecoratorReturnType } from "@ipare/validator";
+import { ValidatorDecoratorReturnType } from "@halsp/validator";
 
-declare module "@ipare/validator" {
+declare module "@halsp/validator" {
   interface ValidatorLib {
     CustomEquals: (num: number) => ValidatorDecoratorReturnType;
     CustomDecorator2: () => ValidatorDecoratorReturnType;
@@ -249,7 +249,7 @@ declare module "@ipare/validator" {
 
 - `validate` 校验规则回调函数，返回 bool，与 `Is` 装饰器不同的是有三个参数，前两个参数相同
   - `value` 请求参数实际值
-  - `property` 数据传输模型属性名，或 `@ipare/pipe` 取的属性名如 `@Header('prop')`
+  - `property` 数据传输模型属性名，或 `@halsp/pipe` 取的属性名如 `@Header('prop')`
   - `args` 装饰器输入参数数组
 - `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数的参数同 `validate` 回调函数
 - `name` 装饰器名称，必须唯一，且与已有装饰器不同

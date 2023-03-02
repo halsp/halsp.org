@@ -1,13 +1,13 @@
-# 视图渲染 `(@ipare/view)`
+# 视图渲染 `(@halsp/view)`
 
-安装 `@ipare/view` 以支持视图渲染功能，用于构建一体化应用程序
+安装 `@halsp/view` 以支持视图渲染功能，用于构建一体化应用程序
 
-`@ipare/view` 支持多种视图模板，基于 [consolidate](https://github.com/tj/consolidate.js)
+`@halsp/view` 支持多种视图模板，基于 [consolidate](https://github.com/tj/consolidate.js)
 
 ## 安装
 
 ```
-npm i @ipare/view
+npm i @halsp/view
 ```
 
 ## 快速开始
@@ -19,7 +19,7 @@ npm i @ipare/view
 在 `startup.ts` 中添加 `startup.useView`
 
 ```TS
-import "@ipare/view";
+import "@halsp/view";
 
 startup
   .useView()
@@ -102,7 +102,7 @@ Response 类的实例方法
 
 比如你需要在权限验证之后，每次请求都将登录信息放入 `ctx.state`
 
-在你使用 `view` 渲染模板时，`@ipare/view` 做了以下类似操作：
+在你使用 `view` 渲染模板时，`@halsp/view` 做了以下类似操作：
 
 ```TS
 const args = Object.assign({}, options, ctx.state, locals);
@@ -110,6 +110,6 @@ const args = Object.assign({}, options, ctx.state, locals);
 
 ## CLI
 
-已内置 `@ipare/cli` 的支持
+已内置 `@halsp/cli` 的支持
 
 `views` 文件夹不需要配置为资源文件

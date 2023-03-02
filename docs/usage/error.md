@@ -2,13 +2,13 @@
 
 任何程序都需要处理已知和未知异常
 
-Ipare 提供了多种请求异常，也提供了异常处理的功能
+Halsp 提供了多种请求异常，也提供了异常处理的功能
 
 ## 异常类
 
 Http 环境和微服务都提供了异常类
 
-所有异常类都派生自 `@ipare/core` 的 `IpareException` 类
+所有异常类都派生自 `@halsp/common` 的 `HalspException` 类
 
 你可以在任何地方抛出请求异常，以终止当前中间件的运行，并使中间件管道立即转向
 
@@ -16,9 +16,9 @@ Http 环境和微服务都提供了异常类
 
 ### Http
 
-在 http 中，提供了许多派生自 `HttpException` 的异常类，当然 `HttpException` 也派生自 `IpareException`
+在 http 中，提供了许多派生自 `HttpException` 的异常类，当然 `HttpException` 也派生自 `HalspException`
 
-这些 http 异常类均来自于 `@ipare/http`
+这些 http 异常类均来自于 `@halsp/http`
 
 分别与标准 `http` 状态码相对应
 
@@ -50,7 +50,7 @@ Http 环境和微服务都提供了异常类
 如果抛出的是请求异常 `HttpException` 派生类的实例对象，那么会根据请求异常返回特定的 body 和 status
 
 ```TS
-import { Middleware, BadRequestException } from "@ipare/core";
+import { Middleware, BadRequestException } from "@halsp/common";
 
 class TestMiddleware extends Middleware{
   invoke(){
@@ -82,7 +82,7 @@ class TestMiddleware extends Middleware{
 
 ### 微服务
 
-微服务提供的异常类来自于 `@ipare/micro`
+微服务提供的异常类来自于 `@halsp/micro`
 
 只有一个 `MicroException`
 
@@ -152,11 +152,11 @@ try {
 
 添加异常钩子能够接管框架对异常的处理，比如你可以特殊处理某种异常，而其他异常按默认处理
 
-如 [@ipare/filter](./filter) 中的异常过滤器，就是使用的异常钩子，并且只处理 `@ipare/router` 中的 `Action` 中间件
+如 [@halsp/filter](./filter) 中的异常过滤器，就是使用的异常钩子，并且只处理 `@halsp/router` 中的 `Action` 中间件
 
 ```TS
-import { HookType } from "@ipare/core";
-import { Action } from "@ipare/router";
+import { HookType } from "@halsp/common";
+import { Action } from "@halsp/router";
 
 startup.hook(HookType.Error, (ctx, md, ex) => {
   if (md instanceof Action) {

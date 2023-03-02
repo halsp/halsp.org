@@ -1,19 +1,19 @@
-# 单元测试 `(@ipare/testing)`
+# 单元测试 `(@halsp/testing)`
 
-安装 `@ipare/testing` 以添加单元测试功能
+安装 `@halsp/testing` 以添加单元测试功能
 
-`@ipare/testing` 内建了对多种运行环境的单元测试支持
+`@halsp/testing` 内建了对多种运行环境的单元测试支持
 
 ## Startup
 
-`@ipare/testing` 提供多种环境的 `Startup` 用于单元测试
+`@halsp/testing` 提供多种环境的 `Startup` 用于单元测试
 
 :::warning
 除 `TestStartup` 可以直接导出外，其他 `Startup` 均需要写完整路径，如
 
 ```TS
-import { TestHttpStartup } from "@ipare/testing/dist/http";
-import { TestMicroGrpcStartup } from "@ipare/testing/dist/micro-grpc";
+import { TestHttpStartup } from "@halsp/testing/dist/http";
+import { TestMicroGrpcStartup } from "@halsp/testing/dist/micro-grpc";
 ```
 
 :::
@@ -27,12 +27,12 @@ import { TestMicroGrpcStartup } from "@ipare/testing/dist/micro-grpc";
 并增加了以下功能
 
 - `setContext` 函数，用于设置测试的请求 `Context` 或 `Request`
-- `setSkipThrow` 函数，调用之后，中间件如果抛出未处理错误，那么框架将不处理这个错误（默认 ipare 会处理错误，并修改状态码为 500）
+- `setSkipThrow` 函数，调用之后，中间件如果抛出未处理错误，那么框架将不处理这个错误（默认 halsp 会处理错误，并修改状态码为 500）
 - `run` 函数，开始根据请求执行已添加中间件
 - `expect` 函数，用于测试断言
 
 ```TS
-import { TestStartup } from "@ipare/testing";
+import { TestStartup } from "@halsp/testing";
 
 new TestStartup()
   .use(async (ctx, next) => {
@@ -45,7 +45,7 @@ new TestStartup()
 ```
 
 ```TS
-import { TestStartup } from "@ipare/testing";
+import { TestStartup } from "@halsp/testing";
 
 it("should xxx", async () => {
   new TestStartup()
@@ -66,7 +66,7 @@ it("should xxx", async () => {
 用于模拟 http 请求，但仍与运行环境无关
 
 ```TS
-import { TestHttpStartup } from "@ipare/testing/dist/http";
+import { TestHttpStartup } from "@halsp/testing/dist/http";
 
 const res = await new TestHttpStartup()
   .use((ctx) => {
@@ -85,10 +85,10 @@ const res = await new TestHttpStartup()
 
 Response 新增 `expect` 函数，用于断言请求结果
 
-注意，使用前需要先导入 `@ipare/testing`
+注意，使用前需要先导入 `@halsp/testing`
 
 ```TS
-import { TestHttpStartup } from "@ipare/testing/dist/http";
+import { TestHttpStartup } from "@halsp/testing/dist/http";
 
 new TestHttpStartup()
   .use(async (ctx, next) => {
@@ -114,7 +114,7 @@ new TestHttpStartup()
 `create` 函数会返回 `supertest` 的 `Test` 对象
 
 ```TS
-import { TestNativeStartup } from "@ipare/testing/dist/http";
+import { TestNativeStartup } from "@halsp/testing/dist/http";
 
 await new TestNativeStartup()
   .use((ctx) => {
@@ -142,7 +142,7 @@ await new TestNativeStartup()
 - TestMicroTcpStartup
 
 ```TS
-import { TestMicroGrpcStartup } from "@ipare/testing/dist/micro-grpc";
+import { TestMicroGrpcStartup } from "@halsp/testing/dist/micro-grpc";
 
 const startup = new TestMicroGrpcStartup({
   protoFiles: "./test/test.proto",
@@ -163,12 +163,12 @@ await startup.listen();
 
 Startup 及其派生类新增函数 `expectMiddleware`，用于中间件的单元测试
 
-注意，使用前需要先导入 `@ipare/testing`
+注意，使用前需要先导入 `@halsp/testing`
 
 ```TS
-import "@ipare/testing";
-import { TestHttpStartup } from "@ipare/testing/dist/http";
-import { Middleware } from "@ipare/core";
+import "@halsp/testing";
+import { TestHttpStartup } from "@halsp/testing/dist/http";
+import { Middleware } from "@halsp/common";
 
 class TestMiddleware extends Middleware {
   fn() {
@@ -196,9 +196,9 @@ new TestHttpStartup()
 
 Startup 及其派生类新增函数 `expectInject`，用于依赖注入服务的单元测试
 
-安装了 `@ipare/inject` 的项目才能使用这个功能
+安装了 `@halsp/inject` 的项目才能使用这个功能
 
-注意，使用前需要先导入 `@ipare/testing`
+注意，使用前需要先导入 `@halsp/testing`
 
 ```TS
 class TestService1 {
@@ -217,8 +217,8 @@ class TestService2 {
 ```
 
 ```TS
-import "@ipare/testing";
-import { TestStartup } from "@ipare/testing";
+import "@halsp/testing";
+import { TestStartup } from "@halsp/testing";
 
 new TestStartup()
   .expectInject(TestService, (service) => {
@@ -227,8 +227,8 @@ new TestStartup()
 ```
 
 ```TS
-import "@ipare/testing";
-import { TestStartup } from "@ipare/testing";
+import "@halsp/testing";
+import { TestStartup } from "@halsp/testing";
 
 new TestStartup()
   .useInject();
@@ -246,7 +246,7 @@ new TestStartup()
 
 ```TS
 import { existsSync } from "fs";
-import { runin } from "@ipare/testing";
+import { runin } from "@halsp/testing";
 
 await runin("./test", () => {
   expect(existsSync("./file.txt")).toBeTruthy();

@@ -1,6 +1,6 @@
 # 习惯约定
 
-Ipare 在很多方面都是约定大于配置
+Halsp 在很多方面都是约定大于配置
 
 遵循这些约定可以避免很多配置和不必要的问题
 
@@ -8,7 +8,7 @@ Ipare 在很多方面都是约定大于配置
 
 ## 统一启动文件 Startup
 
-在 `src` 下需要有 `startup.ts` 文件，导出一个默认回调函数，此规则用于 `@ipare/cli` 正确解析代码，内容如
+在 `src` 下需要有 `startup.ts` 文件，导出一个默认回调函数，此规则用于 `@halsp/cli` 正确解析代码，内容如
 
 ```TS
 // startup.ts
@@ -23,16 +23,16 @@ export default function <T extends Startup>(startup: T, mode?: string) {
 }
 ```
 
-`mode` 参数值为 `@ipare/cli` 的 `build` 或 `start` 命令传入的 `--mode` 参数，如 `development`、`production` 等
+`mode` 参数值为 `@halsp/cli` 的 `build` 或 `start` 命令传入的 `--mode` 参数，如 `development`、`production` 等
 
 ## 路由文件夹
 
-`@ipare/router` 或 `@ipare/mva` 路由文件夹默认为 `src/actions`
+`@halsp/router` 或 `@halsp/mva` 路由文件夹默认为 `src/actions`
 
-当然你也可以指定其他文件夹，需配置 `ipare-cli.config.ts`，增加 `routerActionsDir` ，如
+当然你也可以指定其他文件夹，需配置 `halsp-cli.config.ts`，增加 `routerActionsDir` ，如
 
 ```ts
-import { defineConfig, Configuration } from "@ipare/cli";
+import { defineConfig, Configuration } from "@halsp/cli";
 export default defineConfig(({ mode }) => {
   return {
     routerActionsDir: "custom-actions",
@@ -42,7 +42,7 @@ export default defineConfig(({ mode }) => {
 
 ## 视图文件夹
 
-`@ipare/view` 或 `@ipare/mva` 视图文件夹默认为 `views`，其中的文件会被 `@ipare/cli` 自动打包
+`@halsp/view` 或 `@halsp/mva` 视图文件夹默认为 `views`，其中的文件会被 `@halsp/cli` 自动打包
 
 你也可以指定其他文件夹，设置 `startup.useView()` 的参数
 
@@ -52,10 +52,10 @@ startu.useView({
 })
 ```
 
-并且如果修改默认视图文件夹，你还需要配置 `ipare-cli.config.ts` 以支持 `@ipare/cli` 的资源文件打包功能
+并且如果修改默认视图文件夹，你还需要配置 `halsp-cli.config.ts` 以支持 `@halsp/cli` 的资源文件打包功能
 
 ```TS
-import { defineConfig, Configuration } from "@ipare/cli";
+import { defineConfig, Configuration } from "@halsp/cli";
 export default defineConfig(({ mode }) => {
   return {
     build: {
@@ -71,7 +71,7 @@ export default defineConfig(({ mode }) => {
 
 ## 静态文件
 
-`@ipare/static` 静态资源文件夹默认为 `static`，其中的文件会被 `@ipare/cli` 自动打包
+`@halsp/static` 静态资源文件夹默认为 `static`，其中的文件会被 `@halsp/cli` 自动打包
 
 你也可以指定其他文件夹，设置 `startup.useStatic()` 的参数
 
@@ -81,10 +81,10 @@ startup.useStatic({
 })
 ```
 
-并且如果修改默认静态资源文件夹，你还需要配置 `ipare-cli.config.ts` 以支持 `@ipare/cli` 的资源文件打包功能
+并且如果修改默认静态资源文件夹，你还需要配置 `halsp-cli.config.ts` 以支持 `@halsp/cli` 的资源文件打包功能
 
 ```TS
-import { defineConfig, Configuration } from "@ipare/cli";
+import { defineConfig, Configuration } from "@halsp/cli";
 export default defineConfig(({ mode }) => {
   return {
     build: {

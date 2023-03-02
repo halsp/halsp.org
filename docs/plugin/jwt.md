@@ -1,27 +1,27 @@
-# Jwt 身份验证 `(@ipare/jwt)`
+# Jwt 身份验证 `(@halsp/jwt)`
 
-安装 `@ipare/jwt` 以使用 Jwt 身份验证
+安装 `@halsp/jwt` 以使用 Jwt 身份验证
 
-`@ipare/jwt` 基于以下内容
+`@halsp/jwt` 基于以下内容
 
 - [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
-- [@ipare/inject](https://github.com/ipare/inject)
+- [@halsp/inject](https://github.com/halsp/inject)
 
 ## 安装
 
 ```
-npm install @ipare/jwt
+npm install @halsp/jwt
 ```
 
 ## 快速开始
 
 ```TS
-import "@ipare/jwt";
+import "@halsp/jwt";
 startup.useJwt(options);
 ```
 
 ```TS
-import "@ipare/jwt";
+import "@halsp/jwt";
 
 startup
   .useJwt(options)
@@ -101,7 +101,7 @@ startup
 
 ## JwtService
 
-在调用 `useJwt` 时就已经使用 `@ipare/inject` 注入了 `JwtService`
+在调用 `useJwt` 时就已经使用 `@halsp/inject` 注入了 `JwtService`
 
 用于更方便的处理 jwt
 
@@ -177,7 +177,7 @@ JwtService 提供了一些 jwt 相关的方法
 赋值为 `jwt token` 字符串
 
 ```TS
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{
@@ -191,7 +191,7 @@ class TestMiddleware extends Middleware{
 解析 `jwt token` 字符串并转为对象
 
 ```TS
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{
@@ -205,7 +205,7 @@ class TestMiddleware extends Middleware{
 只取 jwt payload 部分，如果是 json 字符串，则会自动解析
 
 ```TS
-import { Middleware } from "@ipare/core";
+import { Middleware } from "@halsp/common";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{

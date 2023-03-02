@@ -7,36 +7,36 @@ const microLinks: NavLink[] = [
     link: "/env/micro-common",
   },
   {
-    text: "TCP (@ipare/micro-tcp)",
+    text: "TCP (@halsp/micro-tcp)",
     link: "/env/micro-tcp",
   },
   {
-    text: "gRPC (@ipare/micro-grpc)",
+    text: "gRPC (@halsp/micro-grpc)",
     link: "/env/micro-grpc",
   },
   {
-    text: "Redis (@ipare/micro-redis)",
+    text: "Redis (@halsp/micro-redis)",
     link: "/env/micro-redis",
   },
   {
-    text: "MQTT (@ipare/micro-mqtt)",
+    text: "MQTT (@halsp/micro-mqtt)",
     link: "/env/micro-mqtt",
   },
   {
-    text: "Nats (@ipare/micro-nats)",
+    text: "Nats (@halsp/micro-nats)",
     link: "/env/micro-nats",
   },
 ];
 
 export default defineUserConfig({
   lang: "zh-CN",
-  title: "Ipare 文档",
+  title: "Halsp 文档",
   description: "面向云的现代渐进式轻量 Node.js 框架",
   base: "/",
   theme: defaultTheme({
-    docsRepo: "https://github.com/ipare/ipare.org",
+    docsRepo: "https://github.com/halsp/halsp.org",
     docsBranch: "main",
-    repo: "https://github.com/ipare/ipare",
+    repo: "https://github.com/halsp/core",
     docsDir: "docs",
     editLinkPattern: ":repo/edit/:branch/:path",
     editLink: true,
@@ -129,7 +129,7 @@ export default defineUserConfig({
         children: [
           {
             text: "Discussions",
-            link: "https://github.com/ipare/ipare/discussions",
+            link: "https://github.com/halsp/core/discussions",
           },
           {
             text: "开黑啦",

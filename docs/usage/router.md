@@ -1,6 +1,6 @@
-# 路由 `(@ipare/router)`
+# 路由 `(@halsp/router)`
 
-添加 `@ipare/router` 以支持路由功能
+添加 `@halsp/router` 以支持路由功能
 
 - 支持 HTTP RESTful
 - 支持微服务路由
@@ -12,7 +12,7 @@
 ## 安装
 
 ```sh
-npm install @ipare/router
+npm install @halsp/router
 ```
 
 ## 开始使用
@@ -20,14 +20,14 @@ npm install @ipare/router
 在 `startup.ts` 中添加 `startup.useRouter`
 
 ```TS
-import "@ipare/router";
+import "@halsp/router";
 startup.useRouter()
 ```
 
 在 `src/actions` 下创建 `test.get.ts` 文件和 `Action` 派生类
 
 ```TS
-import { Action } from "@ipare/router";
+import { Action } from "@halsp/router";
 
 export default class extends Action{
   invoke(){
@@ -46,11 +46,11 @@ export default class extends Action{
 
 路由文件夹默认为 `src/actions`
 
-当然你也可以指定其他文件夹，需配置 `ipare-cli.config.ts`，增加 `routerActionsDir` ，如
+当然你也可以指定其他文件夹，需配置 `halsp-cli.config.ts`，增加 `routerActionsDir` ，如
 
 ```ts
-import { defineConfig, Configuration } from "@ipare/cli";
-import "@ipare/router/dist/cli-config";
+import { defineConfig, Configuration } from "@halsp/cli";
+import "@halsp/router/dist/cli-config";
 
 export default defineConfig(() => {
   return {
@@ -59,7 +59,7 @@ export default defineConfig(() => {
 });
 ```
 
-配置后，`@ipare/cli` 编译时才能正确发现路由
+配置后，`@halsp/cli` 编译时才能正确发现路由
 
 ## 配置参数
 
@@ -189,7 +189,7 @@ export default defineConfig(() => {
 同时指定请求方法和路径
 
 ```TS
-import { HttpGet } from '@ipare/router';
+import { HttpGet } from '@halsp/router';
 
 @HttpGet("test/^id")
 export default class extends Action {
@@ -202,7 +202,7 @@ export default class extends Action {
 只指定请求方法，路径按文件系统匹配
 
 ```TS
-import { HttpGet } from '@ipare/router';
+import { HttpGet } from '@halsp/router';
 
 @HttpGet
 export default class extends Action {
@@ -271,7 +271,7 @@ export default class extends Action {
 在 action 文件 (`.ts`) 中创建继承 `Action` 的类，并重写 `invoke` 函数
 
 ```TS
-import { Action } from "@ipare/router";
+import { Action } from "@halsp/router";
 
 export default class extends Action {
   async invoke() {
@@ -298,21 +298,21 @@ export default class extends Action {
 }
 ```
 
-`@ipare/router` 会在 `ctx.req` 中添加 `params` 属性
+`@halsp/router` 会在 `ctx.req` 中添加 `params` 属性
 
 ## 路由元数据
 
 你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
 
 ```TS
-import { Action } from "@ipare/core"
+import { Action } from "@halsp/common"
 
 @SetActionMetadata("roles", ["admin"])
 export default class extends Action{}
 ```
 
 ```TS
-import "@ipare/router";
+import "@halsp/router";
 
 startup
   .use(async (ctx, next)=>{
@@ -325,7 +325,7 @@ startup
 也可以利用 `setActionMetadata` 创建自定义装饰器，更便捷的添加元数据
 
 ```TS
-import { setActionMetadata } from "@ipare/router";
+import { setActionMetadata } from "@halsp/router";
 
 function Admin(target: any) {
   setActionMetadata(target, {
@@ -340,13 +340,13 @@ function Root(target: any) {
 ```
 
 ```TS
-import { Action } from "@ipare/core"
+import { Action } from "@halsp/common"
 @Admin
 export default class extends Action{}
 ```
 
 ```TS
-import { Action } from "@ipare/core"
+import { Action } from "@halsp/common"
 @Root
 export default class extends Action{}
 ```
@@ -354,8 +354,8 @@ export default class extends Action{}
 也可以使用 `getActionMetadata` 获取元数据
 
 ```TS
-import { Action } from "@ipare/core"
-import { getActionMetadata } from "@ipare/router";
+import { Action } from "@halsp/common"
+import { getActionMetadata } from "@halsp/router";
 
 @Root
 export default class extends Action{
@@ -371,20 +371,20 @@ export default class extends Action{
 
 ## 编译
 
-使用 `@ipare/cli` 的编译命令 `ipare build` 时，`@ipare/router` 会扫描路由文件夹并创建映射表
+使用 `@halsp/cli` 的编译命令 `halsp build` 时，`@halsp/router` 会扫描路由文件夹并创建映射表
 
 用于快速匹配路由，提升程序启动速度，serverless 项目通过编译路由表，能极大的提升启动速度和响应速度
 
 ### 编译结果
 
-编译会在目标文件夹下生成 `.ipare-cache/ipare-router.config` 文件
+编译会在目标文件夹下生成 `.halsp-cache/halsp-router.config` 文件
 
-该文件记录了 `@ipare/router` 的配置和路由表，请不要手动修改
+该文件记录了 `@halsp/router` 的配置和路由表，请不要手动修改
 
 ### 发布
 
-发布时需要将 `ipare-router.config` 一同发布，否则程序首次启动会自动重新创建映射表
+发布时需要将 `halsp-router.config` 一同发布，否则程序首次启动会自动重新创建映射表
 
-如果没有 `ipare-router.config` 文件，对于原生服务 `@ipare/native` 影响不是很大
+如果没有 `halsp-router.config` 文件，对于原生服务 `@halsp/native` 影响不是很大
 
 但 serverless 项目可能每次请求都会启动一个新程序，即重新创建映射表，将失去编译路由表的优势

@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    if: github.repository == 'ipare/ipare.org'
+    if: github.repository == 'halsp/halsp.org'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           directory: docs/.vuepress/dist
-          repository: ipare/ipare.org
+          repository: halsp/halsp.org
           force: true
           branch: gh-pages
           github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}

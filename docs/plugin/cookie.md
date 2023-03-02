@@ -1,13 +1,13 @@
-# Cookie `(@ipare/cookie)`
+# Cookie `(@halsp/cookie)`
 
-安装 `@ipare/cookie` 以开启 Ipare 的 Cookie 功能
+安装 `@halsp/cookie` 以开启 Halsp 的 Cookie 功能
 
 基于 [cookie](https://github.com/jshttp/cookie) 和 [set-cookie-parser](https://github.com/nfriedly/set-cookie-parser)
 
 ## 安装
 
 ```
-npm install @ipare/cookie
+npm install @halsp/cookie
 ```
 
 ## 快速开始
@@ -15,7 +15,7 @@ npm install @ipare/cookie
 在 `startup.ts` 中
 
 ```TS
-import "@ipare/cookie";
+import "@halsp/cookie";
 
 startup.useCookie();
 ```
@@ -46,7 +46,7 @@ const name = ctx.cookies.name;
 
 ```TS
 ctx.cookies = {
-  account: "ipare.org",
+  account: "halsp.org",
 };
 ```
 
@@ -54,7 +54,7 @@ ctx.cookies = {
 
 ```TS
 ctx.res.cookies = {
-  account: "ipare.org",
+  account: "halsp.org",
 };
 ```
 
@@ -63,7 +63,7 @@ ctx.res.cookies = {
 ```TS
 ctx.cookies = {
   account: {
-    value: "ipare.org",
+    value: "halsp.org",
     httpOnly: true,
     maxAge: 0,
   },
@@ -73,19 +73,19 @@ ctx.cookies = {
 还可以给某个 name 的 cookie 赋值
 
 ```TS
-ctx.res.cookies.account = "ipare.org";
+ctx.res.cookies.account = "halsp.org";
 ```
 
 :::danger 注意不能这样赋值
 
 ```TS
-ctx.cookies.account = "ipare.org";
+ctx.cookies.account = "halsp.org";
 ```
 
 ctx.cookies 属性的 get 方法是返回请求头的 cookie，等同于
 
 ```TS
-ctx.req.cookies.account = "ipare.org";
+ctx.req.cookies.account = "halsp.org";
 ```
 
 因此这种写法其实是给请求头的 cookie 赋值，不会抛出错误但在控制台会提示一个 error
@@ -104,7 +104,7 @@ ctx.req.cookies.account = "ipare.org";
 - `serialize` 全局序列化配置，参考 [cookie](https://github.com/jshttp/cookie) 的 `serialize` 函数参数配置
 
 ```TS
-import "@ipare/cookie";
+import "@halsp/cookie";
 
 startup.useCookie({
   serialize: {},
@@ -131,7 +131,7 @@ export type SetCookieValueWithArgs = {
 
 ```TS
 ctx.res.cookies.account = {
-  value: "ipare.org",
+  value: "halsp.org",
   httpOnly: true,
   maxAge: 0,
 };

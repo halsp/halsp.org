@@ -1,13 +1,13 @@
-# TypeORM `(@ipare/typeorm)`
+# TypeORM `(@halsp/typeorm)`
 
-添加 `@ipare/typeorm` 插件以使用流行 ORM 工具 [TypeORM](https://github.com/typeorm/typeorm)
+添加 `@halsp/typeorm` 插件以使用流行 ORM 工具 [TypeORM](https://github.com/typeorm/typeorm)
 
-`@ipare/typeorm` 的功能基于 [TypeORM](https://github.com/typeorm/typeorm)，使用 `@ipare/typeorm` 可以简化数据库的操作
+`@halsp/typeorm` 的功能基于 [TypeORM](https://github.com/typeorm/typeorm)，使用 `@halsp/typeorm` 可以简化数据库的操作
 
 ## 安装
 
 ```sh
-npm install @ipare/typeorm
+npm install @halsp/typeorm
 ```
 
 ## 快速开始
@@ -15,7 +15,7 @@ npm install @ipare/typeorm
 在 `startup.ts` 中
 
 ```TS
-import '@ipare/typeorm';
+import '@halsp/typeorm';
 
 // 此示例使用 sqlite，需要在项目中先安装 sqlite 驱动: npm install sqlite3
 startup.useTypeorm({
@@ -48,8 +48,8 @@ export class User {
 在中间件或服务通过依赖注入获取数据库连接实例 `TypeormInject`
 
 ```TS
-import { Middleware } from '@ipare/core';
-import { TypeormConnection, TypeormInject } from "@ipare/typeorm";
+import { Middleware } from '@halsp/common';
+import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
 
 class TestMiddleware extends Middleware {
   @TypeormInject()
@@ -85,10 +85,10 @@ class TestMiddleware extends Middleware {
 
 ## 多数据库连接
 
-`@ipare/typeorm` 支持多数据库连接，只需调用多次 `useTypeorm` ，并传参 `identity` 用于区分
+`@halsp/typeorm` 支持多数据库连接，只需调用多次 `useTypeorm` ，并传参 `identity` 用于区分
 
 ```TS
-import '@ipare/typeorm';
+import '@halsp/typeorm';
 
 startup
   .useTypeorm({
@@ -108,8 +108,8 @@ startup
 在中间件或服务中，给装饰器 `@TypeormInject()` 传参以区分连接
 
 ```TS
-import { Middleware } from '@ipare/core';
-import { TypeormConnection, TypeormInject } from "@ipare/typeorm";
+import { Middleware } from '@halsp/common';
+import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
 
 class TestMiddleware extends Middleware {
   @TypeormInject("db1")
@@ -135,11 +135,11 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@TypeormInject` 装饰属性或构造函数参数，通过 `@ipare/inject` 依赖注入创建实例
+用 `@TypeormInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
-import { Middleware } from "@ipare/core";
-import { TypeormConnection, TypeormInject } from "@ipare/typeorm";
+import { Middleware } from "@halsp/common";
+import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
 
 @Inject
 class TestMiddleware extends Middleware {
@@ -162,7 +162,7 @@ class TestMiddleware extends Middleware {
 使用 `ctx.getTypeorm` 的方式更灵活，但代码易读性不如使用依赖注入
 
 ```TS
-import "@ipare/typeorm";
+import "@halsp/typeorm";
 
 startup.use(async (ctx, next) => {
   const connection1 = await ctx.getTypeorm("id1");
@@ -177,10 +177,10 @@ startup.use(async (ctx, next) => {
 
 通过 `startup.useTypeorm` 函数传参 `injectType` 以修改该实例作用域
 
-参考 <https://ipare.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
+参考 <https://halsp.org/usage/inject.html#%E4%BD%9C%E7%94%A8%E5%9F%9F>
 
 ```TS
-import '@ipare/typeorm';
+import '@halsp/typeorm';
 
 startup
   .useTypeorm({
@@ -192,9 +192,9 @@ startup
 
 ### 生命周期
 
-数据库连接实例通过依赖注入 `@ipare/inject` 创建，因此其生命周期符合 `@ipare/inject` 规则
+数据库连接实例通过依赖注入 `@halsp/inject` 创建，因此其生命周期符合 `@halsp/inject` 规则
 
-参考 <http://ipare.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
+参考 <http://halsp.org/usage/inject.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F>
 
 销毁的行为是在 `startup.useInject` 中间件的返回管道中触发，伪代码逻辑如
 
@@ -209,7 +209,7 @@ await dispose(); // 销毁
 
 参考 <https://github.com/typeorm/typeorm>
 
-`@ipare/typeorm` 没有内置数据库驱动
+`@halsp/typeorm` 没有内置数据库驱动
 
 因此需要配合安装数据库驱动，以支持对应数据库
 
@@ -277,7 +277,7 @@ npm install @google-cloud/spanner --save
 项目中应该包含 `src/entities` 目录，默认 `src/entities` 目录中的数据库实体模型会被自动加载
 
 ```
-ipare-project
+halsp-project
 │── src
 │   │── startup.ts
 │   │── index.ts
