@@ -4,7 +4,7 @@
 
 ## 线上尝试
 
-通过 <http://minimal.halsp.org> 在线使用 halsp
+通过 <http://mini.halsp.org> 在线使用 halsp
 
 浏览器里运行了基于 halsp 的构建设置，不需要在机器上安装任何依赖
 
