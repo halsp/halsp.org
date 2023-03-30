@@ -1,0 +1,16 @@
+{
+  "i18n-ally.localesPaths": [
+    "docs/lang",
+  ],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.enabledParsers": [
+    "ts",
+    "json"
+  ],
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.displayLanguage": "zh-cn",
+  "i18n-ally.enabledFrameworks": [
+    "vue",
+    "react"
+  ]
+}

@@ -1,38 +1,220 @@
-import { defaultTheme, defineUserConfig, NavLink } from "vuepress";
+import { defaultTheme, defineUserConfig } from "vuepress";
 import { searchPlugin } from "@vuepress/plugin-search";
+import { zh, en, lang } from "../lang";
 
-const microLinks: NavLink[] = [
-  {
-    text: "概览",
-    link: "/env/micro-common",
-  },
-  {
-    text: "TCP (@halsp/micro-tcp)",
-    link: "/env/micro-tcp",
-  },
-  {
-    text: "gRPC (@halsp/micro-grpc)",
-    link: "/env/micro-grpc",
-  },
-  {
-    text: "Redis (@halsp/micro-redis)",
-    link: "/env/micro-redis",
-  },
-  {
-    text: "MQTT (@halsp/micro-mqtt)",
-    link: "/env/micro-mqtt",
-  },
-  {
-    text: "Nats (@halsp/micro-nats)",
-    link: "/env/micro-nats",
-  },
+const microLinks: string[] = [
+  "/env/micro-common",
+  "/env/micro-tcp",
+  "/env/micro-grpc",
+  "/env/micro-redis",
+  "/env/micro-mqtt",
+  "/env/micro-nats",
+];
+const guideLinks: string[] = [
+  "/usage/intro",
+  "/usage/quickstart",
+  "/usage/appoint",
+];
+const basicLinks: string[] = [
+  "/usage/startup",
+  "/usage/middleware",
+  "/usage/result",
+  "/usage/inject",
+  "/usage/router",
+];
+const advanceLinks: string[] = [
+  "/usage/cli",
+  "/usage/view",
+  "/usage/pipe",
+  "/usage/filter",
+  "/usage/mva",
+  "/usage/error",
 ];
 
+function getLinksWithPrefix<T extends string | string[]>(links: T, l: lang): T {
+  let list: string[] = Array.isArray(links) ? links : [links];
+  list = list.map((link) => l.t("prefix") + link);
+  return (Array.isArray(links) ? list : list[0]) as T;
+}
+
+function createNavbar(l: lang) {
+  const { t } = l;
+  return [
+    {
+      text: t("menus.guide"),
+      children: [
+        {
+          text: t("menus.start"),
+          children: getLinksWithPrefix(guideLinks, l),
+        },
+        {
+          text: t("menus.basic"),
+          children: getLinksWithPrefix(basicLinks, l),
+        },
+        {
+          text: t("menus.advance"),
+          children: getLinksWithPrefix(advanceLinks, l),
+        },
+        {
+          text: t("menus.debug"),
+          children: getLinksWithPrefix(["/usage/debug", "/usage/testing"], l),
+        },
+      ],
+    },
+    {
+      text: t("menus.environment"),
+      children: [
+        {
+          text: t("menus.custom"),
+          children: getLinksWithPrefix(["/env/custom-env"], l),
+        },
+        {
+          text: t("menus.basic"),
+          children: getLinksWithPrefix(
+            ["/env/native", "/env/lambda", "/env/alifc"],
+            l
+          ),
+        },
+        {
+          text: t("menus.microservices"),
+          children: getLinksWithPrefix(microLinks, l),
+        },
+        {
+          text: t("menus.more"),
+          children: getLinksWithPrefix(["/env/koa-env"], l),
+        },
+      ],
+    },
+    {
+      text: t("menus.plugins"),
+      children: [
+        {
+          text: t("menus.common"),
+          children: getLinksWithPrefix(
+            ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+            l
+          ),
+        },
+        {
+          text: t("menus.safety"),
+          children: getLinksWithPrefix(["/plugin/jwt", "/plugin/validator"], l),
+        },
+        {
+          text: t("menus.dataStorage"),
+          children: getLinksWithPrefix(
+            ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+            l
+          ),
+        },
+        {
+          text: t("menus.more"),
+          children: getLinksWithPrefix(
+            ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
+            l
+          ),
+        },
+      ],
+    },
+    {
+      text: t("menus.community"),
+      children: [
+        {
+          text: "Discussions",
+          link: "https://github.com/halsp/core/discussions",
+        },
+        {
+          text: t("config.kook"),
+          link: "https://kook.top/qdUuDI",
+        },
+      ],
+    },
+  ];
+}
+function createSidebar(l: lang) {
+  const { t } = l;
+  return [
+    {
+      text: t("menus.start"),
+      children: guideLinks,
+    },
+    {
+      text: t("menus.basic"),
+      children: basicLinks,
+    },
+    {
+      text: t("menus.advance"),
+      children: advanceLinks,
+    },
+    {
+      text: t("menus.environment"),
+      children: [
+        "/env/custom-env",
+        "/env/native",
+        "/env/lambda",
+        "/env/alifc",
+        "/env/koa-env",
+        {
+          text: t("menus.microservices"),
+          children: microLinks,
+        },
+      ],
+    },
+    {
+      text: t("menus.debug"),
+      children: ["/usage/debug", "/usage/testing"],
+    },
+    {
+      text: t("menus.plugins"),
+      children: [
+        {
+          text: t("menus.common"),
+          children: ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+        },
+        {
+          text: t("menus.safety"),
+          children: ["/plugin/jwt", "/plugin/validator"],
+        },
+        {
+          text: t("menus.dataStorage"),
+          children: ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+        },
+        {
+          text: t("menus.more"),
+          children: ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
+        },
+      ],
+    },
+  ];
+}
+
+function getLocales(l: lang) {
+  const { t } = l;
+  return {
+    lang: t("lang"),
+    title: t("title"),
+    description: t("description"),
+  };
+}
+
+function getThemeLocales(l: lang) {
+  const { t } = l;
+  return {
+    selectLanguageName: t("langName"),
+    editLinkText: t("config.editLinkText"),
+    backToHome: t("config.backToHome"),
+    notFound: [t("config.notFound")],
+    navbar: createNavbar(l),
+    sidebar: createSidebar(l),
+  };
+}
+
 export default defineUserConfig({
-  lang: "zh-CN",
-  title: "Halsp 文档",
-  description: "面向云的现代渐进式轻量 Node.js 框架",
+  lang: "en-US",
   base: "/",
+  locales: {
+    [en.t("prefix") + "/"]: getLocales(en),
+    [zh.t("prefix") + "/"]: getLocales(zh),
+  },
   theme: defaultTheme({
     docsRepo: "https://github.com/halsp/halsp.org",
     docsBranch: "main",
@@ -40,170 +222,13 @@ export default defineUserConfig({
     docsDir: "docs",
     editLinkPattern: ":repo/edit/:branch/:path",
     editLink: true,
-    editLinkText: "编辑此页",
     home: "/index.md",
-    logo: "/images/logo.png",
+    // logo: "/images/logo.png",
     sidebarDepth: 2,
-    backToHome: "返回主页",
-    notFound: ["你访问的页面不存在"],
-    navbar: [
-      {
-        text: "使用文档",
-        children: [
-          {
-            text: "新手指南",
-            children: ["/usage/intro", "/usage/quickstart", "/usage/appoint"],
-          },
-          {
-            text: "基础",
-            children: [
-              "/usage/startup",
-              "/usage/middleware",
-              "/usage/result",
-              "/usage/inject",
-              "/usage/router",
-            ],
-          },
-          {
-            text: "进阶",
-            children: [
-              "/usage/cli",
-              "/usage/view",
-              "/usage/pipe",
-              "/usage/filter",
-              "/usage/mva",
-              "/usage/error",
-            ],
-          },
-          {
-            text: "测试",
-            children: ["/usage/debug", "/usage/testing"],
-          },
-        ],
-      },
-      {
-        text: "运行环境",
-        children: [
-          {
-            text: "自定义",
-            children: ["/env/custom-env"],
-          },
-          {
-            text: "基础",
-            children: ["/env/native", "/env/lambda", "/env/alifc"],
-          },
-          {
-            text: "微服务",
-            children: microLinks,
-          },
-          {
-            text: "其他",
-            children: ["/env/koa-env"],
-          },
-        ],
-      },
-      {
-        text: "拓展和插件",
-        link: "/usage/",
-        children: [
-          {
-            text: "常用",
-            children: ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
-          },
-          {
-            text: "安全性",
-            children: ["/plugin/jwt", "/plugin/validator"],
-          },
-          {
-            text: "数据存储",
-            children: ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
-          },
-          {
-            text: "其他",
-            children: ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
-          },
-        ],
-      },
-      {
-        text: "社区",
-        children: [
-          {
-            text: "Discussions",
-            link: "https://github.com/halsp/core/discussions",
-          },
-          {
-            text: "开黑啦",
-            link: "https://kook.top/qdUuDI",
-          },
-        ],
-      },
-    ],
-    sidebar: [
-      {
-        text: "新手指南",
-        children: ["/usage/intro", "/usage/quickstart", "/usage/appoint"],
-      },
-      {
-        text: "基础",
-        children: [
-          "/usage/startup",
-          "/usage/middleware",
-          "/usage/result",
-          "/usage/inject",
-          "/usage/router",
-        ],
-      },
-      {
-        text: "进阶",
-        children: [
-          "/usage/cli",
-          "/usage/view",
-          "/usage/filter",
-          "/usage/mva",
-          "/usage/pipe",
-          "/usage/error",
-        ],
-      },
-      {
-        text: "运行环境",
-        children: [
-          "/env/custom-env",
-          "/env/native",
-          "/env/lambda",
-          "/env/alifc",
-          "/env/koa-env",
-          {
-            text: "微服务",
-            children: microLinks,
-          },
-        ],
-      },
-      {
-        text: "测试",
-        children: ["/usage/debug", "/usage/testing"],
-      },
-      {
-        text: "扩展和插件",
-        children: [
-          {
-            text: "常用",
-            children: ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
-          },
-          {
-            text: "安全性",
-            children: ["/plugin/jwt", "/plugin/validator"],
-          },
-          {
-            text: "数据存储",
-            children: ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
-          },
-          {
-            text: "其他",
-            children: ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
-          },
-        ],
-      },
-    ],
+    locales: {
+      [en.t("prefix") + "/"]: getThemeLocales(en),
+      [zh.t("prefix") + "/"]: getThemeLocales(zh),
+    },
   }),
   head: [
     [
@@ -219,11 +244,11 @@ export default defineUserConfig({
     searchPlugin({
       maxSuggestions: 10,
       locales: {
-        "": {
-          placeholder: "输入搜索内容",
+        [en.t("lang")]: {
+          placeholder: en.t("config.searchPlaceholder"),
         },
-        "zh-cn": {
-          placeholder: "输入搜索内容",
+        [zh.t("lang")]: {
+          placeholder: zh.t("config.searchPlaceholder"),
         },
       },
     }),

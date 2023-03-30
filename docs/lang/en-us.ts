@@ -1,0 +1,31 @@
+export default {
+  prefix: "",
+  lang: "en-US",
+  langName: "English",
+  title: "Halsp",
+  description:
+    "Modern Progressive Lightweight Node.js Framework for the Serverless",
+  config: {
+    kook: "KOOK",
+    editLinkText: "Edit this page",
+    backToHome: "Back to home",
+    notFound: "Not Found",
+    searchPlaceholder: "Enter the search content",
+  },
+  menus: {
+    guide: "Guide",
+    start: "Start",
+    basic: "Basic",
+    advance: "Advance",
+    debug: "Debug",
+    environment: "Environment",
+    custom: "Custom",
+    microservices: "Microservices",
+    community: "Community",
+    more: "More",
+    plugins: "Plugins",
+    safety: "Safety",
+    dataStorage: "Data Storage",
+    common: "Common",
+  },
+};
