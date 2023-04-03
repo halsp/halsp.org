@@ -305,7 +305,7 @@ export default class extends Action {
 你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
 
 ```TS
-import { Action } from "@halsp/common"
+import { Action } from "@halsp/core"
 
 @SetActionMetadata("roles", ["admin"])
 export default class extends Action{}
@@ -340,13 +340,13 @@ function Root(target: any) {
 ```
 
 ```TS
-import { Action } from "@halsp/common"
+import { Action } from "@halsp/core"
 @Admin
 export default class extends Action{}
 ```
 
 ```TS
-import { Action } from "@halsp/common"
+import { Action } from "@halsp/core"
 @Root
 export default class extends Action{}
 ```
@@ -354,7 +354,7 @@ export default class extends Action{}
 也可以使用 `getActionMetadata` 获取元数据
 
 ```TS
-import { Action } from "@halsp/common"
+import { Action } from "@halsp/core"
 import { getActionMetadata } from "@halsp/router";
 
 @Root

@@ -39,7 +39,7 @@ class TestService2 {
 定义中间件类，派生自 `Middleware`，或其他派生自 `Middleware` 的类
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 
 class TestMiddleware extends Middleware {
@@ -87,7 +87,7 @@ startup.useInject().add(TestMiddleware);
 在服务或中间件的字段声明，使用装饰器 `@Inject`，`@halsp/inject` 将在服务初始化后注入对应服务
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { Inject } from "@halsp/inject";
 
 class TestService1 {}
@@ -119,7 +119,7 @@ class TestMiddleware extends Middleware {
 
 ```TS
 import { Inject } from "@halsp/inject";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 class OtherService(){}
 
@@ -530,7 +530,7 @@ const Service3 = Inject((ctx) => new TestService3());
 中间件
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
   @Service3

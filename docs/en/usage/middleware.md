@@ -161,7 +161,7 @@ startup.hook(HookType, (ctx, md) => {})
 其中参数 1 可省略，默认为 `BeforeInvoke`
 
 ```TS
-  import { Middleware } from "@halsp/common";
+  import { Middleware } from "@halsp/core";
 
 startup
     .hook((md) => {

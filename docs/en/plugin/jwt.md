@@ -177,7 +177,7 @@ JwtService 提供了一些 jwt 相关的方法
 赋值为 `jwt token` 字符串
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{
@@ -191,7 +191,7 @@ class TestMiddleware extends Middleware{
 解析 `jwt token` 字符串并转为对象
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{
@@ -205,7 +205,7 @@ class TestMiddleware extends Middleware{
 只取 jwt payload 部分，如果是 json 字符串，则会自动解析
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import * as jwt from "jsonwebtoken";
 
 class TestMiddleware extends Middleware{

@@ -168,7 +168,7 @@ Startup 及其派生类新增函数 `expectMiddleware`，用于中间件的单�
 ```TS
 import "@halsp/testing";
 import { TestHttpStartup } from "@halsp/testing/dist/http";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
   fn() {

@@ -32,7 +32,7 @@ startup.useValidator()
 ```TS
 import { V } from "@halsp/validator";
 import { Body } from "@halsp/pipe";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 // 数据传输模型
 class TestDto {
@@ -65,7 +65,7 @@ class TestMiddleware extends Middleware {
 ```TS
 import { V } from "@halsp/validator";
 import { Body } from "@halsp/pipe";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 // 中间件
 class TestMiddleware extends Middleware {

@@ -16,7 +16,7 @@
 
 ```TS
 import { Header, Query, Param, Body, InjectContext } from "@halsp/pipe";
-import { Middleware, ReadonlyDict, Context } from "@halsp/common";
+import { Middleware, ReadonlyDict, Context } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
   @InjectContext
@@ -68,7 +68,7 @@ startup.useInject().add(TestMiddleware);
 
 ```TS
 import { parseInject } from "@halsp/inject";
-import { Context } from "@halsp/common";
+import { Context } from "@halsp/core";
 import { Header, Query, InjectContext } from "@halsp/pipe";
 
 class TestClass {

@@ -25,7 +25,7 @@ startup.useRedis({
 在中间件或服务通过依赖注入获取 Redis 连接实例
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { RedisConnection, RedisInject } from "@halsp/redis";
 
 class TestMiddleware extends Middleware {
@@ -64,7 +64,7 @@ startup
 在中间件或服务中，给装饰器 `@RedisInject()` 传参字符串以区分连接
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { RedisConnection, RedisInject } from "@halsp/redis";
 
 class TestMiddleware extends Middleware {
@@ -94,7 +94,7 @@ class TestMiddleware extends Middleware {
 用 `@RedisInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { RedisConnection, RedisInject } from "@halsp/redis";
 
 @Inject

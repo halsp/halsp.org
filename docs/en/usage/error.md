@@ -8,7 +8,7 @@ Halsp 提供了多种请求异常，也提供了异常处理的功能
 
 Http 环境和微服务都提供了异常类
 
-所有异常类都派生自 `@halsp/common` 的 `HalspException` 类
+所有异常类都派生自 `@halsp/core` 的 `HalspException` 类
 
 你可以在任何地方抛出请求异常，以终止当前中间件的运行，并使中间件管道立即转向
 
@@ -50,7 +50,7 @@ Http 环境和微服务都提供了异常类
 如果抛出的是请求异常 `HttpException` 派生类的实例对象，那么会根据请求异常返回特定的 body 和 status
 
 ```TS
-import { Middleware, BadRequestException } from "@halsp/common";
+import { Middleware, BadRequestException } from "@halsp/core";
 
 class TestMiddleware extends Middleware{
   invoke(){
@@ -155,7 +155,7 @@ try {
 如 [@halsp/filter](./filter) 中的异常过滤器，就是使用的异常钩子，并且只处理 `@halsp/router` 中的 `Action` 中间件
 
 ```TS
-import { HookType } from "@halsp/common";
+import { HookType } from "@halsp/core";
 import { Action } from "@halsp/router";
 
 startup.hook(HookType.Error, (ctx, md, ex) => {

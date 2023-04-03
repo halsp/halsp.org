@@ -119,7 +119,7 @@ startup.useMicroTcp()
 
 ```TS
 import { MicroClient, IMicroClient } from "@halsp/micro-client";
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
   @MicroClient()

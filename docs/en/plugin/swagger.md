@@ -43,7 +43,7 @@ export class LoginDto {
 ```TS
 import "@halsp/swagger";
 import { V } from "@halsp/validator";
-import { Action } from "@halsp/common";
+import { Action } from "@halsp/core";
 import { Body } from "@halsp/pipe";
 
 @V.Tags("user").Description("Get user info")

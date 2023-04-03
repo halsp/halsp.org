@@ -14,7 +14,7 @@
 伪代码如下
 
 ```TS
-import { Startup } from "@halsp/common";
+import { Startup } from "@halsp/core";
 
 class CustomEnvStartup extends Startup{
   async run(event: any){
@@ -47,7 +47,7 @@ new CustomEnvStartup()
 函数代码如下
 
 ```TS
-import { Startup, Dict} from "@halsp/common";
+import { Startup, Dict} from "@halsp/core";
 
 export class LambdaStartup extends Startup {
   async run(event: Dict, context: Dict): Promise<ResponseStruct> {

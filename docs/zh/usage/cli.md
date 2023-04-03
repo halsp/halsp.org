@@ -488,7 +488,7 @@ NodeJS Version : v16.15.0
 Halsp CLI Version : 0.7.0
 
 [Halsp Packages Version]
-@halsp/common   : ^3.0.0
+@halsp/core   : ^3.0.0
 @halsp/native   : ^3.0.0
 @halsp/inject : ^3.0.0
 @halsp/pipe   : ^3.0.0

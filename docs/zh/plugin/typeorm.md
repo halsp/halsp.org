@@ -48,7 +48,7 @@ export class User {
 在中间件或服务通过依赖注入获取数据库连接实例 `TypeormInject`
 
 ```TS
-import { Middleware } from '@halsp/common';
+import { Middleware } from '@halsp/core';
 import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
 
 class TestMiddleware extends Middleware {
@@ -108,7 +108,7 @@ startup
 在中间件或服务中，给装饰器 `@TypeormInject()` 传参以区分连接
 
 ```TS
-import { Middleware } from '@halsp/common';
+import { Middleware } from '@halsp/core';
 import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
 
 class TestMiddleware extends Middleware {
@@ -138,7 +138,7 @@ class TestMiddleware extends Middleware {
 用 `@TypeormInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
-import { Middleware } from "@halsp/common";
+import { Middleware } from "@halsp/core";
 import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
 
 @Inject

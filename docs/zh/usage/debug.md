@@ -44,7 +44,7 @@ npx halsp start
 `startup.ts` 内容如
 
 ```TS
-import { Startup } from "@halsp/common";
+import { Startup } from "@halsp/core";
 import "@halsp/mva";
 import "@halsp/env";
 import "@halsp/logger";
