@@ -1,5 +1,5 @@
-import zhOptions from "./zh-cn";
-import enOptions from "./en-us";
+import zhOptions from "./src/zh-cn";
+import enOptions from "./src/en-us";
 
 function getLangByKey(options: any, key: string) {
   const keys = key.split(".");

@@ -1,4 +1,4 @@
-import { defaultTheme, defineUserConfig } from "vuepress";
+import { defaultTheme, defineUserConfig, UserConfig } from "vuepress";
 import { searchPlugin } from "@vuepress/plugin-search";
 import { zh, en, lang } from "../lang";
 
@@ -34,6 +34,7 @@ const advanceLinks: string[] = [
 function getLinksWithPrefix<T extends string | string[]>(links: T, l: lang): T {
   let list: string[] = Array.isArray(links) ? links : [links];
   list = list.map((link) => l.t("prefix") + link);
+  console.log("list", list);
   return (Array.isArray(links) ? list : list[0]) as T;
 }
 
@@ -135,52 +136,66 @@ function createSidebar(l: lang) {
   return [
     {
       text: t("menus.start"),
-      children: guideLinks,
+      children: getLinksWithPrefix(guideLinks, l),
     },
     {
       text: t("menus.basic"),
-      children: basicLinks,
+      children: getLinksWithPrefix(basicLinks, l),
     },
     {
       text: t("menus.advance"),
-      children: advanceLinks,
+      children: getLinksWithPrefix(advanceLinks, l),
     },
     {
       text: t("menus.environment"),
       children: [
-        "/env/custom-env",
-        "/env/native",
-        "/env/lambda",
-        "/env/alifc",
-        "/env/koa-env",
+        ...getLinksWithPrefix(
+          [
+            "/env/custom-env",
+            "/env/native",
+            "/env/lambda",
+            "/env/alifc",
+            "/env/koa-env",
+          ],
+          l
+        ),
         {
           text: t("menus.microservices"),
-          children: microLinks,
+          children: getLinksWithPrefix(microLinks, l),
         },
       ],
     },
     {
       text: t("menus.debug"),
-      children: ["/usage/debug", "/usage/testing"],
+      children: getLinksWithPrefix(["/usage/debug", "/usage/testing"], l),
     },
     {
       text: t("menus.plugins"),
       children: [
         {
           text: t("menus.common"),
-          children: ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+          children: getLinksWithPrefix(
+            ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+            l
+          ),
         },
         {
           text: t("menus.safety"),
-          children: ["/plugin/jwt", "/plugin/validator"],
+          children: getLinksWithPrefix(["/plugin/jwt", "/plugin/validator"], l),
         },
         {
           text: t("menus.dataStorage"),
-          children: ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+          children: getLinksWithPrefix(
+            ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+            l
+          ),
         },
         {
           text: t("menus.more"),
-          children: ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
+          children: getLinksWithPrefix(
+            ["/plugin/koa", "/plugin/cors", "/plugin/cookie"],
+            l
+          ),
         },
       ],
     },
@@ -205,10 +220,11 @@ function getThemeLocales(l: lang) {
     notFound: [t("config.notFound")],
     navbar: createNavbar(l),
     sidebar: createSidebar(l),
+    home: t("prefix") + "/usage/intro",
   };
 }
 
-export default defineUserConfig({
+const userConfig: UserConfig = {
   lang: "en-US",
   base: "/",
   locales: {
@@ -222,8 +238,7 @@ export default defineUserConfig({
     docsDir: "docs",
     editLinkPattern: ":repo/edit/:branch/:path",
     editLink: true,
-    home: "/index.md",
-    // logo: "/images/logo.png",
+    logo: "/images/logo.png",
     sidebarDepth: 2,
     locales: {
       [en.t("prefix") + "/"]: getThemeLocales(en),
@@ -253,4 +268,5 @@ export default defineUserConfig({
       },
     }),
   ],
-});
+};
+export default defineUserConfig(userConfig);

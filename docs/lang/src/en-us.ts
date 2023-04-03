@@ -1,5 +1,5 @@
 export default {
-  prefix: "",
+  prefix: "/en",
   lang: "en-US",
   langName: "English",
   title: "Halsp",

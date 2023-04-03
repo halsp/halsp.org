@@ -1,6 +1,6 @@
 {
   "i18n-ally.localesPaths": [
-    "docs/lang",
+    "docs/lang/src",
   ],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.enabledParsers": [
