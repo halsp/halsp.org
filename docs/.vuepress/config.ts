@@ -34,7 +34,6 @@ const advanceLinks: string[] = [
 function getLinksWithPrefix<T extends string | string[]>(links: T, l: lang): T {
   let list: string[] = Array.isArray(links) ? links : [links];
   list = list.map((link) => l.t("prefix") + link);
-  console.log("list", list);
   return (Array.isArray(links) ? list : list[0]) as T;
 }
 

@@ -4,7 +4,7 @@ export default {
   langName: "English",
   title: "Halsp",
   description:
-    "Modern Progressive Lightweight Node.js Framework for the Serverless",
+    "Modern Progressive Lightweight Node.js Framework with Serverless First",
   config: {
     kook: "KOOK",
     editLinkText: "Edit this page",

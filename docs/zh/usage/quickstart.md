@@ -16,7 +16,7 @@
 npm init halsp
 ```
 
-这一语句将会安装并执行 [create-halsp](https://github.com/halsp/create-halsp)，你将会看到一些选择插件和环境的选项，根据你的需要选择对应的选项。
+这一语句将会安装并执行 [create-halsp](https://www.npmjs.com/package/create-halsp)，你将会看到一些选择插件和环境的选项，根据你的需要选择对应的环境和插件如 `router`、`testing` 等。
 
 ```bash
 ? Project name: halsp-project
@@ -29,14 +29,7 @@ npm init halsp
 
 ### 启动
 
-在项目被创建后，通过以下步骤启动程序：
-
-```bash
-cd <your-project-name>
-npm run dev
-```
-
-你现在应该已经运行起来了 halsp 项目，访问 `http://localhost:2333` 看看吧
+在项目被创建后，就已经启动了
 
 如果选择的插件包含 `swagger` 和 `router`，你将能看到 swagger 页面
 
@@ -44,9 +37,9 @@ npm run dev
 
 或者，能看到一个返回的 json 字符串
 
-### 补充
+无论你选择的运行环境是云函数还是原生 node 服务，本地开发都是以 node 服务启动调试的，你可以在 `halsp-cli.config.ts` 配置文件中的 `start` 节点修改启动参数，如端口、地址等。
 
-无论你选择的运行环境是云函数还是原生 node 服务，本地启动都是以 node 服务启动调试的，你可以在 `halsp-cli.config.ts` 配置文件中的 `start` 节点修改启动参数，如端口、地址等。
+### 发布
 
 当你准备将应用发布到生产环境时，请运行
 
