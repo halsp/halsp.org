@@ -252,6 +252,13 @@ const userConfig: UserConfig = {
         src: "/js/headerIndex.js",
       },
     ],
+    [
+      "script",
+      {
+        type: "text/javascript",
+        src: "/js/index.js",
+      },
+    ],
     ["link", { rel: "icon", href: "/favicon.ico" }],
   ],
   plugins: [
