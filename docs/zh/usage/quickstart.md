@@ -4,9 +4,38 @@
 
 ## 线上尝试
 
-通过 <http://mini.halsp.org> 在线使用 halsp
+浏览器里运行了基于 Halsp 的构建设置，不需要在机器上安装任何依赖
 
-浏览器里运行了基于 halsp 的构建设置，不需要在机器上安装任何依赖
+选择下面需要的环境和组件
+
+_如果下面区域显示空白，请耐心等待或刷新重试_
+
+<div style="padding:20px 24px 0 20px;border:2px solid var(--c-text-accent);border-radius:4px;">
+  <iframe id="iframe" width="100%" frameborder="no" scrolling="no"></iframe>
+</div>
+
+<script>
+const quickstartOrigin='https://quickstart.halsp.org';
+
+!(()=>{
+  const interval =  setInterval(()=>{
+    const iframe = window.document.getElementById('iframe');
+    if(iframe){
+      iframe.src=`${quickstartOrigin}/#/iframe?origin=${location.origin}`
+      clearInterval(interval)
+    }
+  },200)
+})()
+
+window.addEventListener('message',(event)=>{
+  if(event.origin==quickstartOrigin){
+    const { height }=event.data
+    window.document.getElementById('iframe').height=height;
+  }
+})
+</script>
+
+<br />
 
 ## 本地构建
 
@@ -31,9 +60,9 @@ npm init halsp
 
 在项目被创建后，就已经启动了
 
-如果选择的插件包含 `swagger` 和 `router`，你将能看到 swagger 页面
+如果选择的插件包含 `swagger`，你将能看到 swagger 页面
 
-如果选择的插件包含 `view` 或 `mva`，能看到一个简单的 html 页面
+如果选择的插件包含 `view` 或 `mva`，访问 `/user` 能看到一个简单的 html 页面
 
 或者，能看到一个返回的 json 字符串
 

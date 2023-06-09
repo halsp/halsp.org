@@ -128,7 +128,7 @@ class YourMiddleware extends Middleware{
 OR
 
 ```TS
-const jwtService = await parseInject(ctx, JwtService);
+const jwtService = await ctx.getService(JwtService);
 ```
 
 ### 提供方法

@@ -13,7 +13,6 @@ const microLinks: string[] = [
 const guideLinks: string[] = [
   "/usage/intro",
   "/usage/quickstart",
-  "/usage/appoint",
 ];
 const basicLinks: string[] = [
   "/usage/startup",

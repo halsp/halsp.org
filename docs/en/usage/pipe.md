@@ -67,7 +67,7 @@ startup.useInject().add(TestMiddleware);
 在其他任意类中，你也可以利用控制反转实现实例化
 
 ```TS
-import { parseInject } from "@halsp/inject";
+import "@halsp/inject";
 import { Context } from "@halsp/core";
 import { Header, Query, InjectContext } from "@halsp/pipe";
 
@@ -80,9 +80,9 @@ class TestClass {
   private readonly query!: any;
 }
 
-const obj = parseInject(TestClass); // 利用控制反转创建对象
+const obj = await ctx.getService(TestClass); // 利用控制反转创建对象
 // OR
-const obj = parseInject(new TestClass());
+const obj = await ctx.getService(new TestClass());
 ```
 
 ## 避免在单例类中使用

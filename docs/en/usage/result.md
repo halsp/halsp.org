@@ -10,11 +10,11 @@ Halsp 有开箱即用的获取请求参数的方式，同时也内置了一些�
 
 - res 字段: `Response` 实例对象
 - req 字段: `Request` 实例对象
-- bag 函数：用于在中间件管道中传递更多内容
+- get/set/has/delete：用于在中间件管道中传递更多内容
 
 ### Response
 
-作为 API 返回内容（在 Startup 可能会被解析后返回）
+作为 API 返回内容（在 Startup 中可能会被解析后返回）
 
 包含以下内容
 
@@ -23,12 +23,14 @@ Halsp 有开箱即用的获取请求参数的方式，同时也内置了一些�
 - status: 返回状态码
 - isSuccess: 返回值是否成功，status >= 200 && status < 300
 - setHeaders: 设置多个 header
-- setHeader: 设置单个 header
-- hasHeader: 判断 header 是否存在，忽略 key 大小写
-- removeHeader: 移除一个 header，忽略 key 大小写
-- getHeader: 获取一个 header 值，忽略 key 大小写
+- set: 设置单个 header
+- has: 判断 header 是否存在，忽略 key 大小写
+- remove: 移除一个 header，忽略 key 大小写
+- append: 在已有 header 后追加，或新加 header
+- get: 获取一个 header 值，忽略 key 大小写
+- 其他结果函数
 
-在每个中间件都可以修改 `this.ctx.res` 中的内容
+在每个中间件中，都可以修改 `this.ctx.res` 中的内容
 
 ### Request
 
@@ -41,10 +43,12 @@ Halsp 有开箱即用的获取请求参数的方式，同时也内置了一些�
 - body: body 内容
 - headers: 获取 header 的深拷贝值，get 属性
 - setHeaders: 设置多个 header
-- setHeader: 设置单个 header
-- hasHeader: 判断 header 是否存在，忽略 key 大小写
-- removeHeader: 移除一个 header，忽略 key 大小写
-- getHeader: 获取一个 header 值，忽略 key 大小写
+- set: 设置单个 header
+- has: 判断 header 是否存在，忽略 key 大小写
+- remove: 移除一个 header，忽略 key 大小写
+- get: 获取一个 header 值，忽略 key 大小写
+
+也可以使用更灵活的 [管道](./pipe) 来获取请求内容
 
 #### X-HTTP-Method-Override
 
@@ -58,56 +62,49 @@ Halsp 有开箱即用的获取请求参数的方式，同时也内置了一些�
 }
 ```
 
-### `bag` 函数
+### 传递内容
 
-可以在管道中传递更多自定义内容。
+可以通过 `ctx.get/ctx.set/ctx.has/ctx.delete` 在管道中传递更多自定义内容。
 
 如果使用 TS，可以借泛型特性获得更多智能提示。
 
-halsp 支持两种引用类型的 bag
+Halsp 支持 3 种生命周期的内容
 
-- Singleton: 单例模式，添加后可多次获取同一引用
-- Transient: 临时模式，添加后每次获取都会创建一个新引用
+- singleton: 单例模式，添加后可多次获取同一引用
+- scoped: 单次请求，在单次请求内，每次获取都会获取同一引用
+- transient: 临时模式，添加后每次获取都会创建一个新引用
 
 如果是值类型，每次获取的都是该值的拷贝
 
-#### 添加或修改 `bag`
+#### 添加或修改
 
 ```TS
-// Singleton
-this.ctx.bag("BAG_NAME", { /*bag content*/ });
+// singleton
+this.ctx.set("BAG_NAME", 'singleton', () => { /*content*/ });
 ```
 
 OR
 
 ```TS
-// Transient
-this.ctx.bag("BAG_NAME", () => { /*bag content*/ });
+// transient
+this.ctx.set("BAG_NAME", 'transient', () => { /*content*/ });
 ```
 
-#### 获取 `bag`
+#### 获取内容
 
 ```TS
-const val = this.ctx.bag("BAG_NAME")
+const val = this.ctx.get("BAG_NAME")
 ```
 
-或 TS
+或使用模板类型
 
 ```TS
-const val = this.ctx.bag<string>("BAG_NAME")
+const val = this.ctx.get<string>("BAG_NAME")
 ```
-
-### ctx 中的头部
-
-`Context` 中的头部处理比较特殊，和 `Response` 或 `Request` 都不一样
-
-获取的头部，都来自于请求头 `Request`，如 `headers`, `hasHeader`, `getHeader`
-
-设置的头部，都位于返回头 `Response`，如 `setHeader`, `setHeaders`, `removeHeader`
 
 ## 内置结果函数
 
-在 `Context` 和中间件中，内置一些返回结果，用于快速设置返回结果：
+在 `Response` 和中间件中，内置一些返回结果函数，用于快速设置返回状态码和 body：
 
 - ok, 200
 - created, 201
@@ -159,29 +156,36 @@ const val = this.ctx.bag<string>("BAG_NAME")
 如在类中间件中
 
 ```TS
-this.ok("success");
+import { Middleware } from "@halsp/core";
+
+class TestMiddleware extends Middleware{
+  async invoke() {
+    this.ok("success");
+    await this.next();
+  }
+}
 ```
 
 等同于
 
 ```TS
-this.ctx.res.body = "success";
-this.ctx.res.status = 200;
-```
-
-```TS
 import { Middleware } from "@halsp/core";
-export class extends Middleware {
+
+class TestMiddleware extends Middleware{
   async invoke() {
-    this.noContent();
-    // or this.ok('success');
+    this.ctx.res.body = "success";
+    this.ctx.res.status = 200;
+    await this.next();
   }
 }
 ```
 
+如下方式读取请求参数并返回
+
 ```TS
 import { Middleware } from "@halsp/core";
-export class extends Middleware {
+
+export default class extends Middleware {
   async invoke() {
     const { account, password } = this.ctx.req.query;
 
@@ -196,6 +200,12 @@ export class extends Middleware {
 }
 ```
 
-多数内置类型支持传入 `body` 可选参数，`body` 为返回的内容。
+多数内置函数支持传入 `body` 可选参数，`body` 为返回的内容。
 
 API 返回错误时，可统一返回 `ErrorMessage`，命名以 `Msg` 结尾的内置类型接受 `ErrorMessage` 参数。
+
+如
+
+```TS
+ctx.res.notFoundMsg("not found");
+```

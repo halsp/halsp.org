@@ -43,12 +43,12 @@ Halsp 的中间件采用了洋葱圈模型，即
 ```TS
 startup
   .use(async (ctx, next)=>{
-    ctx.res.setHeader("h1", 1);
+    ctx.res.set("h1", 1);
     await next();
-    ctx.res.setHeader("h3", 3);
+    ctx.res.set("h3", 3);
   })
   .use((ctx)=>{
-    ctx.res.setHeader("h2", 2);
+    ctx.res.set("h2", 2);
   })
 ```
 
@@ -61,9 +61,9 @@ startup
 ```TS
 class TestMiddleware extends Middleware{
   async invoke(){
-    this.ctx.res.setHeader("h1",1);
+    this.ctx.res.set("h1",1);
     await this.next();
-    this.ctx.res.setHeader("h2",2);
+    this.ctx.res.set("h2",2);
   }
 }
 ```
@@ -133,7 +133,9 @@ startup
 - 钩子只会作用于其后的中间件
 
 ```TS
-startup.hook(HookType, (ctx, md) => {})
+startup.hook(HookType, (ctx, md) => {
+  // do something
+})
 ```
 
 该函数有两个参数
@@ -161,7 +163,7 @@ startup.hook(HookType, (ctx, md) => {})
 其中参数 1 可省略，默认为 `BeforeInvoke`
 
 ```TS
-  import { Middleware } from "@halsp/core";
+import { Middleware } from "@halsp/core";
 
 startup
     .hook((md) => {

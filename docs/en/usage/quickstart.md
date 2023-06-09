@@ -6,7 +6,38 @@ You can try online or locally.
 
 To quickly get a taste of Halsp, you can try it directly in <http://mini.halsp.org>
 
-The browser is running Halsp based build settings, and there is no need to install any dependencies on the machine
+The halsp app can be run in browser for testing and development, and there is no need to install any dependencies on the machine.
+
+Select the required environment and components below
+
+_If the area below shows blank, please be patient or refresh and try again_
+
+<div style="padding:20px 24px 0 20px;border:2px solid var(--c-text-accent);border-radius:4px;">
+  <iframe id="iframe" width="100%" frameborder="no" scrolling="no"></iframe>
+</div>
+
+<script>
+const quickstartOrigin='https://quickstart.halsp.org';
+
+!(()=>{
+  const interval =  setInterval(()=>{
+    const iframe = window.document.getElementById('iframe');
+    if(iframe){
+      iframe.src=`${quickstartOrigin}/#/iframe?origin=${location.origin}`
+      clearInterval(interval)
+    }
+  },200)
+})()
+
+window.addEventListener('message',(event)=>{
+  if(event.origin==quickstartOrigin){
+    const { height }=event.data
+    window.document.getElementById('iframe').height=height;
+  }
+})
+</script>
+
+<br />
 
 ## Create a Halsp Application
 
@@ -33,9 +64,9 @@ This command will install and execute [create-halsp](https://www.npmjs.com/packa
 
 Once the project is created, the dev server is started.
 
-If you select `swagger` and `router`, you will see the page of swagger.
+If you select `swagger`, you will see the page of swagger.
 
-If you select `view` or `mva`, you will see a simple html page.
+If you select `view` or `mva`, launch `/user` and you will see a simple html page.
 
 Otherwise you will see a json string.
 

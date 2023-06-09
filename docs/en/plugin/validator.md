@@ -145,7 +145,7 @@ class TestDto {
 参数 `val` 是该模型对应的值
 
 ```TS
-@ValidatorEnable(({ ctx: Context; val: any }) => ctx.bag("test") == val)
+@ValidatorEnable(({ ctx: Context; val: any }) => ctx.set("test") == val)
 class TestClass {
   @V.IsInt()
   b1!: number;

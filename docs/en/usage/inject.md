@@ -54,7 +54,7 @@ class TestMiddleware extends Middleware {
 }
 ```
 
-在 `startup.ts` 中
+在 `index.ts` 中
 
 ```TS
 import "@halsp/inject";
@@ -68,7 +68,7 @@ startup.useInject().add(TestMiddleware);
 :::
 
 :::warning
-如果不调用 `startup.useInject`，但通过 `parseInject` 手动创建了实例，那么单例类型的服务会出现不可预知的问题，如无法保证单例的问题
+如果没有调用过 `startup.useInject`，`ctx.getService` 执行将报错
 :::
 
 ## 装饰器
@@ -308,7 +308,7 @@ class TestMiddleware extends Middleware {
 
 键是字符串，即指定字符串映射指定实例对象或其他值
 
-在 `startup.ts` 中
+在 `index.ts` 中
 
 ```TS
 import "@halsp/inject";
@@ -397,14 +397,14 @@ class TestMiddleware extends Middleware{
 
 有些服务可能没有写在其他服务或中间件中，就无法自动获取服务
 
-利用 `parseInject` 函数可手动获取一个服务实例
+利用 `ctx.getService` 函数可手动获取一个服务实例
 
 ```TS
-import { parseInject } from '@halsp/inject'
+import '@halsp/inject'
 
-const service1 = await parseInject(ctx, ParentService);
-const service2 = await parseInject(ctx, "KEY");
-const service3 = await parseInject(ctx, new Service()); // 不推荐
+const service1 = await ctx.getService(ParentService);
+const service2 = await ctx.getService("KEY");
+const service3 = await ctx.getService(new Service()); // 不推荐
 ```
 
 上述 `service3` 方式无法控制服务的生命周期，也无法实例化构造函数中的服务
@@ -510,7 +510,7 @@ class TestMiddleware extends Middleware {
 定义
 
 ```TS
-import { Inject,parseInject } from "@halsp/inject";
+import { Inject } from "@halsp/inject";
 
 class TestService1{}
 class TestService2{
