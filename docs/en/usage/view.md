@@ -16,7 +16,7 @@ npm i @halsp/view
 
 添加视图模板文件夹 `views` 和文件 `views/index.ejs` 并编写 `ejs` 视图模板内容
 
-在 `startup.ts` 中添加 `startup.useView`
+在 `index.ts` 中添加 `startup.useView()` 如
 
 ```TS
 import "@halsp/view";
@@ -28,15 +28,15 @@ startup
   });
 ```
 
-## `useView`
+## `startup.useView()`
 
-`useView` 接收一个可选配置参数，包括以下属性
+`startup.useView()` 接收一个可选配置参数，包括以下属性
 
 - dir: 视图文件夹
 - options: 渲染页面用的通用参数，如网站名称和其他通用信息
 - engines: 视图渲染引擎
 
-`engines` 用于文件扩展名与 [consolidate](https://github.com/tj/consolidate.js) 对应，如
+`engines` 用于将文件扩展名与 [consolidate](https://github.com/tj/consolidate.js) 支持的模板对应，如
 
 ```TS
 startup.useView({
@@ -48,7 +48,7 @@ startup.useView({
 });
 ```
 
-如果扩展名与渲染引擎名称相同，可省略配置
+如果扩展名与渲染引擎名称相同，可省略配置，如 xxx.ejs 文件默认使用 ejs 模板引擎
 
 ### 视图文件夹
 
@@ -71,9 +71,9 @@ startup.useView({
 
 Response 类的实例方法
 
-没有返回值，会修改 Response
+没有返回值，但会修改 Response
 
-如果当前环境是微服务，则修改 Response.body 值为渲染后的 html 字符串
+如果当前环境是微服务，则会修改 Response.body 值为渲染后的 html 字符串
 
 如果当前环境是 http，则做如下以下操作
 
@@ -112,4 +112,4 @@ const args = Object.assign({}, options, ctx.state, locals);
 
 已内置 `@halsp/cli` 的支持
 
-`views` 文件夹不需要配置为资源文件
+因此 `views` 文件夹不需要手动配置为资源文件

@@ -36,21 +36,21 @@ startup.useGlobalFilter(YourFilter, 1)
 ```
 
 :::tip 注意
-过滤器需要在 `startup.useRouter` 之前引入
+过滤器需要在 `startup.useRouter` 之前引入，否则不起作用
 :::
 
 ## 过滤器的作用范围
 
 过滤器有两种作用范围
 
-- 作用于 Action
+- 作用于单个请求 `Action`
 - 全局过滤器
 
 ### 在 Action 上使用过滤器
 
 可以单独为某个 Action 使用过滤器
 
-在 Action 类声明出，加上装饰器 `UseFilters`，表示这个 Action 使用滤器
+在 Action 类声明处，加上装饰器 `UseFilters`，表示这个 Action 使用滤器，可以添加多个过滤器
 
 ```TS
 @UseFilters(filter)
@@ -72,7 +72,7 @@ startup.useGlobalFilter(filter)
 应在 `useRouter` 之前添加全局过滤器
 :::
 
-全局过滤器可以添加多个，每次使用 `useGlobalFilter` 都会添加一个全局过滤器
+全局过滤器可以添加多个，每次调用 `useGlobalFilter` 都会添加一个全局过滤器
 
 ## 依赖注入
 
@@ -89,13 +89,15 @@ startup
   .useRouter()
 ```
 
-:::TIP
-`@UseFilters()` 和 `startup.useGlobalFilter()` 建议传入类而不是对象，这样可以让框架自动初始化过滤器，以正确初始化依赖注入关系
+:::tip 建议
+`@UseFilters()` 和 `startup.useGlobalFilter()` 建议传入类而不是对象
+
+这样可以让框架自动初始化过滤器，以正确初始化依赖注入关系
 :::
 
 ## 执行顺序
 
-不同类型的过滤器之间，执行顺序是固定的
+不同类型的过滤器之间，执行顺序是固定不可变的
 
 `ExceptionFilter` 过滤器是抛出异常立即执行，即如果不抛出异常不会执行
 
@@ -118,7 +120,7 @@ _`ResultFilter` 是 `@halsp/mva` 提供的_
 
 同类型过滤器的执行顺序默认按以下顺序规则执行
 
-- 全局优先于局部装饰器
+- 全局优先于局部过滤器
 - 全局过滤器之间按引入顺序执行
 - 局部过滤器之间按引入顺序执行
 
@@ -156,4 +158,19 @@ class TestActionFilter implements ActionFilter {
     return true;
   }
 }
+```
+
+在 Action 上使用
+
+```TS
+@UseFilters(TestActionFilter)
+export default class extends Action{
+  invoke(){}
+}
+```
+
+或注册为全局过滤器
+
+```TS
+startup.useGlobalFilter(TestActionFilter)
 ```

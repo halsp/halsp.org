@@ -51,7 +51,7 @@ exports.main = main;
 
 使用 `@halsp/cli` 编译，会自动拷贝 `package.json` 文件至目标目录，并移除 `devDependencies` 中的依赖
 
-你可以通过配置 `halsp-cli.config.ts` 修改默认行为
+你可以通过配置 `.halsprc.ts` 修改默认行为
 
 ```TS
 import { defineConfig } from "@halsp/cli";

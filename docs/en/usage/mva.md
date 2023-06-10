@@ -22,8 +22,8 @@ startup.useMva();
 
 参考 `@halsp/router` 在根目录中（ts 项目为 src 目录）添加以下文件夹：
 
-1. 路由文件夹 `actions`，并编写 `action`，也可为其他，但通过 `routerOptions.dir` 参数指定
-2. 视图文件夹 `views` ，并编写相应视图模板，也可为其他，但通过 `viewOptions.dir` 参数指定
+1. 路由文件夹 `actions`，并编写 `action`
+2. 视图文件夹 `views` ，并编写相应视图模板
 
 ## 配置参数
 
@@ -31,7 +31,7 @@ startup.useMva();
 
 - viewOptions: 与 `useView` 参数相同
 - routerOptions: 与 `useRouter` 参数相同
-- codes: 指定状态码对应的模板
+- codes: 指定状态码对应的模板，一般用于展示错误页面
 
 ## 过滤器
 
@@ -58,14 +58,4 @@ class TestFilter implements ResultFilter {
     ctx.res.setHeader("result1", 1);
   }
 }
-```
-
-## 关于 TS
-
-你需要在 `tsconfig.json` 中的 `static` 中添加 `src/views`，让 `sfra` 编译命令能够将模板文件复制到编译目录
-
-```JSON
-"static": [
-  "src/views" // 模板文件夹路径
-]
 ```

@@ -4,58 +4,78 @@
 
 主要操作如下
 
-- 创建入口类并继承 `Startup`
-- 每次请求创建一个 `Request` 对象和 `Context` 对象
-- 执行 `await super.invoke(ctx)` 将 `Context` 对象传入 `super.invoke` 函数
-- 解析 `Context` 对象和 `Request` 对象设置请求返回
+- 为类 `Startup` 的 `propotype` 增加一个函数，用于处理相关环境参数
+- 每次请求都创建一个 `Context` 对象，执行 `await this.invoke(ctx)` 并将 `Context` 对象传入 `this.invoke` 函数
+- 中间件返回后，解析 `Context` 对象和 `Request` 对象，并设置请求返回
 
 ## 伪代码
 
 伪代码如下
 
 ```TS
-import { Startup } from "@halsp/core";
+import { Context, Startup } from "@halsp/core";
 
-class CustomEnvStartup extends Startup{
-  async run(event: any){
-    const ctx = createContext(event);
-    await super.invoke(ctx);
-    return setResult(ctx, event);
+declare module "@halsp/core" {
+  interface Startup {
+    useCustom(): this;
+    listen(): void;
   }
 }
 
-new CustomEnvStartup()
-  .use((ctx) => ctx.ok("OK"))
+Startup.prototype.useCustom = function () {
+  // do something
+  this.listen = function () {
+    // request event
+    xxxEvent.on("message", async () => {
+      const ctx = new Context();
+      const res = await this["invoke"](ctx);
+      return setResult(ctx, event);
+    });
+  };
+  return this;
+};
+
+new Startup()
+  .useCustom()
+  .use((ctx) => {
+    ctx.res.ok("OK");
+  })
   // ...
-  .run();
+  .listen();
 ```
 
 ## 分析 lambda
 
-以 `@halsp/lambda` 为例，分析 `LambdaStartup` 的大致实现
+以 `@halsp/lambda` 为例，分析其的大致实现
+
+### useLambda 函数
+
+在 Startup.prototype 上增加函数 `startup.useLambda`，调用此函数以支持 Lambda 环境
+
+在函数中声明使用 Http 环境 `startup.useHttp()`，并为 startup 实例创建方法 `startup.run`
 
 ### run 函数
 
-每次网络请求，都会调用 `LambdaStartup.run()` 函数
+每次网络请求，都会调用 `startup.run()` 函数
 
 该函数简单来说就三步操作
 
 1. 根据 lambda 的参数 `event` 和 `context` 解析请求内容，并创建 Context 对象
-2. 执行 `super.invoke(ctx)`，这一步将执行各个中间件，是 halsp 的核心部分
+2. 执行 `this.invoke(ctx)`，这一步将执行各个中间件，是 halsp 的核心部分
 3. 格式化返回内容
 
 函数代码如下
 
 ```TS
-import { Startup, Dict} from "@halsp/core";
+import { Startup, Dict } from "@halsp/core";
 
-export class LambdaStartup extends Startup {
-  async run(event: Dict, context: Dict): Promise<ResponseStruct> {
+Startup.prototype.useLambda = function () {
+  return this.useHttp().extend("run", async (event: Dict, context: Dict) => {
     const ctx = this.createContext(event, context);
-    await super.invoke(ctx);
-    return await this.#getStruct(ctx);
-  }
-}
+    await this["invoke"](ctx);
+    return await getStruct(ctx);
+  });
+};
 ```
 
 ### 创建 Context
@@ -68,7 +88,7 @@ export class LambdaStartup extends Startup {
 
 ### 格式化返回内容
 
-在 `super.invoke` 执行完毕后，`Context` 和 `Request` 对象已经在各个中间件被更新
+在 `this.invoke` 执行完毕后，`Context` 和 `Request` 对象已经在各个中间件被更新
 
 然后需要解析 `Context` 和 `Request` 对象并返回符合 lambda 要求的结果
 
@@ -92,11 +112,10 @@ export interface ResponseStruct {
 在 index.ts 中
 
 ```TS
-import { LambdaStartup } from "@halsp/lambda";
-import startup from "./startup";
+import "@halsp/lambda";
 
-const app = startup(new LambdaStartup());
-export const main = async (event, context) => await app.run(event, context);
+const startup = new Startup().useLambda();
+export const main = async (event, context) => await startup.run(event, context);
 ```
 
 ## 贡献

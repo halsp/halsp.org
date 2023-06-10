@@ -2,24 +2,22 @@
 
 安装 `@halsp/pipe` 以支持管道功能
 
-请求参数管道，用于校验、转换、格式化请求参数
+管道一般用于获取、校验、转换、格式化请求参数
 
 此处管道不同于管道上下文 `Context`
 
-你需要使用装饰器并引入 `@halsp/inject` 以使用此功能
-
-用 `Query`, `Header`, `Param`, `Body`, `InjectContext` 装饰字段，该字段在特定生命周期会被自动赋值
+用 `Query`, `Header`, `Param`, `Body`, `Ctx` 装饰字段，该字段在特定生命周期会被自动赋值
 
 ## 快速开始
 
 先创建一个中间件
 
 ```TS
-import { Header, Query, Param, Body, InjectContext } from "@halsp/pipe";
+import { Header, Query, Param, Body, Ctx } from "@halsp/pipe";
 import { Middleware, ReadonlyDict, Context } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
-  @InjectContext
+  @Ctx
   private readonly ctx1!: Context;
   @Header
   private readonly header!: ReadonlyDict;
@@ -51,28 +49,35 @@ class TestMiddleware extends Middleware {
 
 ```
 
-在 `startup.ts` 中
+在 `index.ts` 中
 
 ```TS
 import "@halsp/inject";
+
 startup.useInject().add(TestMiddleware);
 ```
 
 上述代码中的 `useInject` 会启用依赖注入，`@halsp/pipe` 利用依赖注入实现功能
 
-需要注意的是，该功能只会在 `useInject` 之后的中间件中生效，因此你需要把 `useInject` 放在靠前的位置，根据实际项目决定
+:::tip
+管道功能依赖于 `@halsp/inject`，因此需要先引入 `@halsp/inject` 并加入 `startup.useInject()`
+:::
+
+:::warning
+管道的功能只会在 `useInject` 之后的中间件中生效，因此你需要把 `useInject` 放在靠前的位置，根据实际项目决定
+:::
 
 ## 在其他类中
 
-在其他任意类中，你也可以利用控制反转实现实例化
+在其他任意类中，你也可以使用 `ctx.getService` 手动实例化类
 
 ```TS
 import "@halsp/inject";
 import { Context } from "@halsp/core";
-import { Header, Query, InjectContext } from "@halsp/pipe";
+import { Header, Query, Ctx } from "@halsp/pipe";
 
 class TestClass {
-  @InjectContext
+  @Ctx
   private readonly ctx!: Context;
   @Header
   private readonly header!: any;
@@ -93,7 +98,7 @@ const obj = await ctx.getService(new TestClass());
 
 例如不能使用单例类或单例中间件，否则可能会在高并发下出现不可预知的问题
 
-在这样的中间件中不能使用 `@halsp/pipe`，因为中间件是单例的：
+例如在下面的中间件中不能使用 `@halsp/pipe`，因为中间件是单例的：
 
 ```TS
 startup.use(new YourMiddleware())
@@ -104,9 +109,9 @@ const md = new YourMiddleware();
 startup.use((ctx) => md);
 ```
 
-## 管道用法
+## 加入管道
 
-`Header`,`Query` 等装饰器参数可以接收管道对象或类
+`Header`,`Query` 等装饰器参数，可以接收管道对象或类
 
 如果传入的是管道的类，可以利用控制反转自动实例化管道
 
@@ -129,8 +134,8 @@ queryField: number;
 或转换整个 query
 
 ```TS
-@Query(ParseIntPipe)
-query: any;
+@Body(ParseIntPipe)
+body: any; // number
 ```
 
 ## 内置管道
@@ -147,17 +152,24 @@ query: any;
 
 更多需求可以自定义管道
 
-创建一个类，实现 `PipeTransform` 接口，如
+创建一个类 `ToStringPipe`，实现 `PipeTransform` 接口，如
 
 ```TS
-import { InjectContext, PipeTransform } from "@halsp/pipe"
+import { Ctx, PipeTransform } from "@halsp/pipe"
 
 class ToStringPipe implements PipeTransform<any, string> {
-  @InjectContext
+  @Ctx
   readonly ctx: Context;
 
   transform(value: any) {
     return "" + value;
   }
 }
+```
+
+在其他地方使用
+
+```TS
+@Body("str", ToStringPipe)
+str: string;
 ```

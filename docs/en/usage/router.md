@@ -46,7 +46,7 @@ export default class extends Action{
 
 路由文件夹默认为 `src/actions`
 
-当然你也可以指定其他文件夹，需配置 `halsp-cli.config.ts`，增加 `routerActionsDir` ，如
+当然你也可以指定其他文件夹，需配置 `.halsprc.ts`，增加 `routerActionsDir` ，如
 
 ```ts
 import { defineConfig, Configuration } from "@halsp/cli";
@@ -66,7 +66,6 @@ export default defineConfig(() => {
 `startup.useRouter` 接收可选参数 `RouterOptions`，包含以下字段
 
 - prefix: 路由前缀，比如统一添加 `/api` 或 `/v3` 前缀
-- customMethods: 如果内置请求方法不满足需求，可以自定义请求方法，如 ['custom-get','custom-method']
 
 ## 路由匹配
 
@@ -216,10 +215,12 @@ export default class extends Action {
 
 使用 `@HttpCustom(method, url)` 支持自定义请求方法
 
-接收两个参数
+关于如何添加自定义请求方法请参考后面的 [自定义请求方法](#自定义请求方法-1)
+
+该装饰器接收两个参数
 
 1. 请求方法
-2. 请求路径，如果不传次参数将按文件系统匹配
+2. 请求路径，如果不传此参数将按文件系统匹配
 
 ## Action
 
@@ -300,6 +301,18 @@ export default class extends Action {
 
 `@halsp/router` 会在 `ctx.req` 中添加 `params` 属性
 
+## 自定义请求方法
+
+如果内置请求方法不满足需求，可以自定义请求方法，如 ['custom-get','custom-method']
+
+```TS
+startup
+  .useHttp({
+    customMethods: ["custom-get", "custom-method"],
+  })
+  .useRouter();
+```
+
 ## 路由元数据
 
 你可以通过装饰器 `@SetActionMetadata(key,value)` 装饰 Action，给 Action 添加元数据，添加的元数据可以在解析路由后获取
@@ -377,7 +390,7 @@ export default class extends Action{
 
 ### 编译结果
 
-编译会在目标文件夹下生成 `.halsp-cache/halsp-router.config` 文件
+编译会在目标文件夹下生成 `halsp-router.config` 文件
 
 该文件记录了 `@halsp/router` 的配置和路由表，请不要手动修改
 

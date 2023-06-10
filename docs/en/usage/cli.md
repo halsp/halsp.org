@@ -40,9 +40,18 @@ halsp start
 
 ## 项目配置
 
-项目根目录下的文件 `halsp-cli.config.ts` 用来存放 CLI 的相关配置
+在项目根目录下有配置文件，用来存放 CLI 的相关配置
 
-### 配置方式
+文件名称可以是以下其中之一
+
+- .halsprc.ts
+- .halsprc.js
+- .halsprc.json
+- halsp.config.ts
+- halsp.config.js
+- halsp.config.json
+
+### 导出内容
 
 在配置文件中，可以导出一个 json 对象，或导出一个返回 json 对象的回调函数
 
@@ -88,27 +97,33 @@ export default defineConfig(({ mode }) => {
 
 ```TS
 export interface Configuration {
-    build?: {
-        prebuild?: Prebuild[];
-        postbuild?: Postbuild[];
-        beforeHooks?: CompilerHook<ts.SourceFile>[];
-        afterHooks?: CompilerHook<ts.SourceFile>[];
-        afterDeclarationsHooks?: CompilerHook<ts.SourceFile | ts.Bundle>[];
-        deleteOutDir?: boolean;
-        assets?: AssetConfig[];
-        watch?: boolean;
-        watchAssets?: boolean;
-        preserveWatchOutput?: boolean;
-        sourceMap?: boolean;
-        copyPackage?: boolean;
-        removeDevDeps?: boolean;
-    };
-    start?: {
-        port?: number;
-        binaryToRun?: string;
-        inspect?: boolean | string;
-        startupFile?: string;
-    };
+  build?: {
+    prebuild?: Prebuild[];
+    postbuild?: Postbuild[];
+
+    beforeHooks?: CompilerHook<ts.SourceFile>[];
+    afterHooks?: CompilerHook<ts.SourceFile>[];
+    afterDeclarationsHooks?: CompilerHook<ts.SourceFile | ts.Bundle>[];
+
+    deleteOutDir?: boolean;
+    assets?: AssetConfig[];
+
+    watch?: boolean;
+    watchAssets?: boolean;
+    preserveWatchOutput?: boolean;
+
+    sourceMap?: boolean;
+    copyPackage?: boolean;
+    removeDevDeps?: boolean;
+
+    cacheDir?: string;
+  };
+  start?: {
+    port?: number;
+    binaryToRun?: string;
+    inspect?: boolean | string;
+    startupFile?: string;
+  };
 }
 ```
 
@@ -226,6 +241,12 @@ root 参数用于路径提升，如以下示例：
 
 使用云函数环境 `@halsp/lambda` 和 `@halsp/alifc` 时，该值默认为 `true`
 
+#### cacheDir
+
+本地运行时，缓存文件路径
+
+默认为 `node_modules/.halsp`
+
 #### port
 
 调试时启动的端口
@@ -242,30 +263,38 @@ V8 引擎的调试工具
 
 启动文件的路径，默认为 CLI 调试时生成的文件
 
-如果有其他需求，如希望使用其他运行环境调试，而不使用默认的 `@halsp/native`，可以创建一个入口文件，并通过此参数指定该文件
+默认按以下顺序查找
+
+- index.ts
+- main.ts
+- native.ts
+
+一般用于同时支持多种环境
 
 ## 支持的命令
+
+执行命令 `halsp -h` 即可列出所有命令
 
 ```
 Usage: halsp <command> [options]
 
 Options:
-  -V, --version                 output the version number
-  -h, --help                    display help for command
+  -v, --version, -V, -version            output the version number
+  -h, --help                             display help for command
 
 Commands:
-  create|c [options] [name]     Generate halsp application
-  template|t <template> <name>  Generate a project from a remote template
-  build|b [options]             Build halsp application
-  start|s [options]             Run halsp application
-  info|i                        Display halsp project details
-  update|u [options]            Update halsp dependencies
-  help [command]                display help for command
+  create|c [options] [name]              Generate Halsp application
+  build|b [options] [app]                Build Halsp application
+  start|s [options] [app]                Run Halsp application
+  info|i [options] [app]                 Display halsp project details
+  update|u [options] [app]               Update halsp dependencies
+  serve [options] [app]                  Serve static web by @halsp/static and @halsp/native
+  help [command]                         display help for command
 ```
 
 ## create
 
-用于从头新建项目，可以选择插件、运行环境等
+用于新建项目，可以选择插件、运行环境等
 
 ```sh
 halsp create <project-name>
@@ -278,14 +307,14 @@ halsp create <project-name>
 ```
 Usage: halsp create|c [options] [name]
 
-Generate halsp application
+Generate Halsp application
 
 Arguments:
   name                                    Aapplication name
 
 Options:
   -f, --force                             Force create application, delete existing files.  (default: false)
-  -y, --y                                 Override existing files.  (default: false)
+  --override                              Override existing files.  (default: false)
   -e, --env <env>                         The environment to run application. (lambda/native/azure/micro-tcp/...)
   -pm, --packageManager <packageManager>  Specify package manager. (npm/yarn/pnpm/cnpm)
   --registry <url>                        Override configuration registry
@@ -296,32 +325,58 @@ Options:
   -sg, --skipGit                          Skip git repository initialization
   -sp, --skipPlugins                      No plugins will be added
   -sr, --skipRun                          Skip running after completion
-  --forseInit                             Forse init template
+  --forceInit                             Force init scaffold
+  -t, --template [url]                    Generate a project from a remote template
+  -b, --branch <branch>                   The name of template repository branch
+  --path <path>                           Path to template files
+  --skipCheckUpdate                       Skip to check update version
   -h, --help                              display help for command
 ```
 
-### 插件
+### 关于插件
 
 在创建过程中，需要选择插件，也可以用参数 `--plugins` 指定插件
 
-如果选择的某个插件需要引用另一个插件，需要的插件会自动添加，即使没有选择
+如果选择的某个插件需要引用另一个插件，另一个插件即使没有选择，也会自动被添加
 
 比如 `pipe` 依赖于 `inject`，若选择了 `pipe` 将自动加入 `inject`
 
-## template
+### 模板
 
-根据模板创建项目
+参数 -t 指定模板，根据现有模板创建项目
 
-该功能暂未完成
+支持官方模板库 [halsp/template](https://github.com/halsp/template) 和自定义模板
+
+官方模板库名称为 [halsp/template](https://github.com/halsp/template) 中的文件夹名，如
+
+```
+halsp create -t start
+```
+
+```
+halsp create -t grpc
+```
+
+自定义模板库可以省略 `https://github.com`，或其他完整路径，或
+
+```
+halsp create -t username/repos
+```
+
+```
+halsp create -t https://gitee.com/username/repos
+```
 
 ## build
 
 用于编译项目
 
-:::tip
-CLI 支持极高的扩展性，在编译过程中可以调起其他插件执行脚本，或动态修改配置
+编译输出位置，是在 `tsconfig.json` 中配置 `compilerOptions.outDir`
 
-如 `@halsp/router` 编译时创建路由映射, `@halsp/view` 编译时自动修改配置，添加 `views` 文件夹为资源文件
+:::tip
+CLI 有极高的扩展性，在编译过程中可以调起其他插件执行脚本，或动态修改配置
+
+如 `@halsp/router` 编译时创建路由映射, `@halsp/view` 编译时自动修改配置并添加 `views` 文件夹为资源文件
 :::
 
 ### 使用方式
@@ -329,21 +384,27 @@ CLI 支持极高的扩展性，在编译过程中可以调起其他插件执行�
 命令如下
 
 ```
-Usage: halsp build|b [options]
+Usage: halsp build|b [options] [app]
 
-Build halsp application
+Build Halsp application
+
+Arguments:
+  app                           Where is the app
 
 Options:
   -m, --mode <mode>             Run mode (e.g., development,production). (default: "production")
-  -c, --config <path>           Path to halsp-cli configuration file. (default: "halsp-cli.config.ts")
-  -jc, --jsonConfig <json>      Json string of halsp-cli configuration.
-  -fc, --funcConfig <function>  Function string to build halsp-cli configuration.
+  -c, --config <path>           Path to configuration file.
+  -jc, --jsonConfig <json>      Json string of Halsp configuration.
+  -fc, --funcConfig <function>  Function string to build Halsp configuration.
   -tc, --tsconfigPath <path>    Path to tsconfig.json file.
   -w, --watch                   Run in watch mode (live-reload).
   -wa, --watchAssets            Watch non-ts (e.g., .views) files mode.
+  --assets <assets>             Copy files to dist (e.g. views/**/*||static/**/*)
+  --cacheDir <cacheDir>         Cache dir (default: /node_modules/.halsp)
   -sm, --sourceMap              Whether to generate source map files.
   -cp, --copyPackage            Copy package.json to out dir.
   --removeDevDeps               Remove devDependencies in package.json file when --copyPackage is true.
+  --skipCheckUpdate             Skip to check update version
   -h, --help                    display help for command
 ```
 
@@ -351,14 +412,14 @@ Options:
 
 如果你需要实现一个插件，并且有以下任一需求
 
-- 在编译过程执行特定的代码，需要扩展脚本
-- 编译前动态修改配置，需要拓展配置
+- 在编译过程执行特定的代码，那么就需要扩展脚本
+- 编译前动态修改配置，那么就需要拓展配置
 
 插件命名需要满足以下任意一个条件
 
 - 以 `@halsp/` 开头的 scope 包，属于 Halsp 官方插件
 - 以 `halsp-` 开头，如 `halsp-xxx`
-- 以 `@<score>/halsp-` 开头的 scope 包，如 `@my-package/halsp-xxx`
+- 以 `@<score>/halsp-` 开头的 scope 包，如 `@my-name/halsp-xxx`
 
 #### 插件脚本
 
@@ -374,20 +435,25 @@ Options:
 
 ##### 编译前后的脚本
 
-在插件中，导出以下脚本作用于编译前后运行
+在插件中，导出以下脚本，作用于编译前后运行
 
 - postbuild 编译完成后运行
 - prebuild 编译之前运行
 
-脚本为回调函数
+脚本为一个函数，接收一个对象类型的参数，包含以下属性
 
-`postbuild` 回调函数如果返回 false， 将终止编译
+- config 配置对象
+- cacheDir 编译使用的缓存目录，所有编译文件都将输出到这里
+- mode 编译命令指定的 --mode 参数，默认为 `production`
+- command 命令类型，值为 build 或 start
+
+`postbuild` 函数如果返回 false， 将终止编译
 
 #### 动态修改配置
 
-在插件中导出 `cliConfigHook` 函数，可以在编译阶段动态修改 `halsp-cli.config.ts` 中所读取的配置
+在插件中导出 `cliConfigHook` 函数，可以在编译阶段，动态修改配置文件中读取的配置
 
-注意，此操作不会更新 `halsp-cli.config.ts` 文件
+注意，此操作不会更新配置文件
 
 可以在函数中修改当前配置对象，或返回一个新的配置对象
 
@@ -395,7 +461,7 @@ Options:
 
 - config: 当前的配置对象，可以修改
 - options: `ConfigEnv` 类型的对象，包含以下字段
-  - mode: CLI 命令传入的 mode 参数
+  - mode: CLI 命令传入的 mode 参数，默认为 `production`
   - command: 命令类型，`start` 或 `build`
 
 ```TS
@@ -413,6 +479,14 @@ export const cliConfigHook = (config: Configuration, env: ConfigEnv) => {
 
 若插件导出上述 `cliConfigHook` 函数，每次 CLI 编译都会执行该函数以动态修改配置
 
+### 指定目录
+
+可以指定应用所在目录
+
+```
+halsp build path/to/project
+```
+
 ## start
 
 用于启动并调试项目，先编译后启动，编译过程同 `build` 命令
@@ -420,23 +494,37 @@ export const cliConfigHook = (config: Configuration, env: ConfigEnv) => {
 ### 使用方式
 
 ```
-Usage: halsp start|s [options]
+Usage: halsp start|s [options] [app]
 
-Run halsp application
+Run Halsp application
+
+Arguments:
+  app                           Where is the app
 
 Options:
   -m, --mode <mode>             Run mode (e.g., development,production). (default: "development")
-  -c, --config <path>           Path to halsp-cli configuration file. (default: "halsp-cli.config.ts")
-  -jc, --jsonConfig <json>      Json string of halsp-cli configuration.
-  -fc, --funcConfig <function>  Function string to build halsp-cli configuration.
+  -c, --config <path>           Path to configuration file.
+  -jc, --jsonConfig <json>      Json string of Halsp configuration.
+  -fc, --funcConfig <function>  Function string to build Halsp configuration.
   -tc, --tsconfigPath <path>    Path to tsconfig.json file.
   -w, --watch                   Run in watch mode (live-reload).
   -wa, --watchAssets            Watch non-ts (e.g., .views) files mode.
+  --assets <assets>             Copy files to dist (e.g. views/**/*||static/**/*)
+  --cacheDir <cacheDir>         Cache dir (default: /node_modules/.halsp)
   --startupFile <path>          The file to startup
   -b, --binaryToRun <program>   Binary to run application (e.g., node, ts-node)
   -p, --port <port>             The port on http listens
   --inspect <hostport>          Run in inspect mode
+  --skipCheckUpdate             Skip to check update version
   -h, --help                    display help for command
+```
+
+### 指定目录
+
+可以指定应用所在目录
+
+```
+halsp start path/to/project
 ```
 
 ### Startup 入口
@@ -460,38 +548,75 @@ Serverless 环境的本地调试用到了这个特性
 命令如下
 
 ```
-Usage: halsp info|i [options]
+Usage: halsp info|i [options] [app]
 
 Display halsp project details
 
+Arguments:
+  app                Where is the app
+
 Options:
-  -h, --help  display help for command
+  --skipCheckUpdate  Skip to check update version
+  -h, --help         display help for command
 ```
 
 执行结果如
 
 ```
-  ___ ____   _    ____  _____ ____ _     ___
- |_ _|  _ \ / \  |  _ \| ____/ ___| |   |_ _|
-  | || |_) / _ \ | |_) |  _|| |   | |    | |
-  | ||  __/ ___ \|  _ <| |__| |___| |___ | |
- |___|_| /_/   \_\_| \_\_____\____|_____|___|
+  _   _    _    _     ____  ____   ____ _     ___
+ | | | |  / \  | |   / ___||  _ \ / ___| |   |_ _|
+ | |_| | / _ \ | |   \___ \| |_) | |   | |    | |
+ |  _  |/ ___ \| |___ ___) |  __/| |___| |___ | |
+ |_| |_/_/   \_\_____|____/|_|    \____|_____|___|
 
 
 [System Information]
 OS Type        : Windows_NT
 OS Platform    : win32
-OS Release     : 10.0.22000
-NodeJS Version : v16.15.0
+OS Release     : 10.0.22621
+NodeJS Version : v16.20.0
 
 [Halsp CLI]
-Halsp CLI Version : 0.7.0
+Halsp CLI Version : 0.4.4
 
 [Halsp Packages Version]
-@halsp/core   : ^3.0.0
-@halsp/native   : ^3.0.0
-@halsp/inject : ^3.0.0
-@halsp/pipe   : ^3.0.0
+@halsp/alifc       : ^2.1.1
+@halsp/core        : ^2.1.1
+@halsp/cors        : ^2.1.1
+@halsp/env         : ^2.1.1
+@halsp/filter      : ^2.1.1
+@halsp/inject      : ^2.1.1
+@halsp/jwt         : ^2.1.1
+@halsp/lambda      : ^2.1.1
+@halsp/logger      : ^2.1.1
+@halsp/micro       : ^2.1.1
+@halsp/micro-grpc  : ^2.1.1
+@halsp/micro-mqtt  : ^2.1.1
+@halsp/micro-nats  : ^2.1.1
+@halsp/micro-redis : ^2.1.1
+@halsp/micro-tcp   : ^2.1.1
+@halsp/mva         : ^2.1.1
+@halsp/native      : ^2.1.1
+@halsp/pipe        : ^2.1.1
+@halsp/router      : ^2.1.1
+@halsp/static      : ^2.1.1
+@halsp/swagger     : ^2.1.1
+@halsp/validator   : ^2.1.1
+@halsp/view        : ^2.1.1
+@halsp/ws          : ^2.1.1
+@halsp/cli         : ../
+@halsp/native      : ^2.1.1
+@halsp/testing     : ^2.1.1
+@halsp/http        : ^2.1.1
+@halsp/body        : ^2.1.1
+```
+
+### 指定目录
+
+可以指定应用所在目录
+
+```
+halsp info path/to/project
 ```
 
 ## update
@@ -503,9 +628,12 @@ Halsp CLI Version : 0.7.0
 命令如下
 
 ```
-Usage: halsp update|u [options]
+Usage: halsp update|u [options] [app]
 
 Update halsp dependencies
+
+Arguments:
+  app                                    Where is the app
 
 Options:
   -n, --name <name>                      Specify to update a package
@@ -515,5 +643,49 @@ Options:
   -si, --skipInstall                     Skip installation (default: false)
   -p, --packageManager <packageManager>  Specify package manager. (npm/yarn/pnpm/cnpm)
   --registry <url>                       Override configuration registry
+  --skipCheckUpdate                      Skip to check update version
   -h, --help                             display help for command
+```
+
+### 指定目录
+
+可以指定应用所在目录
+
+```
+halsp update path/to/project
+```
+
+## serve
+
+用于托管静态网站，使用了 `@halsp/static` 和 `@halsp/native`
+
+### 使用方式
+
+命令如下
+
+```
+Usage: halsp serve [options] [app]
+
+Serve static web by @halsp/static and @halsp/native
+
+Arguments:
+  app                    Where is the app
+
+Options:
+  -p, --port <port>      The port on http listens
+  --hostname <hostname>  The hostname on http listens
+  --hideDir              Do not list dir
+  --exclude <files>      Exclude files, glob string, separate with space (e.g. "**/*.key secret/*.crt")
+  --prefix <prefix>      File prefix
+  --encoding <encoding>  Buffer encoding (e.g. utf8)
+  --skipCheckUpdate      Skip to check update version
+  -h, --help             display help for command
+```
+
+### 指定目录
+
+可以指定应用所在目录
+
+```
+halsp serve path/to/project
 ```

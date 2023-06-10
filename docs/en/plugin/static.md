@@ -166,4 +166,4 @@ startup.useStatic({
 - `/static -> dist/static`
 - `/src/static -> dist/static`
 
-你也可以通过添加 `halsp-cli.config.ts` 文件的 `build.assets` 数组元素，以增加编译时自动拷贝的文件或文件夹
+你也可以通过添加 `.halsprc.ts` 文件的 `build.assets` 数组元素，以增加编译时自动拷贝的文件或文件夹

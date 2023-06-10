@@ -49,7 +49,7 @@ If you select `view` or `mva`, launch `/user` and you will see a simple html pag
 
 Otherwise you will see a json string.
 
-Whether the environment you choose is serverless or a native node service, dev server is debugged using the node service. You can modify the startup parameters, such as port, address, etc. in the 'start' node of the `halsp-cli.config.ts` configuration file.
+Whether the environment you choose is serverless or a native node service, dev server is debugged using the node service. You can modify the startup parameters, such as port, address, etc. in the 'start' node of the `.halsprc.ts` configuration file.
 
 ## Build
 
