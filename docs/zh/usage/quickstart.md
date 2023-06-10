@@ -35,7 +35,7 @@ npm init halsp
 
 `create-halsp` 是 Halsp 的官方项目脚手架工具，由 `@halsp/cli` 自动生成，并且功能完全和 `@halsp/cli` 的 `halsp create` 命令相同。
 
-### 启动
+## 启动
 
 在项目被创建后，就已经启动了
 
@@ -47,7 +47,7 @@ npm init halsp
 
 无论你选择的运行环境是云函数还是原生 node 服务，本地开发都是以 node 服务启动调试的，你可以在 `halsp-cli.config.ts` 配置文件中的 `start` 节点修改启动参数，如端口、地址等。
 
-### 发布
+## 发布
 
 当你准备将应用发布到生产环境时，请运行
 

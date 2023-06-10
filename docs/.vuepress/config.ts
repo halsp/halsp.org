@@ -10,10 +10,7 @@ const microLinks: string[] = [
   "/env/micro-mqtt",
   "/env/micro-nats",
 ];
-const guideLinks: string[] = [
-  "/usage/intro",
-  "/usage/quickstart",
-];
+const guideLinks: string[] = ["/usage/intro", "/usage/quickstart"];
 const basicLinks: string[] = [
   "/usage/startup",
   "/usage/middleware",

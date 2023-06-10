@@ -51,7 +51,7 @@ Otherwise you will see a json string.
 
 Whether the environment you choose is serverless or a native node service, dev server is debugged using the node service. You can modify the startup parameters, such as port, address, etc. in the 'start' node of the `halsp-cli.config.ts` configuration file.
 
-### Build
+## Build
 
 When you are ready to publish the application to the production environment, run
 
