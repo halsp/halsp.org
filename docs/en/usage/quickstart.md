@@ -12,30 +12,9 @@ Select the required environment and components below
 
 _If the area below shows blank, please be patient or refresh and try again_
 
-<div style="padding:20px 24px 0 20px;border:2px solid var(--c-text-accent);border-radius:4px;">
-  <iframe id="iframe" width="100%" frameborder="no" scrolling="no"></iframe>
-</div>
-
-<script>
-const quickstartOrigin='https://quickstart.halsp.org';
-
-!(()=>{
-  const interval =  setInterval(()=>{
-    const iframe = window.document.getElementById('iframe');
-    if(iframe){
-      iframe.src=`${quickstartOrigin}/#/iframe?origin=${location.origin}`
-      clearInterval(interval)
-    }
-  },200)
-})()
-
-window.addEventListener('message',(event)=>{
-  if(event.origin==quickstartOrigin){
-    const { height }=event.data
-    window.document.getElementById('iframe').height=height;
-  }
-})
-</script>
+<ClientOnly>
+  <QuickStart />
+</ClientOnly>
 
 <br />
 
