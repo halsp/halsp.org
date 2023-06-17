@@ -11,41 +11,36 @@ npm i @halsp/lambda
 ## 开始使用
 
 ```TS
-import { LambdaStartup } from "@halsp/lambda";
+import { Startup } from "@halsp/core";
+import "@halsp/lambda";
 
-const startup = new LambdaStartup(event, context).use(async (ctx, next) => {
+const startup = new Startup().useLambda().use(async (ctx, next) => {
   ctx.res.headers.demo = "@halsp/lambda";
   await next();
 });
-const main = async (event, context) => {
-  return await startup.run();
-};
-exports.main = main;
+exports.main = async (e, c) => await startup.run(e, c);
 ```
 
 如果添加 `@halsp/router`
 
 ```TS
-import { LambdaStartup } from "@halsp/lambda";
+import { Startup } from "@halsp/core";
+import "@halsp/lambda";
 import "@halsp/router";
 
-const startup = new LambdaStartup(event, context)
+const startup = new Startup()
+  .useLambda()
   .use(async (ctx, next) => {
     ctx.res.headers.demo = "@halsp/lambda";
     await next();
   })
   .useRouter();
-const main = async (event, context) => {
-  return await startup.run();
-};
-exports.main = main;
+exports.main = async (e, c) => await startup.run(e, c);
 ```
 
-## 入口
+## useLambda
 
-`LambdaStartup` 作为 `Halsp` 运行于云函数的入口
-
-该类继承于 `Startup` 并实现云函数的功能
+调用 `startup.useLambda()` 即开启 Lambda 云函数的功能
 
 ## CLI 编译
 
@@ -66,6 +61,6 @@ export default defineConfig(() => {
 });
 ```
 
-labmda 环境默认为 `true`
+labmda 环境下，上面的两个值默认为 `true`
 
-配置参考 [@halsp/cli](./cli/#项目配置) 中的 `copyPackage` 和 `removeDevDeps` 配置
+配置参考 [@halsp/cli](../usage/cli/#项目配置) 中的 `copyPackage` 和 `removeDevDeps` 配置

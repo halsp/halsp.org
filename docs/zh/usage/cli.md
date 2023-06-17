@@ -689,3 +689,18 @@ Options:
 ```
 halsp serve path/to/project
 ```
+
+## create-halsp
+
+包 `create-halsp` 使用了 `@halsp/cli` 的能力，能够快速创建 Halsp 应用且无需安装任何包
+
+```sh
+npm init halsp
+```
+
+相当于执行
+
+```sh
+npm install @halsp/cli -g
+halsp create
+```

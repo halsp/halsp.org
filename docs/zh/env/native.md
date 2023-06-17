@@ -17,21 +17,26 @@ npm i @halsp/native
 以下示例开启一个服务，端口是 9504
 
 ```TS
-import { NativeStartup } from "@halsp/native";
+import { Startup } from "@halsp/core";
+import "@halsp/native";
 
-new NativeStartup()
+new Startup()
+  .useNative()
   .use(async (ctx) => {
     ctx.ok("@halsp/native");
   })
   .listen(9504);
 ```
 
-@halsp/native 也支持 https，上述示例中增加参数 `https:true`
+@halsp/native 也支持 https，上述示例中增加参数 `https`，值为相关 https 配置
 
 ```TS
-new NativeStartup({
-  https: true
-})
+new Startup()
+  .useNative({
+    https: {
+      cert: "",
+    }
+  })
   .use(async (ctx) => {
     ctx.ok("@halsp/native");
   })
@@ -43,10 +48,12 @@ new NativeStartup({
 ### @halsp/router
 
 ```TS
-import { NativeStartup } from "@halsp/native";
+import { Startup } from "@halsp/core";
+import "@halsp/native";
 import "@halsp/router";
 
-new NativeStartup()
+new Startup()
+  .useNative()
   .useRouter()
   .listen(9504);
 ```
@@ -54,10 +61,12 @@ new NativeStartup()
 ### @halsp/static
 
 ```TS
-import { NativeStartup } from "@halsp/native";
+import { Startup } from "@halsp/core";
+import "@halsp/native";
 import "@halsp/static";
 
-new NativeStartup()
+new Startup()
+  .useNative()
   .useStatic()
   .listen(9504);
 ```
@@ -67,8 +76,11 @@ new NativeStartup()
 基于 `@halsp/body` 支持四种 body 解析
 
 ```TS
-import { NativeStartup } from "@halsp/native";
-new NativeStartup()
+import { Startup } from "@halsp/core";
+import "@halsp/native";
+
+new Startup()
+  .useNative()
   .useHttpJsonBody()
   .useHttpTextBody()
   .useHttpUrlencodedBody()
@@ -95,6 +107,10 @@ startup.useHttpJsonBody({
   onError: (ctx, err) => {},
 });
 ```
+
+:::tip
+默认已支持 json
+:::
 
 ### text
 
@@ -159,16 +175,14 @@ startup.useHttpMultipartBody({
 });
 ```
 
-## `httpRes` & `httpReq`
+## `resStream` & `reqStream`
 
-为了更好的利用 halsp，正常情况使用 `ctx.res` 和 `ctx.req` 即可，并且可以更好的配合其他中间件。
+一般情况下使用 `ctx.res` 和 `ctx.req` 即可，并且可以更好的配合其他中间件。
 
-为了应对特殊需求，`@halsp/native` 在 ctx 中也加入了 `httpRes` 和 `httpReq`，特殊情况下你也可以按原生方法操作 `ctx.httpRes` 和 `ctx.httpReq`，但不建议使用。
+为了应对特殊需求，`@halsp/native` 在 ctx 中也加入了 `resStream` 和 `reqStream`
 
-如果调用了 `httpReq.end()`，`ctx.res` 将不会被写入返回结果
+特殊情况下你也可以按原生方法操作 `ctx.resStream` 和 `ctx.reqStream`，如 `@halsp/ws` 支持 `WebSocket`
 
-## 入口
-
-`NativeStartup` 作为 `Halsp` 运行于原生环境的入口
-
-该类继承于 `Startup` 并实现 `http` 功能
+:::tip
+如果提前调用了 `reqStream.end()`，`ctx.res` 最终将不会被写入返回结果
+:::

@@ -2,7 +2,7 @@
 
 任何程序都需要处理已知和未知异常
 
-Halsp 提供了多种请求异常，也提供了异常处理的功能
+Halsp 提供了多种请求异常，也内置了基本异常处理的功能，还支持扩展异常处理
 
 ## 异常类
 
@@ -12,7 +12,7 @@ Http 环境和微服务都提供了异常类
 
 你可以在任何地方抛出请求异常，以终止当前中间件的运行，并使中间件管道立即转向
 
-抛出请求异常后，框架会自动更新请求结果
+抛出请求异常后，框架会自动更新请求响应内容
 
 ### Http
 
@@ -49,6 +49,8 @@ Http 环境和微服务都提供了异常类
 
 如果抛出的是请求异常 `HttpException` 派生类的实例对象，那么会根据请求异常返回特定的 body 和 status
 
+如抛出 `BadRequestException`
+
 ```TS
 import { Middleware, BadRequestException } from "@halsp/core";
 
@@ -71,7 +73,7 @@ class TestMiddleware extends Middleware{
 }
 ```
 
-如果抛出的是其他异常，并且没有 catch，那么返回的状态码将是 500，body 为
+如果抛出的是其他异常，并且异常没有被捕获，那么返回的状态码将是 500，body 为
 
 ```json
 {
@@ -94,15 +96,17 @@ class TestMiddleware extends Middleware{
 
 - 当前中间件立即中断执行
 - 中间件管道转向
-- 当前中间件之前的中间件正常反向执行
+- 当前中间件之前的中间件，照常反向执行并返回
 
 不难看出，抛出异常一般只会影响当前中间件和其后的中间件
 
 ### 贯穿中间件
 
-抛出异常并设置异常 `breakthrough` 的值为 `true`，可以使所有中间件都中断执行
+如果某个异常较为严重，需要完全终止此次请求的中间件执行
 
-即请求会立即返回，中间件 `next()` 之后的代码不会被执行
+那么就需要抛出异常，并设置异常 `breakthrough` 的值为 `true`，可以使所有中间件都中断执行
+
+即请求会立即返回，且中间件 `next()` 之后的代码不会被执行
 
 ```TS
 const exception = new BadRequestException('error message');
@@ -146,9 +150,32 @@ try {
 }
 ```
 
+## 过滤器
+
+Halsp 提供有多种过滤器，其中异常过滤器可以捕获在 Action 中间件中抛出的异常
+
+更多内容可参考 [过滤器](./filter) 文档
+
+```TS
+class CustomExceptionFilter implements ExceptionFilter<Error> {
+  onException(ctx: Context, error: Error): Promise<boolean> {
+    ctx.res.set('error', error.message);
+  }
+}
+
+@UseFilters(CustomExceptionFilter)
+export default class extends Action{
+  invoke(){}
+}
+```
+
+一般情况过滤器就能够满足需求，而且过滤器能让代码更易读
+
+但是如果需要捕获其他中间件抛出的错误，那么就需要用到下面的异常钩子
+
 ## 异常钩子
 
-`startup.hook()` 可以添加多种钩子，其中也包括异常钩子
+`startup.hook()` 可以添加多种[中间件钩子](./middleware.html#中间件钩子)，其中也包括异常钩子
 
 添加异常钩子能够接管框架对异常的处理，比如你可以特殊处理某种异常，而其他异常按默认处理
 
@@ -171,14 +198,14 @@ startup.hook(HookType.Error, (ctx, md, ex) => {
 用 `startup.hook()` 添加异常钩子，接收两个参数
 
 1. `HookType.Error`, 表示该钩子是异常钩子
-2. 回调函数有三个参数
+2. 回调函数，有三个参数
    - ctx: Context 实例对象
    - middleware: 抛出异常的中间件
-   - exception: 抛出的异常
+   - error: 抛出的错误
 
 关于回调函数返回值
 
-- 可以返回 Promise
-- 如果返回 false， 表示该异常未处理，将异常交给下一个异常钩子
-- 如果返回 true，表示该异常已被捕获并处理，下一个异常钩子将不会被该异常触发
-- 如果没有返回值，则和返回 false 效果相同
+- 可以返回 `boolean`/`Promise<boolean>`，或没有返回值
+- 如果返回 `false`，表示该异常未处理，将异常交给下一个异常钩子
+- 如果返回 `true`，表示该异常已被捕获并处理，下一个异常钩子将不会被该异常触发
+- 如果没有返回值，则和返回 `false` 效果相同
