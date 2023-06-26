@@ -44,7 +44,7 @@ startup
 ### 将 Halsp 作为 Koa 的中间件
 
 ```TS
-import { Koa } from "@halsp/koa";
+import { Koa } from "koa";
 
 const koa = new Koa()
   .use(async (ctx, next) => {
@@ -100,37 +100,11 @@ startup
   });
 ```
 
-## 参数
-
-连续不间断的 `startup.koa` 会组成一个中间件组
-
-执行请求时，Halsp 内部每个中间件组创建一个 `Koa` 实例对象，并执行这组中间件
-
-`startup.koa` 第二个参数即用来创建这个 `Koa` 实例对象的参数 `KoaOptions`
-
-```TS
-export interface KoaOptions {
-  env?: string | undefined;
-  keys?: string[] | undefined;
-  proxy?: boolean | undefined;
-  subdomainOffset?: number | undefined;
-  proxyIpHeader?: string | undefined;
-  maxIpsCount?: number | undefined;
-}
-```
-
-Halsp 内部有类似如下代码
-
-```TS
-new Koa(options)
-```
-
-因此连续不间断的 `startup.koa` 只有最后一个 `startup.koa` 的参数 `KoaOptions` 会生效
-
-## 使用流
+## 解析请求体
 
 为了兼容各运行环境，halsp 的 ctx.body 都是已解析好的数据
 
-因此如果涉及到流，你需要先解析流并将解析后的内容放入 `ctx.body`
+因此如果请求体没有被解析，有两种方式解析：
 
-如 `co-body`, `formidable` 等工具
+1. 先解析流并将解析后的内容放入 `ctx.body`，如 `co-body`, `formidable` 等工具
+2. 在 `Halsp` 中间件中使用 `@halsp/body`，如 `startup.useHttpJsonBody()`

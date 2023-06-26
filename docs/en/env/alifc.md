@@ -4,7 +4,7 @@
 
 将 Halsp 托管到阿里云函数计算
 
-> 只支持 HTTP 请求的函数，事件请求可以使用 `@halsp/lambda`
+> 此环境只支持 HTTP 请求的函数。事件请求可以使用 `@halsp/lambda`
 
 ## 安装
 
@@ -15,32 +15,31 @@ npm i @halsp/alifc
 ## 开始使用
 
 ```TS
-import { AlifcStartup } from "@halsp/alifc";
+import { Startup } from "@halsp/core";
+import "@halsp/alifc";
 
-const startup = new AlifcStartup(req, resp, context).use(async (ctx) => {
+const startup = new Startup().useAlifc().use(async (ctx) => {
   ctx.ok("@halsp/alifc");
 });
-const handler = async function (req, resp, context) {
-  await startup.run();
-};
-module.exports.handler = handler;
+module.exports.handler = async (req, res, context) =>
+  await startup.run(req, res, context);
 ```
 
 如果添加 `@halsp/router`
 
 ```TS
-import { AlifcStartup } from "@halsp/alifc";
+import { Startup } from "@halsp/core";
+import "@halsp/alifc";
 import "@halsp/router";
 
-const startup = new AlifcStartup(req, resp, context)
+const startup = new Startup()
+  .useAlifc()
   .use(async (ctx) => {
     ctx.ok("@halsp/alifc");
   })
   .useRouter();
-const handler = async function (req, resp, context) {
-  await startup.run();
-};
-module.exports.handler = handler;
+module.exports.handler = async (req, res, context) =>
+  await startup.run(req, res, context);
 ```
 
 ## 解析 body
@@ -52,22 +51,23 @@ module.exports.handler = handler;
 - urlencoded
 - multipart
 
+默认已支持 `json`
+
 使用详情参考 [@halsp/native](https://github.com/halsp/native)
 
 ```TS
-await new AlifcStartup(req, resp, context)
+await new new Startup()
+  .useAlifc()
   .useHttpJsonBody()
   .useHttpTextBody()
   .useHttpUrlencodedBody()
   .useHttpMultipartBody()
-  .run();
+  .run(req, res, context);
 ```
 
-## 入口
+## useAlifc
 
-`AlifcStartup` 作为 `Halsp` 运行于阿里云函数计算的入口
-
-该类继承于 `Startup` 并实现阿里云函数计算功能
+调用 `startup.useAlifc()` 即开启阿里云函数计算功能
 
 ## CLI 编译
 

@@ -4,4 +4,4 @@
 
 可以将 Halsp 作为 Koa 的中间件，并打通 Halsp 和 Koa 的中间件管道
 
-参考 [Koa 插件](/plugin/koa)
+参考 [Koa 插件](../plugin/koa)
