@@ -20,14 +20,15 @@ npm install @halsp/validator
 
 ### startup
 
-在 `startup.ts` 中添加如下代码，开启 `@halsp/validator` 的功能
+在入口文件中添加如下代码，开启 `@halsp/validator` 的功能
 
 ```TS
 import "@halsp/validator";
+
 startup.useValidator()
 ```
 
-### 在数据传输模型中定义
+### 装饰数据传输模型
 
 ```TS
 import { V } from "@halsp/validator";
@@ -252,4 +253,4 @@ declare module "@halsp/validator" {
   - `property` 数据传输模型属性名，或 `@halsp/pipe` 取的属性名如 `@Header('prop')`
   - `args` 装饰器输入参数数组
 - `errorMessage` 校验失败响应的错误，可以是一个字符串，也可以是一个回调函数，回调函数的参数同 `validate` 回调函数
-- `name` 装饰器名称，必须唯一，且与已有装饰器不同
+- `name` 装饰器名称，必须唯一，且与已有装饰器不能重名

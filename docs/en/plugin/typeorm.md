@@ -12,7 +12,7 @@ npm install @halsp/typeorm
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import '@halsp/typeorm';
@@ -45,15 +45,15 @@ export class User {
 }
 ```
 
-在中间件或服务通过依赖注入获取数据库连接实例 `TypeormInject`
+在中间件或服务通过依赖注入获取数据库连接实例 `Typeorm`
 
 ```TS
 import { Middleware } from '@halsp/core';
-import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
+import { Typeorm } from "@halsp/typeorm";
 
 class TestMiddleware extends Middleware {
-  @TypeormInject()
-  private readonly dataSource!: TypeormConnection;
+  @Typeorm
+  private readonly dataSource!: Typeorm;
 
   async invoke(): Promise<void> {
     const userRepository = this.dataSource.getRepository(User);
@@ -105,17 +105,17 @@ startup
   })
 ```
 
-在中间件或服务中，给装饰器 `@TypeormInject()` 传参以区分连接
+在中间件或服务中，给装饰器 `@Typeorm()` 传参以区分连接
 
 ```TS
 import { Middleware } from '@halsp/core';
-import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
+import { Typeorm } from "@halsp/typeorm";
 
 class TestMiddleware extends Middleware {
-  @TypeormInject("db1")
-  private readonly dataSource1!: TypeormConnection;
-  @TypeormInject("db2")
-  private readonly dataSource2!: TypeormConnection;
+  @Typeorm("db1")
+  private readonly dataSource1!: Typeorm;
+  @Typeorm("db2")
+  private readonly dataSource2!: Typeorm;
 
   async invoke(): Promise<void> {
     const userRepository1 = this.dataSource1.getRepository(User);
@@ -135,27 +135,31 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@TypeormInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
+用 `@Typeorm` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { TypeormConnection, TypeormInject } from "@halsp/typeorm";
+import { Typeorm } from "@halsp/typeorm";
 
 @Inject
 class TestMiddleware extends Middleware {
   constructor(
-    @TypeormInject private readonly connection: TypeormConnection,
-    @TypeormInject("id2") private readonly connection2: TypeormConnection
+    @Typeorm private readonly connection: Typeorm,
+    @Typeorm("id2") private readonly connection2: Typeorm
   ) {}
 
-  @TypeormInject("id1")
-  private readonly connection1!: TypeormConnection;
+  @Typeorm("id1")
+  private readonly connection1!: Typeorm;
 
   async invoke(): Promise<void> {
     await this.next();
   }
 }
 ```
+
+:::tip
+`Typeorm` 既可以作为装饰器，也可以作为 typeorm 在 `TypeScript` 中的连接实例类型
+:::
 
 ### `ctx.getTypeorm`
 
@@ -279,7 +283,6 @@ npm install @google-cloud/spanner --save
 ```
 halsp-project
 │── src
-│   │── startup.ts
 │   │── index.ts
 │   └── entities
 │       └── user.entity.ts

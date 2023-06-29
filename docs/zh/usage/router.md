@@ -17,7 +17,7 @@ npm install @halsp/router
 
 ## 开始使用
 
-在 `startup.ts` 中添加 `startup.useRouter`
+在入口文件中添加 `startup.useRouter`
 
 ```TS
 import "@halsp/router";

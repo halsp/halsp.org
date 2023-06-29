@@ -12,7 +12,7 @@ npm install @halsp/redis
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import '@halsp/redis';
@@ -26,11 +26,11 @@ startup.useRedis({
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { RedisConnection, RedisInject } from "@halsp/redis";
+import { Redis } from "@halsp/redis";
 
 class TestMiddleware extends Middleware {
-  @RedisInject()
-  private readonly redisClient!: RedisConnection;
+  @Redis()
+  private readonly redisClient!: Redis;
 
   async invoke(): Promise<void> {
     await redisClient.set("key", "value");
@@ -61,17 +61,17 @@ startup
   });
 ```
 
-在中间件或服务中，给装饰器 `@RedisInject()` 传参字符串以区分连接
+在中间件或服务中，给装饰器 `@Redis()` 传参字符串以区分连接
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { RedisConnection, RedisInject } from "@halsp/redis";
+import { Redis } from "@halsp/redis";
 
 class TestMiddleware extends Middleware {
-  @RedisInject("db1")
-  private readonly redisClient1!: RedisConnection;
-  @RedisInject("db2")
-  private readonly redisClient2!: RedisConnection;
+  @Redis("db1")
+  private readonly redisClient1!: Redis;
+  @Redis("db2")
+  private readonly redisClient2!: Redis;
 
   async invoke(): Promise<void> {
     this.redisClient1.set("key1", "value1");
@@ -91,27 +91,31 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@RedisInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
+用 `@Redis` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { RedisConnection, RedisInject } from "@halsp/redis";
+import { Redis } from "@halsp/redis";
 
 @Inject
 class TestMiddleware extends Middleware {
   constructor(
-    @RedisInject private readonly connection: RedisConnection,
-    @RedisInject("id2") private readonly connection2: RedisConnection
+    @Redis private readonly connection: Redis,
+    @Redis("id2") private readonly connection2: Redis
   ) {}
 
-  @RedisInject("id1")
-  private readonly connection1!: RedisConnection;
+  @Redis("id1")
+  private readonly connection1!: Redis;
 
   async invoke(): Promise<void> {
     await this.next();
   }
 }
 ```
+
+:::tip
+`Redis` 既可以作为装饰器，也可以作为 redis 在 `TypeScript` 中的连接实例类型
+:::
 
 ### `ctx.getRedis`
 

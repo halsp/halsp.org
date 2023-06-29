@@ -12,7 +12,7 @@ npm install @halsp/logger
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import '@halsp/logger';
@@ -24,10 +24,10 @@ startup.useLogger()
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { LoggerInject, Logger } from "@halsp/logger";
+import { Logger } from "@halsp/logger";
 
 class TestMiddleware extends Middleware {
-  @LoggerInject()
+  @Logger()
   private readonly logger!: Logger;
 
   invoke(){
@@ -58,12 +58,12 @@ startup
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { LoggerInject, Logger } from "@halsp/logger";
+import { Logger } from "@halsp/logger";
 
 class TestMiddleware extends Middleware {
-  @LoggerInject("id1")
+  @Logger("id1")
   private readonly logger1!: Logger;
-  @LoggerInject("id2")
+  @Logger("id2")
   private readonly logger2!: Logger;
 
   async invoke(): Promise<void> {
@@ -84,30 +84,34 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@LoggerInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
+用 `@Logger` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { Logger, LoggerInject } from "@halsp/logger";
+import { Logger } from "@halsp/logger";
 
 @Inject
 class TestMiddleware extends Middleware {
   constructor(
-    @LoggerInject private readonly logger1: Logger,
-    @LoggerInject("id2") private readonly logger2: Logger
+    @Logger private readonly logger1: Logger,
+    @Logger("id2") private readonly logger2: Logger
   ) {}
 
-  @LoggerInject("id1")
+  @Logger("id1")
   private readonly logger1!: Logger;
 
   async invoke(): Promise<void> {
     this.logger1.info("def");
     this.logger2.error("err");
-    this.logger3.info("info");
+    this.logger3.warn("warn");
     await this.next();
   }
 }
 ```
+
+:::tip
+`Logger` 既可以作为装饰器，也可以作为 logger 在 `TypeScript` 中的实例类型
+:::
 
 ### `ctx.getLogger`
 

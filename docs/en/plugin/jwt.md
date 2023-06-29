@@ -15,8 +15,11 @@ npm install @halsp/jwt
 
 ## 快速开始
 
+在入口文件中
+
 ```TS
 import "@halsp/jwt";
+
 startup.useJwt(options);
 ```
 
@@ -52,13 +55,13 @@ RSA 和 ECDSA 加密的 PEM 公钥
 
 `jwt token` 的前缀，用于解析，默认为 `Bearer`
 
-### getToken
+### tokenProvider
 
-`getToken` 是一个回调函数，用于指示 `jwt token` 的位置，如 `headers`/`query` 中
+`tokenProvider` 是一个回调函数，用于指明 `jwt token` 的位置，如 `headers`/`query` 中
 
 使用 `useJwt` 后会给 `Context` 对象增加 `jwtToken` 属性，默认取自请求头部 `Authorization` 值
 
-设置 `getToken` 后可以从其他位置获取 `jwt token`
+设置 `tokenProvider` 后可以从其他位置获取 `jwt token`
 
 ## 内置验证 jwt
 
@@ -89,7 +92,7 @@ startup
 startup
   .useJwt()
   .useJwtVerify()
-  .useJwtExtraAuth((ctx)=>bool)
+  .useJwtExtraAuth((ctx) => bool)
 ```
 
 该函数接收一个回调函数，返回 `Promise<bool>`
@@ -112,7 +115,7 @@ startup
 ```TS
 class YourMiddleware extends Middleware{
   @Inject
-  private readonly jwtService!:JwtService;
+  private readonly jwtService!: JwtService;
 }
 ```
 
@@ -121,7 +124,7 @@ OR
 ```TS
 @Inject
 class YourMiddleware extends Middleware{
-  constructor(private readonly jwtService:JwtService){}
+  constructor(private readonly jwtService: JwtService){}
 }
 ```
 

@@ -14,7 +14,7 @@ npm install @halsp/mongoose
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import '@halsp/mongoose';
@@ -24,15 +24,15 @@ startup.useMongoose({
 })
 ```
 
-在中间件或服务通过依赖注入获取数据库连接实例 `MongooseConnection`
+在中间件或服务通过依赖注入获取数据库连接实例 `Mongoose`
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { MongooseConnection, MongooseInject } from "@halsp/mongoose";
+import { Mongoose } from "@halsp/mongoose";
 
 class TestMiddleware extends Middleware {
-  @MongooseInject()
-  private readonly connection!: MongooseConnection;
+  @Mongoose()
+  private readonly connection!: Mongoose;
 
   async invoke(): Promise<void> {
     const MyModel = this.connection.model("ModelName");
@@ -64,17 +64,17 @@ startup
   });
 ```
 
-在中间件或服务中，给装饰器 `@MongooseInject()` 传参以区分连接
+在中间件或服务中，给装饰器 `@Mongoose()` 传参以区分连接
 
 ```TS
 import { Middleware } from '@halsp/core';
-import { MongooseConnection, MongooseInject } from "@halsp/mongoose";
+import { Mongoose } from "@halsp/mongoose";
 
 class TestMiddleware extends Middleware {
-  @MongooseInject("db1")
-  private readonly connection1!: MongooseConnection;
-  @MongooseInject("db2")
-  private readonly connection2!: MongooseConnection;
+  @Mongoose("db1")
+  private readonly connection1!: Mongoose;
+  @Mongoose("db2")
+  private readonly connection2!: Mongoose;
 
   async invoke(): Promise<void> {
     const MyModel1 = this.connection1.model("ModelName1");
@@ -94,27 +94,31 @@ class TestMiddleware extends Middleware {
 
 ### 依赖注入
 
-用 `@MongooseInject` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
+用 `@Mongoose` 装饰属性或构造函数参数，通过 `@halsp/inject` 依赖注入创建实例
 
 ```TS
 import { Middleware } from "@halsp/core";
-import { MongooseConnection, MongooseInject } from "@halsp/mongoose";
+import { Mongoose } from "@halsp/mongoose";
 
 @Inject
 class TestMiddleware extends Middleware {
   constructor(
-    @MongooseInject private readonly connection: MongooseConnection,
-    @MongooseInject("id2") private readonly connection2: MongooseConnection
+    @Mongoose private readonly connection: Mongoose,
+    @Mongoose("id2") private readonly connection2: Mongoose
   ) {}
 
-  @MongooseInject("id1")
-  private readonly connection1!: MongooseConnection;
+  @Mongoose("id1")
+  private readonly connection1!: Mongoose;
 
   async invoke(): Promise<void> {
     await this.next();
   }
 }
 ```
+
+:::tip
+`Mongoose` 既可以作为装饰器，也可以作为 mongoose 在 `TypeScript` 中的连接实例类型
+:::
 
 ### `ctx.getMongoose`
 

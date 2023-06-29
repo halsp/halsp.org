@@ -12,7 +12,7 @@ npm i @halsp/mva
 
 ## 简单使用
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import "@halsp/mva";

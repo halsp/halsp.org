@@ -14,7 +14,7 @@ npm install @halsp/swagger
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import "@halsp/swagger";
@@ -63,6 +63,7 @@ export default class extends Action {
 
 ```TS
 export interface SwaggerOptions {
+  basePath?: string;
   path?: string;
   builder?: SwaggerBuilder;
   html?: SwaggerHtmlOptions;
@@ -74,6 +75,19 @@ export interface SwaggerOptions {
 ### path
 
 访问 swagger 页面的路径，默认为 `swagger`，即访问路径为 `/swagger`
+
+### basePath
+
+`swagger` 前缀路径，用于默认路径跳转
+
+如下面示例，请求地址为 `/` 时，会跳转至 `./v3/index.html`
+
+```TS
+startup.useSwagger({
+  basePath: "v3",
+  path: ""
+});
+```
 
 ### builder
 
@@ -103,6 +117,10 @@ startup.useSwagger({
 ```
 
 `OpenApiBuilder` 参考 [openapi3-ts](https://github.com/metadevpro/openapi3-ts)
+
+:::tip
+此参数一般用于设定基础信息
+:::
 
 ### html
 
@@ -251,7 +269,7 @@ SwaggerUIBundle({
 
 ### 数组
 
-需要注意，数组类型无法确定其元素类型，需要借助 `Items` 装饰器声明元素类型
+需要注意，由于 TypeScript 的限制，数组类型无法确定其元素类型，需要借助 `Items` 装饰器声明元素类型
 
 ```TS
 class TestDto1 {
@@ -291,6 +309,6 @@ class TestDto3 {
 ## 示例项目
 
 - todo 一个简易的 todo 项目
-  - 在线示例: https://todo.hal.wang
-  - github: https://github.com/hal-wang/todo
-  - swagger: https://todo-5gcg801923564f08-1253337886.ap-shanghai.app.tcloudbase.com/v2
+  - 在线示例: <https://env-caafniqh-1253337886.ap-shanghai.app.tcloudbase.com/todo>
+  - github: <https://github.com/hal-wang/todo>
+  - swagger: <https://env-caafniqh-1253337886.ap-shanghai.app.tcloudbase.com/todo/swagger>
