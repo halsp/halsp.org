@@ -87,7 +87,12 @@ function createNavbar(l: lang) {
         {
           text: t("menus.common"),
           children: getLinksWithPrefix(
-            ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+            [
+              "/plugin/static",
+              "/plugin/swagger",
+              "/plugin/logger",
+              "/plugin/ws",
+            ],
             l
           ),
         },
@@ -175,7 +180,12 @@ function createSidebar(l: lang) {
         {
           text: t("menus.common"),
           children: getLinksWithPrefix(
-            ["/plugin/static", "/plugin/swagger", "/plugin/logger"],
+            [
+              "/plugin/static",
+              "/plugin/swagger",
+              "/plugin/logger",
+              "/plugin/ws",
+            ],
             l
           ),
         },
