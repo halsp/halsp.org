@@ -98,7 +98,12 @@ function createNavbar(l: lang) {
         {
           text: t("menus.dataStorage"),
           children: getLinksWithPrefix(
-            ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+            [
+              "/plugin/typeorm",
+              "/plugin/redis",
+              "/plugin/mongoose",
+              "/plugin/knex",
+            ],
             l
           ),
         },
@@ -181,7 +186,12 @@ function createSidebar(l: lang) {
         {
           text: t("menus.dataStorage"),
           children: getLinksWithPrefix(
-            ["/plugin/typeorm", "/plugin/redis", "/plugin/mongoose"],
+            [
+              "/plugin/typeorm",
+              "/plugin/redis",
+              "/plugin/mongoose",
+              "/plugin/knex",
+            ],
             l
           ),
         },

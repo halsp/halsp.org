@@ -22,7 +22,7 @@ startup.useRedis({
 })
 ```
 
-在中间件或服务通过依赖注入获取 Redis 连接实例
+在中间件或服务中，通过依赖注入获取 Redis 连接实例
 
 ```TS
 import { Middleware } from "@halsp/core";

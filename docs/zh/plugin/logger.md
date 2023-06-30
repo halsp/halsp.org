@@ -20,7 +20,7 @@ import '@halsp/logger';
 startup.useLogger()
 ```
 
-在中间件或服务通过依赖注入获取日志输出类的实例
+在中间件或服务中，通过依赖注入获取日志输出类的实例
 
 ```TS
 import { Middleware } from "@halsp/core";

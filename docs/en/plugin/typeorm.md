@@ -45,7 +45,7 @@ export class User {
 }
 ```
 
-在中间件或服务通过依赖注入获取数据库连接实例 `Typeorm`
+在中间件或服务中，通过依赖注入获取数据库连接实例 `Typeorm`
 
 ```TS
 import { Middleware } from '@halsp/core';
