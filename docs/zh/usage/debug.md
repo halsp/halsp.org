@@ -9,7 +9,7 @@
 :::tip 注意
 Serverless 环境下（`@halsp/lambda`, `@halsp/alifc` 等），默认是使用 `@halsp/native` 模拟 Http 环境启动应用
 
-如果不需要，删除 `native.ts` 文件即可
+如不需要本地调试，可移除相关代码
 :::
 
 ## 开始调试
@@ -18,7 +18,7 @@ Serverless 环境下（`@halsp/lambda`, `@halsp/alifc` 等），默认是使用 
 
 如果使用的是 vscode 可以直接按下 F5 开始调试
 
-其他编译器可以执行下面语句开始调试
+其他编译器可以执行下面语句开始运行调试
 
 ```sh
 npm start
@@ -30,59 +30,62 @@ npx halsp start
 
 ## 入口文件
 
-建议 `src` 目录下，有以下两个文件
+建议 `src` 目录下，有以下任一文件
 
-1. `index.ts` 入口文件
-1. `startup.ts`，导出一个函数，函数返回 `Startup` 派生类实例对象
+1. `native.ts`
+1. `index.ts`
+1. `main.ts`
 
-这样的好处是方便切换环境，如 `lambda` 项目通过增加一个 `native` 入口文件，即可本地模拟调试
+`@halsp/cli` 会按此顺序为优先级，查找并作为入口文件
 
-### CLI 生成的内容示例
+### 入口文件内容示例
 
-使用 CLI 生成的项目已有这两个文件（根据选择插件不同，生成的内容也不同）
+使用 CLI 生成的项目已有这个文件（根据选择环境和插件不同，生成的内容也不同）
 
-`startup.ts` 内容如
+如果运行环境选择 `native` ，以及其他部分插件，内容如
 
 ```TS
 import { Startup } from "@halsp/core";
+import "@halsp/native";
 import "@halsp/mva";
 import "@halsp/env";
 import "@halsp/logger";
 
-export default <T extends Startup>(startup: T) =>
-  startup
-    .useEnv()
-    .useConsoleLogger()
-    .useMva();
+new Startup()
+  .useNative()
+  .useEnv()
+  .useConsoleLogger()
+  .useMva()
+  .listen()
 ```
 
-`index.ts` 如果选择 `lambda` 环境内容如下
+如果运行环境选择 `lambda` ，以及其他部分插件，内容如
 
 ```TS
-const app = startup(new LambdaStartup());
-export const main = (event: any, context: any) => app.run(event, context);
-```
+import { Startup } from "@halsp/core";
+import "@halsp/native";
+import "@halsp/lambda";
+import "@halsp/mva";
+import "@halsp/env";
+import "@halsp/logger";
 
-使用 `native` 本地模拟调试的入口文件 `native.ts` 文件内容如下
+const startup = new Startup()
+  .useNative()
+  .useEnv()
+  .useConsoleLogger()
+  .useMva();
 
-```TS
-import { NativeStartup } from "@halsp/native";
-import setupStartup from "./startup";
-
-async function bootstrap() {
-  const startup = setupStartup(new NativeStartup().useHttpJsonBody());
-  await startup.dynamicListen();
+if (process.env.NODE_ENV == "development") {
+  startup.listen();
 }
-bootstrap();
+export const main = (e: any, c: any) => startup.run(e, c);
 ```
+
+上面代码中的 `startup.listen`，是本地调试时，利用 `@halsp/native` 启动的本地服务
 
 ### 指定入口文件
 
-默认入口文件按以下顺序查找
-
-- native.ts
-- index.ts
-- main.ts
+除上述默认入口文件外，也可以指定自定义的入口文件
 
 通过参数 `--startupFile` 可以指定入口文件，如
 
@@ -105,6 +108,12 @@ npm install @halsp/cli -D
 # 或 全局安装
 npm install @halsp/cli -g
 ```
+
+### 确保 TypeScript
+
+确保项目是 TypeScript 编写的，目前 `@halsp/cli` 的调试功能仅支持 TS
+
+并且在项目根目录必须有文件 `tsconfig.json`
 
 ### 添加脚本
 
@@ -139,9 +148,9 @@ npm install @halsp/cli -g
 
 ### 创建入口文件
 
-按建议创建文件 `startup.ts` 和 `index.ts`
+按建议创建入口文件 `index.ts` 或 `main.ts`
 
-参考 [入口文件](#入口文件)
+参考前面的 [入口文件](#入口文件)
 
 ### 开始调试
 
@@ -151,4 +160,4 @@ npm install @halsp/cli -g
 
 ## CLI 调试命令
 
-参考 [CLI 脚手架](/usage/cli.html) 的文档
+参考 [CLI 脚手架](./cli.html) 的文档

@@ -10,13 +10,19 @@ npm install @halsp/cors
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import "@halsp/cors";
 
 startup.useCors();
 ```
+
+:::tip
+一般要在靠前的位置定义，因为有可能前面的中间件会中断中间件管道
+
+防止出错的情况未能使跨域生效
+:::
 
 ## 配置
 

@@ -6,169 +6,156 @@
 
 ## Startup
 
-`@halsp/testing` 提供多种环境的 `Startup` 用于单元测试
-
-:::warning
-除 `TestStartup` 可以直接导出外，其他 `Startup` 均需要写完整路径，如
-
-```TS
-import { TestHttpStartup } from "@halsp/testing/dist/http";
-import { TestMicroGrpcStartup } from "@halsp/testing/dist/micro-grpc";
-```
-
-:::
-
-### TestStartup
-
-用于与运行环境无关的单元测试
-
-与 http / 微服务 / Serverless 等都无关
-
-并增加了以下功能
+增加了以下功能
 
 - `setContext` 函数，用于设置测试的请求 `Context` 或 `Request`
-- `setSkipThrow` 函数，调用之后，中间件如果抛出未处理错误，那么框架将不处理这个错误（默认 halsp 会处理错误，并修改状态码为 500）
-- `run` 函数，开始根据请求执行已添加中间件
+- `keepThrow` 函数，调用之后，中间件如果抛出未处理错误，那么框架将不处理这个错误（默认 halsp 会处理错误，并修改状态码为 500）
+- `test` 函数，开始根据请求执行已添加中间件
 - `expect` 函数，用于测试断言
+- `expectError` 函数，用于断言错误
 
 ```TS
-import { TestStartup } from "@halsp/testing";
+import { Startup } from "@halsp/core";
+import "@halsp/testing";
 
-new TestStartup()
+new Startup()
   .use(async (ctx, next) => {
     ctx.setBody("test");
     await next();
   })
   .expect((res) => {
-    expect(res.status).toBe(200);
-  });
+    expect(res.body).toBe("test");
+  })
+  .test();
 ```
 
+设置 Cotnext 并且把未处理的错误抛出
+
 ```TS
-import { TestStartup } from "@halsp/testing";
+import { Startup } from "@halsp/core";
+import "@halsp/testing";
 
 it("should xxx", async () => {
-  new TestStartup()
-    .setSkipThrow()
+  new Startup()
+    .expect((res) => {
+      expect(res.body).toBe("test");
+    })
+    .keepThrow()
     .setContext(new Context())
     .use(() => {
       ctx.setBody("test");
       await next();
     })
-    .expect((res) => {
-      expect(!!res).toBeTrue();
+    .test();
+});
+```
+
+断言有未处理错误
+
+```TS
+import { Startup } from "@halsp/core";
+import "@halsp/testing";
+
+it("should xxx", async () => {
+  new Startup()
+    .expectError((err) => {
+      expect(err.message).toBe("err");
+    })
+    .keepThrow()
+    .use(() => {
+      throw new Error("err");
+    })
+    .test();
+});
+```
+
+## Native
+
+`@halsp/testing` 已内置对 `supertest` 的支持
+
+需要单独安装 `supertest`
+
+```sh
+npm install supertest -D
+```
+
+调用 `startup.nativeTest()` 会返回 `supertest` 实例
+
+```TS
+import { Startup } from "@halsp/core";
+import "@halsp/native";
+import "@halsp/testing";
+
+it("should xxx", async () => {
+  new Startup()
+    .useNative()
+    .keepThrow()
+    .use((ctx) => {
+      ctx.ok({
+        method: ctx.req.method,
+        path: ctx.req.path,
+      });
+    })
+    .nativeTest()
+    .get("/url")
+    .expect(200, {
+      method: "GET",
+      path: "url",
     });
 });
 ```
 
-### TestHttpStartup
+:::warning
+`startup.setContext` 不支持 `native`
+:::
 
-用于模拟 http 请求，但仍与运行环境无关
-
-```TS
-import { TestHttpStartup } from "@halsp/testing/dist/http";
-
-const res = await new TestHttpStartup()
-  .use((ctx) => {
-    ctx.ok({
-      method: ctx.req.method,
-      path: ctx.req.path,
-    });
-  })
-  .expect(200, {
-    method: "GET",
-    path: "url",
-  });
-```
-
-#### Response
+## Response
 
 Response 新增 `expect` 函数，用于断言请求结果
 
-注意，使用前需要先导入 `@halsp/testing`
+有下面几种使用方式
 
 ```TS
-import { TestHttpStartup } from "@halsp/testing/dist/http";
+    expect(status: number): this;
+    expect(status: number, body: any): this;
+    expect(checker: (res: Response) => void): this;
+    expect(body: any): this;
+```
 
-new TestHttpStartup()
+如
+
+```TS
+import "@halsp/testing";
+import "@halsp/http";
+import { Startup } from "@halsp/core";
+
+new Startup()
+  .useHttp()
   .use(async (ctx, next) => {
     ctx.ok("body-ok");
     await next();
   })
-  .expect((res) => {
-    res.expect(200);
-    res.expect(200, "body-ok");
-    res.expect("body-ok");
-    res.expect((res) => {
-      expect(res.status).toBe(200);
-    });
-  });
-```
-
-### TestNativeStartup
-
-派生自 `TestHttpStartup`，用于模仿 http 原生 native 运行环境
-
-基于 [supertest](https://github.com/visionmedia/supertest)
-
-`create` 函数会返回 `supertest` 的 `Test` 对象
-
-```TS
-import { TestNativeStartup } from "@halsp/testing/dist/http";
-
-await new TestNativeStartup()
-  .use((ctx) => {
-    ctx.ok({
-      method: ctx.req.method,
-      path: ctx.req.path,
-    });
-  })
-  .create()
-  .get("/url")
-  .expect(200, {
-    method: "GET",
-    path: "url",
-  });
-```
-
-### 微服务 Startup
-
-微服务包含以下类别的 Startup，用法与前面的 Startup 都类似
-
-- TestMicroGrpcStartup
-- TestMicroMqttStartup
-- TestMicroNatsStartup
-- TestMicroRedisStartup
-- TestMicroTcpStartup
-
-```TS
-import { TestMicroGrpcStartup } from "@halsp/testing/dist/micro-grpc";
-
-const startup = new TestMicroGrpcStartup({
-  protoFiles: "./test/test.proto",
-  port: 5080,
-})
-  .use((ctx) => {
-    ctx.res.setBody({
-      resMessage: ctx.req.body.reqMessage,
-    });
-  })
-  .pattern("test/TestService/testMethod", (ctx) => {
-    ctx.res.body = ctx.req.body;
-  });
-await startup.listen();
+  .expect((res) =>
+    res
+      .expect(200)
+      .expect(200, "body-ok")
+      .expect("body-ok")
+      .expect((res) => {
+        expect(res.status).toBe(200);
+      })
+  );
 ```
 
 ## 中间件
 
-Startup 及其派生类新增函数 `expectMiddleware`，用于中间件的单元测试
+Startup 新增函数 `expectMiddleware`，用于中间件的单元测试
 
 注意，使用前需要先导入 `@halsp/testing`
 
 ```TS
 import "@halsp/testing";
-import { TestHttpStartup } from "@halsp/testing/dist/http";
-import { Middleware } from "@halsp/core";
+import "@halsp/http";
+import { Middleware, Startup } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
   fn() {
@@ -180,7 +167,8 @@ class TestMiddleware extends Middleware {
   }
 }
 
-new TestHttpStartup()
+new Startup()
+  .useHttp()
   .expectMiddleware(TestMiddleware, (md) => {
     expect(md.fn()).toBe(1);
   })
@@ -194,9 +182,13 @@ new TestHttpStartup()
 
 ## 服务/依赖注入
 
-Startup 及其派生类新增函数 `expectInject`，用于依赖注入服务的单元测试
+Startup 新增函数 `expectInject`，用于依赖注入服务的单元测试
 
 安装了 `@halsp/inject` 的项目才能使用这个功能
+
+```sh
+npm install @halsp/inject
+```
 
 注意，使用前需要先导入 `@halsp/testing`
 
@@ -218,9 +210,10 @@ class TestService2 {
 
 ```TS
 import "@halsp/testing";
-import { TestStartup } from "@halsp/testing";
+import { Startup } from "@halsp/core";
 
-new TestStartup()
+new Startup()
+  .useInject();
   .expectInject(TestService, (service) => {
     expect(service.fn()).toBe(1);
   });
@@ -228,9 +221,9 @@ new TestStartup()
 
 ```TS
 import "@halsp/testing";
-import { TestStartup } from "@halsp/testing";
+import { Startup } from "@halsp/core";
 
-new TestStartup()
+new Startup()
   .useInject();
   .inject(TestService, InjectType.Singleton)
   .expectInject(TestService, (service) => {

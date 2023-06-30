@@ -12,7 +12,7 @@ npm install @halsp/cookie
 
 ## 快速开始
 
-在 `startup.ts` 中
+在入口文件中
 
 ```TS
 import "@halsp/cookie";
@@ -40,9 +40,26 @@ const cookies = ctx.req.cookies;
 const name = ctx.cookies.name;
 ```
 
+还可以利用 `@halsp/inject` 定义装饰器，通过依赖注入获取 cookies
+
+```TS
+import { ReadonlyDict } from "@halsp/core";
+import { Inject } from "@halsp/inject";
+
+// 自定义装饰器
+export const Cookies = Inject((ctx) => ctx.cookies);
+
+// 在服务中
+export class CustomService {
+  // 通过依赖注入初始化值
+  @Cookies
+  private readonly cookies!: ReadonlyDict<string>;
+}
+```
+
 ### 设置响应 cookies
 
-给 `ctx.cookies` 赋值
+给 `ctx.cookies` 赋值即设置响应 cookies
 
 ```TS
 ctx.cookies = {
@@ -114,7 +131,7 @@ startup.useCookie({
 });
 ```
 
-序列化配置也可以单次使用，在设置 cookie 时赋值一个 `SetCookieValue` 对象
+序列化配置也可以单次使用，在设置 cookie 时赋值一个 `SetCookieValueWithArgs` 对象
 
 ```TS
 export type SetCookieValueWithArgs = {
