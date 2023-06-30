@@ -4,19 +4,21 @@ You can try online or locally.
 
 ## Try Halsp Online
 
-To quickly get a taste of Halsp, you can try it directly in <http://mini.halsp.org>
-
 The halsp app can be run in browser for testing and development, and there is no need to install any dependencies on the machine.
 
-Select the required environment and components below
-
-_If the area below shows blank, please be patient or refresh and try again_
+Select the required environment and plugins below, then click the button **Create**
 
 <ClientOnly>
   <QuickStart />
 </ClientOnly>
 
 <br />
+
+You can also go to a single page <https://quickstart.halsp.org>
+
+Or try to use Halsp directly and quickly at <http://mini.halsp.org>
+
+The repository for the online trial project <https://github.com/halsp/quickstart>
 
 ## Create a Halsp Application
 

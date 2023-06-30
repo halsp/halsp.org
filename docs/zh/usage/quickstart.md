@@ -6,15 +6,19 @@
 
 浏览器里运行了基于 Halsp 的构建设置，不需要在机器上安装任何依赖
 
-选择下面需要的环境和组件
-
-_如果下面区域显示空白，请耐心等待或刷新重试_
+选择下面需要的环境和组件，点击 **立即创建** 按钮即可在线尝试
 
 <ClientOnly>
   <QuickStart />
 </ClientOnly>
 
 <br />
+
+也可以跳转至单独的页面 <https://quickstart.halsp.org>
+
+或在这里快速体验 Halsp <http://mini.halsp.org>
+
+该线上尝试项目的仓库 <https://github.com/halsp/quickstart>
 
 ## 本地构建
 
