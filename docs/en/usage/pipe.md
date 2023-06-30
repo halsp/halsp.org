@@ -6,19 +6,17 @@
 
 此处管道不同于管道上下文 `Context`
 
-用 `Query`, `Header`, `Param`, `Body`, `Ctx` 装饰字段，该字段在特定生命周期会被自动赋值
+用 `Query`, `Header`, `Param`, `Body` 装饰字段，该字段在特定生命周期会被自动赋值
 
 ## 快速开始
 
 先创建一个中间件
 
 ```TS
-import { Header, Query, Param, Body, Ctx } from "@halsp/pipe";
+import { Header, Query, Param, Body } from "@halsp/pipe";
 import { Middleware, ReadonlyDict, Context } from "@halsp/core";
 
 class TestMiddleware extends Middleware {
-  @Ctx
-  private readonly ctx1!: Context;
   @Header
   private readonly header!: ReadonlyDict;
   @Query
@@ -72,12 +70,12 @@ startup.useInject().add(TestMiddleware);
 在其他任意类中，你也可以使用 `ctx.getService` 手动实例化类
 
 ```TS
-import "@halsp/inject";
+import { Inject } from "@halsp/inject";
 import { Context } from "@halsp/core";
-import { Header, Query, Ctx } from "@halsp/pipe";
+import { Header, Query } from "@halsp/pipe";
 
 class TestClass {
-  @Ctx
+  @Inject
   private readonly ctx!: Context;
   @Header
   private readonly header!: any;
@@ -155,10 +153,11 @@ body: any; // number
 创建一个类 `ToStringPipe`，实现 `PipeTransform` 接口，如
 
 ```TS
-import { Ctx, PipeTransform } from "@halsp/pipe"
+import { Inject } from "@halsp/inject";
+import { PipeTransform } from "@halsp/pipe"
 
 class ToStringPipe implements PipeTransform<any, string> {
-  @Ctx
+  @Inject
   readonly ctx: Context;
 
   transform(value: any) {

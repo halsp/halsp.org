@@ -553,3 +553,14 @@ class TestMiddleware extends Middleware {
   }
 }
 ```
+
+## Context
+
+已默认注入了 `Context` 示例，因此在中间件或服务中，可以直接通过依赖注入获取
+
+```TS
+class CustomService {
+  @Inject
+  private readonly ctx!: Context;
+}
+```
