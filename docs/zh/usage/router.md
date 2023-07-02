@@ -44,7 +44,9 @@ export default class extends Action{
 
 ## 路由文件夹
 
-路由文件夹默认为 `src/actions`
+路由文件夹默认为 `src/actions` 或 `src/modules` （二选一）
+
+一般 `src/actions` 用于简单项目，`src/modules` 用于稍大的模块化项目，本教程仅用 `src/actions`，模块化请参考 [模块化项目](./module) 教程
 
 当然你也可以指定其他文件夹，需配置 `.halsprc.ts`，增加 `routerActionsDir` ，如
 
@@ -59,7 +61,7 @@ export default defineConfig(() => {
 });
 ```
 
-配置后，`@halsp/cli` 编译时才能正确发现路由
+配置后，`@halsp/cli` 编译时才能正确编译路由
 
 ## 配置参数
 

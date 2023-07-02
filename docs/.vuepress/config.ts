@@ -24,6 +24,7 @@ const advanceLinks: string[] = [
   "/usage/pipe",
   "/usage/filter",
   "/usage/mva",
+  "/usage/module",
   "/usage/error",
 ];
 
