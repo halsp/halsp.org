@@ -46,22 +46,9 @@ export default class extends Action{
 
 路由文件夹默认为 `src/actions` 或 `src/modules` （二选一）
 
-一般 `src/actions` 用于简单项目，`src/modules` 用于稍大的模块化项目，本教程仅用 `src/actions`，模块化请参考 [模块化](./module) 教程
+一般 `src/actions` 用于简单项目，`src/modules` 用于稍大的模块化项目，本教程仅用 `src/actions`，模块化请参考 [模块化项目](./module) 教程
 
-当然你也可以指定其他文件夹，需配置 `.halsprc.ts`，增加 `routerActionsDir` ，如
-
-```ts
-import { defineConfig, Configuration } from "@halsp/cli";
-import "@halsp/router/dist/cli-config";
-
-export default defineConfig(() => {
-  return {
-    routerActionsDir: "custom-actions",
-  };
-});
-```
-
-配置后，`@halsp/cli` 编译时才能正确编译路由
+在其他文件夹的 `actions` 不会被正确编译和执行
 
 ## 配置参数
 
@@ -242,7 +229,7 @@ export default class extends Action {
 
 创建文件夹 `src/actions`，用于存放所有 `Action`
 
-路由文件夹也可以是其他路径，但需要修改配置，参考前面 [路由文件夹](#路由文件夹) 部分
+路由文件夹也可以是 `src/modules`，参考前面 [路由文件夹](#路由文件夹) 部分
 
 #### 创建 action 文件
 

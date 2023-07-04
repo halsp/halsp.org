@@ -59,7 +59,7 @@ _模块化项目需要用到 `@halsp/router`，以支持模块化的路由_
 具体可参考 [@halsp/router](./router)
 :::
 
-默认的模块目录为 `modules`，修改方式参考 [@halsp/router 路由文件夹](./router#路由文件夹)
+存放模块代码的目录为 `modules`，参考 [@halsp/router 路由文件夹](./router#路由文件夹)
 
 `modules` 文件夹下的每个文件夹，都代表一个模块
 
