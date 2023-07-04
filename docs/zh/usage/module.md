@@ -73,6 +73,7 @@ _模块化项目需要用到 `@halsp/router`，以支持模块化的路由_
 interface RouterModule {
   prefix?: string;
   decorators?: ClassDecorator[] | ((mapItem: MapItem) => ClassDecorator[]);
+  deepDir?: string;
 }
 ```
 
@@ -93,6 +94,25 @@ export default {
   prefix: "user",
   decorators: [V.Tags("User").Description("desc")]
 }
+```
+
+-- deepDir
+
+仅 `路径即路由风格` 起作用，值为模块下的目录相对路径
+
+表明只有在此子目录中的 Action 才会生效，并且请求路径以此为基础
+
+通过此参数，允许将模块下所有 Action 统一放到一个目录中，如 actions，代码结构更清晰，目录结构可以如下
+
+```
++-- src
+|   +-- modules
+|       +-- todo
+|           +-- module.ts // 模块化配置，deepDir 值为 actions
+|           +-- actions
+|           |   +-- _.get.ts
+|           |   +-- ^id.patch.ts
+|           |   +-- template.post.ts
 ```
 
 ### 配置导出类型
