@@ -1,7 +1,7 @@
 # Introduction
 
 <p align="center">
-  <a href="https://halsp.org/" target="blank"><img src="https://halsp.org/images/logo.png" alt="Halsp Logo" width="200"/></a>
+  <a href="https://halsp.org/" target="blank"><img src="/images/logo.png" alt="Halsp Logo" width="200"/></a>
 </p>
 
 <p align="center">Modern Progressive Lightweight <a href="http://nodejs.org" target="_blank">Node.js</a> Framework with Serverless First </p>
