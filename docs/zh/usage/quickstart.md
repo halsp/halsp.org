@@ -16,8 +16,6 @@
 
 也可以跳转至单独的页面 <https://quickstart.halsp.org>
 
-或在这里快速体验 Halsp <http://mini.halsp.org>
-
 该线上尝试项目的仓库 <https://github.com/halsp/quickstart>
 
 ## 本地构建

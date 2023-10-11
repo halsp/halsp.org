@@ -16,8 +16,6 @@ Select the required environment and plugins below, then click the button **Creat
 
 You can also go to a single page <https://quickstart.halsp.org>
 
-Or try to use Halsp directly and quickly at <http://mini.halsp.org>
-
 The repository for the online trial project <https://github.com/halsp/quickstart>
 
 ## Create a Halsp Application
