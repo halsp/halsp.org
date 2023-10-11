@@ -1,0 +1,1 @@
+const a=JSON.parse('{"key":"v-2e712f30","path":"/zh/env/micro-grpc.html","title":"gRPC 通信 (@halsp/micro-grpc)","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1680190942000,"contributors":[{"name":"hal-wang","email":"hi@hal.wang","commits":1}]},"filePathRelative":"zh/env/micro-grpc.md"}');export{a as data};

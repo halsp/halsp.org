@@ -1,0 +1,1 @@
+const a=JSON.parse('{"key":"v-8daa1a0e","path":"/","title":"","lang":"en-US","frontmatter":{},"headers":[{"level":2,"title":"Halsp","slug":"halsp","link":"#halsp","children":[]}],"git":{"updatedTime":1682483053000,"contributors":[{"name":"hal-wang","email":"hi@hal.wang","commits":6}]},"filePathRelative":"index.md"}');export{a as data};

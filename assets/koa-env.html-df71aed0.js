@@ -1,0 +1,1 @@
+const a=JSON.parse('{"key":"v-200f396a","path":"/en/env/koa-env.html","title":"Koa 托管 (@halsp/koa)","lang":"en-US","frontmatter":{},"headers":[],"git":{"updatedTime":1687794777000,"contributors":[{"name":"hal-wang","email":"hi@hal.wang","commits":2}]},"filePathRelative":"en/env/koa-env.md"}');export{a as data};

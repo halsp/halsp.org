@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-0d9a461e","path":"/zh/env/micro-redis.html","title":"Redis 通信 (@halsp/micro-redis)","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1680190942000,"contributors":[{"name":"hal-wang","email":"hi@hal.wang","commits":1}]},"filePathRelative":"zh/env/micro-redis.md"}');export{e as data};

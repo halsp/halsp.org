@@ -1,0 +1,1 @@
+const a=JSON.parse('{"key":"v-00ce24d8","path":"/zh/env/micro-nats.html","title":"Nats 通信 (@halsp/micro-nats)","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1680190942000,"contributors":[{"name":"hal-wang","email":"hi@hal.wang","commits":1}]},"filePathRelative":"zh/env/micro-nats.md"}');export{a as data};
